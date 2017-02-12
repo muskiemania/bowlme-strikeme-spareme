@@ -2,8 +2,13 @@ from cards import Card, Hand, StraightFlush, Straight
 
 class Test_StraightFlush():
  
-    def test_isMatch(self):
+    def test_isMatch_1(self):
         hand = Hand([Card('2H'),Card('4H'),Card('6H'),Card('5H'),Card('3H')])
+        straightFlush = StraightFlush()
+        assert straightFlush.IsMatch(hand) == True
+
+    def test_isMatch_2(self):
+        hand = Hand([Card('9H'),Card('KH'),Card('QH'),Card('JH'),Card('TH')])
         straightFlush = StraightFlush()
         assert straightFlush.IsMatch(hand) == True
 
@@ -23,7 +28,6 @@ class Test_StraightFlush():
         assert straightFlush.GetRating(hand) == (9, 8, 7, 6, 5, 4)
 
     def test_getRating_royalFlush(self):
-        #This is actually a royal flush
         hand = Hand([Card('AS'),Card('TS'),Card('QS'),Card('JS'),Card('KS')])
         straightFlush = StraightFlush()
         assert straightFlush.GetRating(hand) == (10, 14, 13, 12, 11, 10)
@@ -37,5 +41,5 @@ class Test_StraightFlush():
         hand = Hand([Card('AS'),Card('TS'),Card('QS'),Card('JS'),Card('KS')])
         straightFlush = StraightFlush()
         isStraightFlush = straightFlush.IsMatch(hand)
-        isHighStraight = Straight().IsHighStraight(hand)
-        assert straightFlush.IsRoyalFlush(hand) == (isStraightFlush and isHighStraight)
+        isStraightToTheAce = Straight().IsStraightToTheAce(hand)
+        assert straightFlush.IsRoyalFlush(hand) == (isStraightFlush and isStraightToTheAce)

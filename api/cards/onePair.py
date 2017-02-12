@@ -13,7 +13,6 @@ class OnePair(PokerHand):
     def GetRating(self, hand):
         tally = PokerHand.cardTally(hand)
         pair = {k: v for (k,v) in tally.items() if len(v) == 2}.keys()
-        print pair
         others = sorted({k: v for (k,v) in tally.items() if len(v) != 2}.keys(), reverse=True)
         c = PokerHand.Coalesce
         return (self.__rating, pair[0], c(others, 0, 0), c(others, 1, 0), c(others, 2, 0), 99) 

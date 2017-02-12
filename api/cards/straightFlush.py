@@ -12,7 +12,7 @@ class StraightFlush(PokerHand, Straight, Flush):
         return Straight.IsMatch(self, hand) and Flush.IsMatch(self, hand)
 
     def GetRating(self, hand):
-        (r,c1,c2,c3,c4,c5) = Straight().GetRating(hand)
+        (r,c1,c2,c3,c4,c5) = Straight.GetRating(self,hand)
         
         if self.IsRoyalFlush(hand):
             return (self.__rating + 1, c1, c2, c3, c4, c5)
@@ -20,4 +20,4 @@ class StraightFlush(PokerHand, Straight, Flush):
         return (self.__rating, c1, c2, c3, c4, c5)
 
     def IsRoyalFlush(self, hand):
-        return self.IsMatch(hand) and Straight.IsHighStraight(self, hand)
+        return self.IsMatch(hand) and Straight.IsStraightToTheAce(self, hand)

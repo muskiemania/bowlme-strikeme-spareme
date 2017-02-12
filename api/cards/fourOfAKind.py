@@ -3,7 +3,7 @@ from cards import PokerHand
 class FourOfAKind(PokerHand):
 
     def __init__(self):
-        self.__rating = 7
+        self.__rating = 8
         PokerHand.__init__(self)
 
     def IsMatch(self, hand):
