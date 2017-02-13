@@ -33,8 +33,8 @@ class Scorer:
             if index == 0:
                 ranked.append((player, hand, score, currentRank))
                 index += 1
-            else:             
-                if score != ranked[index - 1][3]:
+            else:
+                if score != ranked[index - 1][2]:
                     currentRank += 1
 
                 ranked.append((player, hand, score, currentRank))

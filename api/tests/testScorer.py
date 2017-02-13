@@ -82,7 +82,7 @@ class Test_Scorer:
             assert rating == Scorer().GetRating(hand)
 
             
-    def test_rankHands(self):
+    def test_rankHands_1(self):
         scored = []
         scored.append(('justin', None, (3,14,19,13,99,99)))
         scored.append(('sarah', None, (2,13,11,10,4,99)))
@@ -92,3 +92,35 @@ class Test_Scorer:
         for index in range(0, 2):
             (player, hand, score, rank) = ranked[index]
             assert rank == index+1
+
+    def test_rankHands_2(self):
+        scored = []
+        scored.append(('justin', None, (2,13,11,10,4,99)))
+        scored.append(('sarah', None, (2,13,11,10,4,99)))
+
+        ranked = Scorer().RankHands(scored)
+
+        for (player, hand, score, rank) in ranked:
+            assert rank == 1
+
+    def test_rankHands_3(self):
+        scored = []
+        scored.append(('justin', None, (1,13,11,10,4,2)))
+        scored.append(('sarah', None, (1,13,11,10,4,2)))
+        scored.append(('jenna', None, (1,13,11,10,4,2)))
+
+        ranked = Scorer().RankHands(scored)
+
+        for (player, hand, score, rank) in ranked:
+            assert rank == 1
+
+    def test_rankHands_4(self):
+        scored = []
+        scored.append(('justin', None, (2,13,11,10,4,99)))
+        scored.append(('sarah', None, (1,13,11,10,4,2)))
+        scored.append(('jenna', None, (1,13,11,10,4,2)))
+
+        ranked = Scorer().RankHands(scored)[-2:]
+
+        for (player, hand, score, rank) in ranked:
+            assert rank == 2
