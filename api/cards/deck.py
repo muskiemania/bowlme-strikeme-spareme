@@ -32,7 +32,7 @@ class Deck:
         return map(lambda x: "%s%s" % (x.card,x.suit), cards)
 
     def ShuffleDeck(self):
-        self.cards = ShuffleCards(self.cards)
+        self.cards = Deck.ShuffleCards(self.cards)
         return
     
 
