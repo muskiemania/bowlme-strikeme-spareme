@@ -8,10 +8,10 @@ class FullHouse(PokerHand, FourOfAKind, ThreeOfAKind, TwoPairs):
         ThreeOfAKind.__init__(self)
         TwoPairs.__init__(self)
 
-    def IsMatch(self, hand):
-        return not FourOfAKind.IsMatch(self, hand) and ThreeOfAKind.IsMatch(self, hand) and TwoPairs.IsMatch(self, hand) and len(hand.cards) == 5
+    def is_match(self, hand):
+        return not FourOfAKind.is_match(self, hand) and ThreeOfAKind.is_match(self, hand) and TwoPairs.is_match(self, hand) and len(hand.cards) == 5
 
-    def GetRating(self, hand):
-        tally = PokerHand.cardTally(hand)
+    def get_rating(self, hand):
+        tally = PokerHand.card_tally(hand)
         inverted = {str(len(v)): k for (k,v) in tally.items()}
         return (self.__rating, inverted['3'], inverted['2'], 99, 99, 99)

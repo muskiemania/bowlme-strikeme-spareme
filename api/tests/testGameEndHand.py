@@ -5,17 +5,17 @@ class Test_GameEndHand:
     def test_endHandConstructor_noArgs(self):
         eh = EndHand()
 
-        assert eh.gameId == 0
-        assert eh.playerId == None
+        assert eh.game_id == 0
+        assert eh.player_id == None
 
     def test_endHandConstructor_args(self):
         eh = EndHand('1', '2')
 
-        assert eh.gameId == '1'
-        assert eh.playerId == '2'
+        assert eh.game_id == '1'
+        assert eh.player_id == '2'
 
     def test_endHandEnd(self):
-        eh = EndHand('1').End('2')
+        eh = EndHand('1').end('2')
 
-        assert eh.gameId == '1'
-        assert eh.playerId == '2'
+        assert eh.game_id == '1'
+        assert eh.player_id == '2'

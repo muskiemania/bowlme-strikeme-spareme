@@ -3,18 +3,18 @@ import bowlRedis
 
 class JoinGame:
 
-    def __init__(self, gameId = 0, player = None):
-        self.gameId = gameId
+    def __init__(self, game_id = 0, player = None):
+        self.game_id = game_id
         self.player = player
 
-    def Join(self, playerName = None):
-        player = CreatePlayer(playerName, self.gameId)        
+    def join(self, player_name = None):
+        player = CreatePlayer(player_name, self.game_id)        
 
-        return JoinGame(gameId=self.gameId,player=player)
+        return JoinGame(game_id=self.game_id,player=player)
 
-    def Exec(self):
-        r = bowlRedis.JoinGame()
-        r.Init(self)
+    def execute(self):
+        r = bowlRedis.join_game()
+        r.init(self)
         
-        if r.Exec():
-            return self.player.playerId
+        if r.execute():
+            return self.player.player_id

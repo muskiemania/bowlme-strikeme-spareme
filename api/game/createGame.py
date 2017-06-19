@@ -12,42 +12,42 @@ import bowlRedis
 
 class CreateGame:
 
-    def __init__(self, gameId = 0, host = None, players = None, deck = None, discard = None, status = 0):
-        self.gameId = gameId
+    def __init__(self, game_id = 0, host = None, players = None, deck = None, discard = None, status = 0):
+        self.game_id = game_id
         self.host = host
         self.players = players
         self.deck = deck
         self.discard = discard
         self.status = status
 
-    def CreateGameId(self, hostName = None, hashKey = datetime.datetime.now()):
+    def create_game_id(self, host_name = None, hash_key = datetime.datetime.now()):
         m = hashlib.md5()
-        m.update(hostName)
-        m.update(hashKey)
+        m.update(host_name)
+        m.update(hash_key)
         return m.hexdigest()
         
-    def Create(self, hostName = None, hashKey = None):
-        gameId = self.CreateGameId(hostName, hashKey) 
+    def create(self, host_name = None, hash_key = None):
+        game_id = self.create_game_id(host_name, hash_key) 
         
-        hostPlayer = CreatePlayer(hostName, gameId)
+        host_player = CreatePlayer(host_name, game_id)
         
-        host = hostPlayer.playerId
+        host = host_player.player_id
 
         players = {}
-        players[host] = hostPlayer.__dict__
+        players[host] = host_player.__dict__
 
         deck = cards.Deck()
-        deck.ShuffleDeck()
+        deck.shuffle_deck()
 
         discard = []
 
         status = 0
 
-        return CreateGame(gameId=gameId,host=host,players=players,deck=deck,discard=discard,status=status)
+        return CreateGame(game_id=game_id,host=host,players=players,deck=deck,discard=discard,status=status)
 
     def Exec(self):
         r = bowlRedis.CreateGame()
-        r.Init(self)
+        r.init(self)
         
         if r.Exec():
-            return self.gameId
+            return self.game_id

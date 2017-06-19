@@ -2,16 +2,16 @@ import bowlRedis
 
 class EndHand:
 
-    def __init__(self, gameId = 0, playerId = None):
-        self.gameId = gameId
-        self.playerId = playerId
+    def __init__(self, game_id = 0, player_id = None):
+        self.game_id = game_id
+        self.player_id = player_id
 
-    def End(self, playerId = None):
-        return EndHand(gameId=self.gameId,playerId=playerId)
+    def end(self, player_id = None):
+        return EndHand(game_id=self.game_id,player_id=player_id)
 
-    def Exec(self):
-        r = bowlRedis.EndHand()
-        r.Init(self)
+    def execute(self):
+        r = bowlRedis.end_hand()
+        r.init(self)
         
-        if r.Exec():
-            return self.playerId
+        if r.execute():
+            return self.player_id

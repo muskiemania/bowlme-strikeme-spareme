@@ -3,7 +3,7 @@ import pytest
 
 class Test_Hand():
 
-    def __getCards(self, cards=[]):
+    def __get_cards(self, cards=[]):
         return map(lambda x: Card(x), cards)
     
     def test_constuctor_cards_none(self):
@@ -11,57 +11,56 @@ class Test_Hand():
         assert len(hand.cards) == 0
 
     def test_constructor_cards(self):
-        myCards = ['AS','5C']
-        hand = Hand(self.__getCards(myCards))
+        my_cards = ['AS','5C']
+        hand = Hand(self.__get_cards(my_cards))
         
-        assert myCards == hand.ShowCards()
+        assert my_cards == hand.show_cards()
 
     def test_draw_cards_none(self):
-        myCards = ['KH']
-        hand = Hand(self.__getCards(myCards))
-        hand.DrawCards()
-        assert myCards == hand.ShowCards()
+        my_cards = ['KH']
+        hand = Hand(self.__get_cards(my_cards))
+        hand.draw_cards()
+        assert my_cards == hand.show_cards()
 
     def test_draw_cards_one(self):
-        myCards = ['TS']
-        hand = Hand(self.__getCards(myCards))
-        hand.DrawCards(self.__getCards(['TC']))
+        my_cards = ['TS']
+        hand = Hand(self.__get_cards(my_cards))
+        hand.draw_cards(self.__get_cards(['TC']))
 
-        assert ['TS','TC'] == hand.ShowCards()
+        assert ['TS','TC'] == hand.show_cards()
 
     def test_draw_cards_some(self):
-        myCards = ['4D','6D','8H']
-        hand = Hand(self.__getCards(myCards))
-        hand.DrawCards(self.__getCards(['5C','7H']))
+        my_cards = ['4D','6D','8H']
+        hand = Hand(self.__get_cards(my_cards))
+        hand.draw_cards(self.__get_cards(['5C','7H']))
 
-        assert ['4D','6D','8H','5C','7H'] == hand.ShowCards()
+        assert ['4D','6D','8H','5C','7H'] == hand.show_cards()
 
     def test_discard_none(self):
-        myCards = ['2S','3C','4D','5H','6S']
-        hand = Hand(self.__getCards(myCards))
-        hand.Discard()
+        my_cards = ['2S','3C','4D','5H','6S']
+        hand = Hand(self.__get_cards(my_cards))
+        hand.discard()
 
-        assert myCards == hand.ShowCards()
+        assert my_cards == hand.show_cards()
 
     def test_discard_one(self):
-        myCards = ['2S','QS','3C','4D','5H']
-        hand = Hand(self.__getCards(myCards))
-        hand.Discard(self.__getCards(['QS']))
+        my_cards = ['2S','QS','3C','4D','5H']
+        hand = Hand(self.__get_cards(my_cards))
+        hand.discard(self.__get_cards(['QS']))
 
-        del myCards[1]
-        assert myCards == hand.ShowCards()
+        del my_cards[1]
+        assert my_cards == hand.show_cards()
 
     def test_discard_two(self):
-        myCards = ['2S','QS','TC','4D','5H']
-        hand = Hand(self.__getCards(myCards))
-        hand.Discard(self.__getCards(['TC','QS']))
+        my_cards = ['2S','QS','TC','4D','5H']
+        hand = Hand(self.__get_cards(my_cards))
+        hand.discard(self.__get_cards(['TC','QS']))
 
-        del myCards[2]
-        del myCards[1]
-        assert myCards == hand.ShowCards()
+        del my_cards[2]
+        del my_cards[1]
+        assert my_cards == hand.show_cards()
 
     def test_discard_invalid(self):
         hand = Hand()
         with pytest.raises(Exception) as e:
-            hand.Discard(self.__getCards(['AS']))
-        
+            hand.discard(self.__get_cards(['AS']))

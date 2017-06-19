@@ -6,14 +6,14 @@ class JoinGame:
     
     def __init__(self):
         self.r = redis.StrictRedis()
-        self.gameId = None
+        self.game_id = None
         self.player = None
 
-    def Init(self, joinGame):
-        self.gameId = joinGame.gameId
+    def init(self, joinGame):
+        self.game_id = joinGame.game_id
         self.player = joinGame.player
 
-    def Exec(self):
+    def execute(self):
 
         #need a list for the deck - game-id-deck
         #need a list for the discard - game-id-discard
@@ -22,13 +22,13 @@ class JoinGame:
         #hash for each players name - game-id-name:playerid
         #hash for each players hand - game-id-status:playerid
         p = self.r.pipeline()
-        p.hmset('game-%s-name' % self.gameId, {'%s' % self.player.playerId: self.player.playerName})
-        p.hmset('game-%s-status' % self.gameId, {'%s' % self.player.playerId: 0})
+        p.hmset('game-%s-name' % self.game_id, {'%s' % self.player.player_id: self.player.player_name})
+        p.hmset('game-%s-status' % self.game_id, {'%s' % self.player.player_id: 0})
         p.execute()
 
         return True
 
-    def Get(self, key, field=None):
+    def get(self, key, field=None):
         suffix = key.split('-')[2]
         if suffix == 'deck':
             return self.r.lrange(key, 0, -1)

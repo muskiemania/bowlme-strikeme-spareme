@@ -8,16 +8,16 @@ class StraightFlush(PokerHand, Straight, Flush):
         Straight.__init__(self)
         Flush.__init__(self)
 
-    def IsMatch(self, hand):
-        return Straight.IsMatch(self, hand) and Flush.IsMatch(self, hand)
+    def is_match(self, hand):
+        return Straight.is_match(self, hand) and Flush.is_match(self, hand)
 
-    def GetRating(self, hand):
-        (r,c1,c2,c3,c4,c5) = Straight.GetRating(self,hand)
+    def get_rating(self, hand):
+        (r,c1,c2,c3,c4,c5) = Straight.get_rating(self,hand)
         
-        if self.IsRoyalFlush(hand):
+        if self.is_royal_flush(hand):
             return (self.__rating + 1, c1, c2, c3, c4, c5)
         
         return (self.__rating, c1, c2, c3, c4, c5)
 
-    def IsRoyalFlush(self, hand):
-        return self.IsMatch(hand) and Straight.IsStraightToTheAce(self, hand)
+    def is_royal_flush(self, hand):
+        return self.is_match(hand) and Straight.is_straight_to_the_ace(self, hand)

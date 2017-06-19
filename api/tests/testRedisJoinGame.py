@@ -6,33 +6,33 @@ class Test_RedisJoinGame:
 
     def test_joinGameConstructor(self):
         r = bowlRedis.JoinGame()
-        assert r.gameId == None
+        assert r.game_id == None
         assert r.player == None
         
     def test_joinGameInit(self):
         jg = game.JoinGame('1')
-        j = jg.Join('player two')
+        j = jg.join('player two')
         r = bowlRedis.JoinGame()
-        r.Init(j)
+        r.init(j)
 
-        assert j.gameId == r.gameId
+        assert j.game_id == r.game_id
         assert j.player == r.player
         
     def test_createGameExec(self):
         jg = game.JoinGame('1')
-        j = jg.Join('player two')
+        j = jg.join('player two')
         r = bowlRedis.JoinGame()
-        r.Init(j)
+        r.init(j)
         
-        assert r.Exec() == True
+        assert r.execute() == True
 
     def test_joinGameGet(self):
         jg = game.JoinGame('1')
-        j = jg.Join('player two')
+        j = jg.join('player two')
         r = bowlRedis.JoinGame()
-        r.Init(j)
-        r.gameId = 'TEST'
-        r.Exec()
+        r.init(j)
+        r.game_id = 'TEST'
+        r.execute()
 
-        assert r.Get('game-TEST-name', r.player.playerId) == 'player two'
-        assert r.Get('game-TEST-status', r.player.playerId) == str(0)
+        assert r.get('game-TEST-name', r.player.player_id) == 'player two'
+        assert r.get('game-TEST-status', r.player.player_id) == str(0)

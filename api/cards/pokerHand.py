@@ -6,30 +6,30 @@ class PokerHand():
         pass
 
     @staticmethod
-    def sortCards(hand):
+    def sort_cards(hand):
         hand.cards.sort(key=lambda x: x.strength, reverse=True)
 
     @staticmethod
-    def cardTally(hand):
-        cardDict = {}
-        for c in hand.cards:
-            if c.strength not in cardDict.keys():
-                cardDict[c.strength] = []
-            cardDict[c.strength].append(c)
+    def card_tally(hand):
+        card_dictionary = {}
+        for card in hand.cards:
+            if card.strength not in card_dictionary.keys():
+                card_dictionary[card.strength] = []
+            card_dictionary[card.strength].append(card)
 
-        return cardDict
-
-    @staticmethod
-    def getSuitTally(hand):
-        suitDict = {}
-        for c in hand.cards:
-            if c.suit not in suitDict.keys():
-                suitDict[c.suit] = []
-            suitDict[c.suit].append(c)
-
-        return suitDict
+        return card_dictionary
 
     @staticmethod
-    def Coalesce(collection, index, defaultValue=0):
+    def get_suit_tally(hand):
+        suit_dictionary = {}
+        for card in hand.cards:
+            if card.suit not in suit_dictionary.keys():
+                suit_dictionary[card.suit] = []
+            suit_dictionary[card.suit].append(card)
+
+        return suit_dictionary
+
+    @staticmethod
+    def coalesce(collection, index, default_value=0):
         print collection
-        return collection[index] if len(collection) > index else defaultValue
+        return collection[index] if len(collection) > index else default_value

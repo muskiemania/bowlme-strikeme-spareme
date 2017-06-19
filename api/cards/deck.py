@@ -1,44 +1,41 @@
-from cards import Card
 import itertools
 from random import randint
+from cards import Card
 
-class Deck:
+class Deck(object):
 
     def __init__(self, cards=None):
-        if cards == None:
-            self.cards = self.GenerateDeck()
+        if cards is None:
+            self.cards = Deck.generate_deck()
         else:
             self.cards = cards
 
-    def GenerateDeck(self):
-        cards = [str(x) for x in range(2,10)]
-        cards += ['T','J','Q','K','A']
+    @staticmethod
+    def generate_deck():
+        cards = [str(x) for x in range(2, 10)]
+        cards += ['T', 'J', 'Q', 'K', 'A']
 
-        suits = ['C','S','H','D']
+        suits = ['C', 'S', 'H', 'D']
 
-        pairs = itertools.product(cards,suits)
-        deck = map(lambda (card,suit): Card(card,suit), pairs)
+        pairs = itertools.product(cards, suits)
+        deck = [Card(card, suit) for (card, suit) in pairs]
         return deck
 
     @staticmethod
-    def ShuffleCards(cards):
+    def shuffle_cards(cards):
         for i in range(0, len(cards)-2):
             j = randint(i, len(cards)-1)
             cards[i], cards[j] = cards[j], cards[i]
         return cards
-    
+
     @staticmethod
-    def ShowCards(cards):
-        return map(lambda x: "%s%s" % (x.card,x.suit), cards)
+    def show_cards(cards):
+        cards = ["%s%s" % (card, suit) for (card, suit) in cards]
+        return cards
 
-    def ShuffleDeck(self):
-        self.cards = Deck.ShuffleCards(self.cards)
+    def shuffle_deck(self):
+        self.cards = Deck.shuffle_cards(self.cards)
         return
-    
 
-    def GetDeck(self):
+    def get_deck(self):
         return self.cards
-
-            
-        
-    

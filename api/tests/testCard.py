@@ -4,27 +4,26 @@ import pytest
 class Test_Card():
 
     def test_constuctor_card_none(self):
-        jackOfHearts = Card()
-        assert 'card' not in jackOfHearts.__dict__.keys()
-        assert 'suit' not in jackOfHearts.__dict__.keys() 
+        jack_of_hearts = Card()
+        assert 'card' not in jack_of_hearts.__dict__.keys()
+        assert 'suit' not in jack_of_hearts.__dict__.keys() 
     
     def test_constuctor_suit_none(self):
-        aceOfHearts = Card('AH')
-        assert aceOfHearts.card == 'A'
-        assert aceOfHearts.suit == 'H'
+        ace_of_hearts = Card('AH')
+        assert ace_of_hearts.card == 'A'
+        assert ace_of_hearts.suit == 'H'
 
     def test_constuctor_card2_suit(self):
-        aceOfClubs = Card('AC','S')
-        assert aceOfClubs.card == 'A'
-        assert aceOfClubs.suit == 'C'
+        ace_of_clubs = Card('AC','S')
+        assert ace_of_clubs.card == 'A'
+        assert ace_of_clubs.suit == 'C'
 
     def test_constuctor_card_suit(self):
-        aceOfSpades = Card('A','S')
-        assert aceOfSpades.card == 'A'
-        assert aceOfSpades.suit == 'S'
+        ace_of_spades = Card('A','S')
+        assert ace_of_spades.card == 'A'
+        assert ace_of_spades.suit == 'S'
 
     def test_constuctor_bad_input(self):
-        aceOfSpades = Card('Ace','Spades')
-        assert 'card' not in aceOfSpades.__dict__.keys()
-        assert 'suit' not in aceOfSpades.__dict__.keys() 
-
+        ace_of_spades = Card('Ace','Spades')
+        assert 'card' not in ace_of_spades.__dict__.keys()
+        assert 'suit' not in ace_of_spades.__dict__.keys() 
