@@ -6,22 +6,22 @@ class CreateGame:
     
     def __init__(self):
         self.r = redis.StrictRedis()
-        self.gameId = None
+        self.game_id = None
         self.host = None
         self.players = None
         self.deck = None
         self.discard = None
         self.status = None
 
-    def Init(self, createGame):
-        self.gameId = createGame.gameId
-        self.host = createGame.host
-        self.players = createGame.players
-        self.deck =  cards.Deck.ShowCards(createGame.deck.cards)
-        self.discard = createGame.discard
-        self.status = createGame.status
+    def init(self, create_game):
+        self.game_id = create_game.game_id
+        self.host = create_game.host
+        self.players = create_game.players
+        self.deck =  cards.Deck.show_cards(create_game.deck.cards)
+        self.discard = create_game.discard
+        self.status = create_game.status
 
-    def Exec(self):
+    def execute(self):
 
         #need a list for the deck - game-id-deck
         #need a list for the discard - game-id-discard
@@ -31,16 +31,16 @@ class CreateGame:
         #hash for each players hand - game-id-status:playerid
         p = self.r.pipeline()
 
-        p.delete('game-%s-deck' % self.gameId)
-        p.rpush('game-%s-deck' % self.gameId, *list(self.deck))
-        p.hmset('game-%s-info' % self.gameId, {'host': self.host, 'status': self.status})
-        p.hmset('game-%s-name' % self.gameId, {'%s' % self.host: self.players[self.host]['playerName']})
-        p.hmset('game-%s-status' % self.gameId, {'%s' % self.host: 0})
+        p.delete('game-%s-deck' % self.game_id)
+        p.rpush('game-%s-deck' % self.game_id, *list(self.deck))
+        p.hmset('game-%s-info' % self.game_id, {'host': self.host, 'status': self.status})
+        p.hmset('game-%s-name' % self.game_id, {'%s' % self.host: self.players[self.host]['player_name']})
+        p.hmset('game-%s-status' % self.game_id, {'%s' % self.host: 0})
         p.execute()
 
         return True
 
-    def Get(self, key, field=None):
+    def get(self, key, field=None):
         suffix = key.split('-')[2]
         if suffix == 'deck':
             return self.r.lrange(key, 0, -1)
