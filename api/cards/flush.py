@@ -1,13 +1,15 @@
-from cards import Hand, PokerHand
+from cards import PokerHand
 
 class Flush(PokerHand):
 
     def __init__(self):
         self.__rating = 6
+        PokerHand.__init__(self)
 
     def is_match(self, hand):
-        return len(PokerHand.get_suit_tally(hand).keys()) == 1 and len(hand.cards) == 5
+        return len(self.get_suit_tally(hand).keys()) == 1 and len(hand.cards) == 5
 
     def get_rating(self, hand):
-        PokerHand.sort_cards(hand)
-        return (self.__rating, hand.cards[0].strength, hand.cards[1].strength, hand.cards[2].strength, hand.cards[3].strength, hand.cards[4].strength)
+        hand = self.sort_cards(hand)
+        strengths = [x.strength for x in hand.cards]
+        return (self.__rating, strengths[0], strengths[1], strengths[2], strengths[3], strengths[4])

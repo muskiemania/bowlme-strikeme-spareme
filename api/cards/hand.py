@@ -1,19 +1,19 @@
-class Hand:
+class Hand(object):
 
-    def __init__(self, cards = []):
-        self.cards = cards
+    def __init__(self, cards=None):
+        self.cards = cards or []
 
-    def draw_cards(self, drawn_cards = []):
-        for card in drawn_cards:
+    def draw_cards(self, drawn_cards=None):
+        for card in drawn_cards or []:
             self.cards.append(card)
 
-    def discard(self, discards = []):
-        for card in discards:
+    def discard(self, discards=None):
+        for card in discards or []:
             if card not in self.cards:
                 raise Exception('cannot discard a card not in my hand')
 
             i = self.cards.index(card)
             del self.cards[i]
-            
+
     def show_cards(self):
-        return map(lambda x: '%s%s' % (x.card, x.suit), self.cards)
+        return ['%s%s' % (x.card, x.suit) for x in self.cards]

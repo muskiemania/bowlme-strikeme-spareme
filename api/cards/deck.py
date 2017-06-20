@@ -30,8 +30,7 @@ class Deck(object):
 
     @staticmethod
     def show_cards(cards):
-        cards = ["%s%s" % (card, suit) for (card, suit) in cards]
-        return cards
+        return ["%s%s" % (x.card, x.suit) for x in cards]
 
     def shuffle_deck(self):
         self.cards = Deck.shuffle_cards(self.cards)

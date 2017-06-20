@@ -1,16 +1,14 @@
-from cards import Hand
+class PokerHand(object):
 
-class PokerHand():
-    
     def __init__(self):
         pass
 
-    @staticmethod
-    def sort_cards(hand):
+    @classmethod
+    def sort_cards(cls, hand):
         hand.cards.sort(key=lambda x: x.strength, reverse=True)
 
-    @staticmethod
-    def card_tally(hand):
+    @classmethod
+    def card_tally(cls, hand):
         card_dictionary = {}
         for card in hand.cards:
             if card.strength not in card_dictionary.keys():
@@ -19,8 +17,8 @@ class PokerHand():
 
         return card_dictionary
 
-    @staticmethod
-    def get_suit_tally(hand):
+    @classmethod
+    def get_suit_tally(cls, hand):
         suit_dictionary = {}
         for card in hand.cards:
             if card.suit not in suit_dictionary.keys():
@@ -29,7 +27,6 @@ class PokerHand():
 
         return suit_dictionary
 
-    @staticmethod
-    def coalesce(collection, index, default_value=0):
-        print collection
+    @classmethod
+    def coalesce(cls, collection, index, default_value=0):
         return collection[index] if len(collection) > index else default_value
