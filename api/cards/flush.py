@@ -7,7 +7,7 @@ class Flush(PokerHand):
         PokerHand.__init__(self, hand)
 
     def is_match(self):
-        return len(self.get_suit_tally(self.hand).keys()) == 1 and len(self.hand.cards) == 5
+        return len(self.get_suit_tally().keys()) == 1 and len(self.hand.cards) == 5
 
     def get_rating(self):
         self.sort_cards()

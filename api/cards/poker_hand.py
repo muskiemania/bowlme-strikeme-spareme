@@ -17,7 +17,7 @@ class PokerHand(object):
 
         return card_dictionary
 
-    def get_suit_tally(self, cards=None):
+    def get_suit_tally(self):
         suit_dictionary = {}
         for card in self.hand.cards:
             if card.suit not in suit_dictionary.keys():
