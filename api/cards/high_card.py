@@ -2,16 +2,15 @@ from cards import PokerHand
 
 class HighCard(PokerHand):
 
-    def __init__(self):
+    def __init__(self, hand):
         self.__rating = 1
-        PokerHand.__init__(self)
+        PokerHand.__init__(self, hand)
 
-    @classmethod
-    def is_match(cls, hand):
-        return True or hand
+    def is_match(self):
+        return True
 
-    def get_rating(self, hand):
-        tally = self.card_tally(hand)
+    def get_rating(self):
+        tally = self.card_tally()
         cards = sorted(tally.keys(), reverse=True) or []
         cards.extend([0, 0, 0, 0, 0])
         coalesce = self.coalesce

@@ -5,23 +5,34 @@ class Scorer:
     def __init__(self):
         pass
 
-    def get_rating(self, hand):
-        hands = [cards.StraightFlush(), cards.FourOfAKind(), cards.FullHouse(), cards.Flush(), cards.Straight(), cards.ThreeOfAKind(), cards.TwoPairs(), cards.OnePair(), cards.HighCard()]
+    @staticmethod
+    def get_rating(hand):
+        hands = []
+        hands.append(cards.StraightFlush(hand))
+        hands.append(cards.FourOfAKind(hand))
+        hands.append(cards.FullHouse(hand))
+        hands.append(cards.Flush(hand))
+        hands.append(cards.Straight(hand))
+        hands.append(cards.ThreeOfAKind(hand))
+        hands.append(cards.TwoPairs(hand))
+        hands.append(cards.OnePair(hand))
+        hands.append(cards.HighCard(hand))
 
-        for h in hands:
-            if h.is_match(hand):
-                print h
-                return h.get_rating(hand)
+        for hand in hands:
+            if hand.is_match():
+                return hand.get_rating()
 
-    def score_hands(self, player_hands):
+    @staticmethod
+    def score_hands(player_hands):
         scored = []
         for (player, hand) in player_hands:
-            rating = Scorer().get_rating(hand)
+            rating = Scorer.get_rating(hand)
             scored.append((player, hand, rating))
 
         return scored
 
-    def rank_hands(self, player_hands):
+    @staticmethod
+    def rank_hands(player_hands):
         for i in range(5, -1, -1):
             player_hands.sort(key=lambda (p, h, r): r[i], reverse=True)
 
@@ -44,5 +55,5 @@ class Scorer:
 
     @staticmethod
     def get_leaderboard(player_hands):
-        scored_hands = Scorer().score_hands(player_hands)
-        return Scorer().rank_hands(player_hands)
+        scored_hands = Scorer.score_hands(player_hands)
+        return Scorer.rank_hands(player_hands)
