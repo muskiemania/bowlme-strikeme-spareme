@@ -1,0 +1,21 @@
+game_id : counter(int)
+
+
+game_[game_id]_info : hash
+          host: [name of host],
+          host_id: [id of host]
+          status: [0, 1, 2]
+
+game_[game_id]_deck : list
+game_[game_id]_discard : list
+
+game_[game_id]_players : hash
+          name: [name of player]
+game_[game_id]_player_statuses: hash
+          status: [status of player]
+          
+game_[game_id]_hands_[player_id]: list [cards]
+
+game_last_updated : hash
+          [game_id]_updated: timestamp
+          [game_id]_status: [0, 1, 2]
