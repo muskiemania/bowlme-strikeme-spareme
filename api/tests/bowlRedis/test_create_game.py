@@ -35,14 +35,14 @@ class Test_RedisCreateGame:
         assert game_info_exists
         assert game_info['host_name'] == 'Justin'
         assert 'host_id' in game_info.keys()
-        #assert game_info['status'] == GameStatus.CREATED
+        assert game_info['status'] == str(GameStatus.CREATED.value)
 
         game_last_updated_exists = pipe.exists('game-last-updated').execute()[0]
         game_last_updated_info = pipe.hgetall('game-last-updated').execute()[0]
 
         assert game_last_updated_exists
         assert game_last_updated_info['g%s-updated' % game.game_id] == str(game.last_updated)
-        #assert game_last_updated_info['g%s-status' % game.game_id] == game.game_status
+        assert game_last_updated_info['g%s-status' % game.game_id] == str(game.game_status.value)
 
         player_exists = pipe.exists('game-%s-players' % game.game_id).execute()[0]
         player_name = pipe.hgetall('game-%s-players' % game.game_id).execute()[0]
@@ -56,4 +56,4 @@ class Test_RedisCreateGame:
 
         assert player_status_exists
         assert host_id in player_statuses.keys()
-        #assert player_statuses[host_id] == entities.PlayerStatus.JOINED
+        assert player_statuses[host_id] == str(PlayerStatus.JOINED.value)

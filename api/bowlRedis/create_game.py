@@ -15,12 +15,12 @@ class CreateGame:
         game.game_status = GameStatus.CREATED
         
         info = {}
-        info['status'] = game.game_status
+        info['status'] = game.game_status.value
         info['host_name'] = self.host_player_name
 
         last_updated = {}
         last_updated['g%s-updated' % game_id] = game.last_updated
-        last_updated['g%s-status' % game_id] = game.game_status
+        last_updated['g%s-status' % game_id] = game.game_status.value
 
         pipe = self.redis.pipeline()
         pipe.hmset('game-%s-info' % game_id, info)

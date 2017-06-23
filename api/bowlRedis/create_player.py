@@ -14,7 +14,7 @@ class CreatePlayer(object):
         players[self.player.player_id] = self.player.player_name
 
         statuses = {}
-        statuses[self.player.player_id] = self.player.player_status
+        statuses[self.player.player_id] = str(self.player.player_status.value)
 
         pipe = self.redis.pipeline()
         pipe.hmset('game-%s-players' % game_id, players)
