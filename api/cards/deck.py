@@ -6,7 +6,7 @@ class Deck(object):
 
     def __init__(self, cards=None):
         if cards is None:
-            self.cards = Deck.generate_deck()
+            self.cards = Deck.generate_deck().cards
         else:
             self.cards = cards
 
@@ -18,7 +18,7 @@ class Deck(object):
         suits = ['C', 'S', 'H', 'D']
 
         pairs = itertools.product(cards, suits)
-        deck = [Card(card, suit) for (card, suit) in pairs]
+        deck = Deck(cards=[Card(card, suit) for (card, suit) in pairs])
         return deck
 
     @staticmethod
@@ -36,5 +36,8 @@ class Deck(object):
         self.cards = Deck.shuffle_cards(self.cards)
         return
 
-    def get_deck(self):
-        return self.cards
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+
+        return self.cards == other.cards
