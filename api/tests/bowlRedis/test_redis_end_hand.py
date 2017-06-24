@@ -4,12 +4,12 @@ import cards
 
 class Test_RedisEndHand:
 
-    def test_endHandConstructor(self):
+    def endHandConstructor(self):
         eh = bowlRedis.EndHand()
         assert eh.game_id == None
         assert eh.player_id == None
         
-    def test_endHandInit(self):
+    def endHandInit(self):
         eh = game.EndHand('1')
         e = eh.end('2')
         r = bowlRedis.EndHand()
@@ -18,7 +18,7 @@ class Test_RedisEndHand:
         assert e.game_id == r.game_id
         assert e.player_id == r.player_id
         
-    def test_endHandExec(self):
+    def endHandExec(self):
         cg = game.CreateGame()
         g = cg.create('justin','keys')
         r = bowlRedis.CreateGame()
@@ -38,7 +38,7 @@ class Test_RedisEndHand:
         
         assert r.execute() == True
 
-    def test_endHandGet(self):
+    def endHandGet(self):
         cg = game.CreateGame()
         g = cg.create('justin','keys')
         r = bowlRedis.CreateGame()

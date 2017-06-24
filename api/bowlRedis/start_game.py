@@ -38,7 +38,7 @@ class StartGame:
         info = {}
         info['status'] = game.status.value
         pipe.hmset('game-%s-info' % self.game_id, info)
-        pipe.rpush('game-%s-deck' % self.game_id, *Deck.show_cards(game.deck.get_deck()))
+        pipe.rpush('game-%s-deck' % self.game_id, *Deck.show_cards(game.deck.cards))
 
         updated = {}
         updated['%s-updated' % self.game_id] = game.last_updated

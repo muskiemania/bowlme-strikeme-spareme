@@ -4,12 +4,12 @@ import cards
 
 class Test_RedisJoinGame:
 
-    def test_joinGameConstructor(self):
+    def joinGameConstructor(self):
         r = bowlRedis.JoinGame()
         assert r.game_id == None
         assert r.player == None
         
-    def test_joinGameInit(self):
+    def joinGameInit(self):
         jg = game.JoinGame('1')
         j = jg.join('player two')
         r = bowlRedis.JoinGame()
@@ -18,7 +18,7 @@ class Test_RedisJoinGame:
         assert j.game_id == r.game_id
         assert j.player == r.player
         
-    def test_createGameExec(self):
+    def createGameExec(self):
         jg = game.JoinGame('1')
         j = jg.join('player two')
         r = bowlRedis.JoinGame()
@@ -26,7 +26,7 @@ class Test_RedisJoinGame:
         
         assert r.execute() == True
 
-    def test_joinGameGet(self):
+    def joinGameGet(self):
         jg = game.JoinGame('1')
         j = jg.join('player two')
         r = bowlRedis.JoinGame()

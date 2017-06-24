@@ -4,12 +4,12 @@ import cards
 
 class Test_RedisStartGame:
 
-    def test_startGameConstructor(self):
+    def startGameConstructor(self):
         sg = bowlRedis.StartGame()
         assert sg.game_id == None
         assert sg.player_id == None
         
-    def test_joinStartInit(self):
+    def joinStartInit(self):
         sg = game.StartGame('1')
         s = sg.start('2')
         r = bowlRedis.StartGame()
@@ -18,7 +18,7 @@ class Test_RedisStartGame:
         assert s.game_id == r.game_id
         assert s.player_id == r.player_id
         
-    def test_startGameExecHost(self):
+    def startGameExecHost(self):
         cg = game.CreateGame()
         g = cg.create('justin','keys')
         r = bowlRedis.CreateGame()
@@ -33,7 +33,7 @@ class Test_RedisStartGame:
         
         assert r.execute() == True
 
-    def test_startGameExecNonHost(self):
+    def startGameExecNonHost(self):
         cg = game.CreateGame()
         g = cg.create('justin','keys')
         r = bowlRedis.CreateGame()
@@ -48,7 +48,7 @@ class Test_RedisStartGame:
         
         assert r.execute() == False
 
-    def test_startGameGetHostSuccess(self):
+    def startGameGetHostSuccess(self):
         cg = game.CreateGame()
         g = cg.create('justin','keys')
         r = bowlRedis.CreateGame()
@@ -70,7 +70,7 @@ class Test_RedisStartGame:
 
         assert len(filtered) == 0
 
-    def test_startGameGetNonHostFailure(self):
+    def startGameGetNonHostFailure(self):
         cg = game.CreateGame()
         g = cg.create('justin','keys')
         r = bowlRedis.CreateGame()
