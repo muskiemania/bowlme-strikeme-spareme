@@ -1,36 +1,36 @@
 import redis
-from create_player import CreatePlayer
-from entities import Game, GameStatus, Player, PlayerStatus
+from entities import Game, GameStatus, Player
+from . import RedisKeys, CreatePlayer
 
-class CreateGame:
-   
+class CreateGame(object):
     def __init__(self, host_player_name):
         self.redis = redis.StrictRedis()
         self.host_player_name = host_player_name
 
     def execute(self):
-
         game_id = self.__get_new_game_id()
         game = Game(game_id, self.host_player_name)
         game.game_status = GameStatus.CREATED
-        
+
+        key_info = RedisKeys(game_id)
+
         info = {}
         info['status'] = game.game_status.value
         info['host_name'] = self.host_player_name
 
         last_updated = {}
-        last_updated['g%s-updated' % game_id] = game.last_updated
-        last_updated['g%s-status' % game_id] = game.game_status.value
+        last_updated[key_info.game_last_updated_key()] = game.last_updated
+        last_updated[key_info.game_last_updated_status_key()] = game.game_status.value
 
         pipe = self.redis.pipeline()
-        pipe.hmset('game-%s-info' % game_id, info)
-        pipe.hmset('game-last-updated', last_updated)
+        pipe.hmset(key_info.game_info(), info)
+        pipe.hmset(key_info.game_last_updated(), last_updated)
         pipe.execute()
 
         player = Player(self.host_player_name, game.game_id)
 
         info['host_id'] = player.player_id
-        pipe.hmset('game-%s-info' % game_id, info)
+        pipe.hmset(key_info.game_info(), info)
         pipe.execute()
 
         CreatePlayer(player).execute(game.game_id)
@@ -40,8 +40,9 @@ class CreateGame:
         return game
 
     def __get_new_game_id(self):
+        key_info = RedisKeys()
         pipe = self.redis.pipeline()
-        pipe.incr('game-id-counter', 1)
+        pipe.incr(key_info.game_id_counter(), 1)
         game_id = pipe.execute()
         if len(game_id) == 1:
             return game_id[0]

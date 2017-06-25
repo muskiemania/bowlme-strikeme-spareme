@@ -1,11 +1,10 @@
+import datetime
 import redis
 from cards import Deck
-import datetime
 from entities import Game, GameStatus
 
-class StartGame:
+class StartGame(object):
 
-    
     def __init__(self, game_id):
         self.redis = redis.StrictRedis()
         self.game_id = game_id
@@ -34,7 +33,7 @@ class StartGame:
         game.last_updated = datetime.datetime.now()
         game.deck = Deck.generate_deck()
         game.deck.shuffle_deck()
-        
+
         info = {}
         info['status'] = game.status.value
         pipe.hmset('game-%s-info' % self.game_id, info)
@@ -47,4 +46,3 @@ class StartGame:
 
         pipe.execute()
         return game
-        
