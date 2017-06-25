@@ -21,21 +21,21 @@ class DrawCards(object):
             pipe.execute()
 
             pipe.llen(self.deck_key)
-            deck_size = pipe.execute()
+            [deck_size] = pipe.execute()
 
             if deck_size == 1:
-                self.__shuffle_deck()
+                self.__shuffle(self.discard_key, self.deck_key)
 
             number_of_cards = number_of_cards - 1
 
         return
 
-    def __shuffle_deck(self):
+    def __shuffle(self, source, destination):
         pipe = self.redis.pipeline()
-        pipe.lrange(self.discard_key, 0, -1)
-        discarded_cards = pipe.execute()[0]
-        shuffled_cards = Deck.shuffle_cards([Card(x) for x in discarded_cards])
-        for card in shuffled_cards:
-            pipe.lpush(self.deck_key, card)
-        pipe.ltrim(self.discard_key, -1, 0)
+        pipe.lrange(source, 0, -1)
+        source_cards = pipe.execute()[0]
+        shuffled_source = Deck.shuffle_cards(source_cards)
+        for card in shuffled_source:
+            pipe.lpush(destination, card)
+        pipe.ltrim(source, -1, 0)
         pipe.execute()
