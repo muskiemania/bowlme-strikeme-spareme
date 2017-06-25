@@ -1,7 +1,5 @@
-import redis
 import datetime
 from enum import Enum
-import cards
 
 class Game(object):
     def __init__(self, game_id, host_player_name):

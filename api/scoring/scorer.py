@@ -1,22 +1,22 @@
 import cards
 
-class Scorer:
+class Scorer(object):
 
     def __init__(self):
         pass
 
     @staticmethod
-    def get_rating(hand):
+    def get_rating(poker_hand):
         hands = []
-        hands.append(cards.StraightFlush(hand))
-        hands.append(cards.FourOfAKind(hand))
-        hands.append(cards.FullHouse(hand))
-        hands.append(cards.Flush(hand))
-        hands.append(cards.Straight(hand))
-        hands.append(cards.ThreeOfAKind(hand))
-        hands.append(cards.TwoPairs(hand))
-        hands.append(cards.OnePair(hand))
-        hands.append(cards.HighCard(hand))
+        hands.append(cards.StraightFlush(poker_hand))
+        hands.append(cards.FourOfAKind(poker_hand))
+        hands.append(cards.FullHouse(poker_hand))
+        hands.append(cards.Flush(poker_hand))
+        hands.append(cards.Straight(poker_hand))
+        hands.append(cards.ThreeOfAKind(poker_hand))
+        hands.append(cards.TwoPairs(poker_hand))
+        hands.append(cards.OnePair(poker_hand))
+        hands.append(cards.HighCard(poker_hand))
 
         for hand in hands:
             if hand.is_match():
@@ -33,13 +33,13 @@ class Scorer:
 
     @staticmethod
     def rank_hands(player_hands):
-        for i in range(5, -1, -1):
-            player_hands.sort(key=lambda (p, h, r): r[i], reverse=True)
+        for item in range(5, -1, -1):
+            player_hands.sort(key=lambda (p, h, r): r[item], reverse=True)
 
         ranked = []
         index = 0
         current_rank = 1
-        
+
         for (player, hand, score) in player_hands:
             if index == 0:
                 ranked.append((player, hand, score, current_rank))
@@ -52,8 +52,3 @@ class Scorer:
                 index += 1
 
         return ranked
-
-    @staticmethod
-    def get_leaderboard(player_hands):
-        scored_hands = Scorer.score_hands(player_hands)
-        return Scorer.rank_hands(player_hands)

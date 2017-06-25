@@ -45,8 +45,7 @@ class CreateGame(object):
         return CreateGame(game_id, host, players, deck, discard, status)
 
     def execute(self):
-        redis = bowl_redis.CreateGame()
-        redis.init(self)
-
-        if redis.execute():
+        create_game = bowl_redis.CreateGame()
+        
+        if create_game.execute():
             return self.game_id
