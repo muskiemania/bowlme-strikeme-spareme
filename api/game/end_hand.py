@@ -1,4 +1,4 @@
-import bowlRedis
+import bowl_redis
 
 class EndHand(object):
 
@@ -10,7 +10,7 @@ class EndHand(object):
         return EndHand(game_id=self.game_id, player_id=player_id)
 
     def execute(self):
-        redis = bowlRedis.end_hand()
+        redis = bowl_redis.end_hand()
         redis.init(self)
 
         if redis.execute():

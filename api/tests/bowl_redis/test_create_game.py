@@ -1,12 +1,12 @@
 from entities import GameStatus, PlayerStatus
-import bowlRedis
+import bowl_redis
 import redis
 
 class Test_RedisCreateGame:
 
     def test_create_game_constructor(self):
         host_player_name = 'Justin'
-        create_game = bowlRedis.CreateGame(host_player_name)
+        create_game = bowl_redis.CreateGame(host_player_name)
         assert create_game.host_player_name == host_player_name
         
     def test_create_game_get_new_game_id(self):
@@ -15,7 +15,7 @@ class Test_RedisCreateGame:
         r.flushall()
         pipe.execute()
 
-        create_game = bowlRedis.CreateGame('Justin')
+        create_game = bowl_redis.CreateGame('Justin')
 
         assert create_game._CreateGame__get_new_game_id() == 1
         assert create_game._CreateGame__get_new_game_id() == 2
@@ -26,10 +26,10 @@ class Test_RedisCreateGame:
         r.flushall()
         pipe.execute()
 
-        create_game = bowlRedis.CreateGame('Justin')
+        create_game = bowl_redis.CreateGame('Justin')
         game = create_game.execute()
 
-        key_info = bowlRedis.RedisKeys(game.game_id)
+        key_info = bowl_redis.RedisKeys(game.game_id)
         
         game_info_exists = pipe.exists(key_info.game_info()).execute()[0]
         game_info = pipe.hgetall(key_info.game_info()).execute()[0]

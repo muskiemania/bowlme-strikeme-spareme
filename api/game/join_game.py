@@ -1,5 +1,5 @@
 from game import CreatePlayer
-import bowlRedis
+import bowl_redis
 
 class JoinGame(object):
 
@@ -13,7 +13,7 @@ class JoinGame(object):
         return JoinGame(game_id=self.game_id, player=player)
 
     def execute(self):
-        redis = bowlRedis.join_game()
+        redis = bowl_redis.join_game()
         redis.init(self)
 
         if redis.execute():

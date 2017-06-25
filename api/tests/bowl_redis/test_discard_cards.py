@@ -1,5 +1,5 @@
 from entities import GameStatus, PlayerStatus
-import bowlRedis
+import bowl_redis
 import redis
 
 class Test_RedisDiscardCards:
@@ -7,16 +7,16 @@ class Test_RedisDiscardCards:
     def test_draw_cards_constructor(self):
         game_id = 100
         player_id = 'asdfqwerty'
-        draw_cards = bowlRedis.DrawCards(game_id, player_id)
+        draw_cards = bowl_redis.DrawCards(game_id, player_id)
 
         assert draw_cards.game_id == game_id
         assert draw_cards.player_id == player_id
 
     def setup_game(self):
-        create_game = bowlRedis.CreateGame('Justin')
+        create_game = bowl_redis.CreateGame('Justin')
         game = create_game.execute()
 
-        start_game = bowlRedis.StartGame(game.game_id)
+        start_game = bowl_redis.StartGame(game.game_id)
         host_player_id = game.players[0].player_id
         start_game.execute(host_player_id)
 
@@ -43,14 +43,14 @@ class Test_RedisDiscardCards:
         pipe.execute()
 
         (game_id, host_player_id) = self.setup_game()
-        key_info = bowlRedis.RedisKeys(game_id, host_player_id)
+        key_info = bowl_redis.RedisKeys(game_id, host_player_id)
 
         test_deck = ['AS', 'KS', '3S', '5S']
         test_discard = ['7C', '3C', '2C']
         test_hand = ['7H', '8H', '2H', 'TH', 'JH', '9H']
         self.setup_deck_discard_and_hand(key_info, test_deck, test_discard, test_hand)
 
-        discard_cards = bowlRedis.DiscardCards(game_id, host_player_id)
+        discard_cards = bowl_redis.DiscardCards(game_id, host_player_id)
         discard_cards.execute(['2H'])
 
         pipe.lrange(key_info.game_deck(), 0, -1)
@@ -72,14 +72,14 @@ class Test_RedisDiscardCards:
         pipe.execute()
 
         (game_id, host_player_id) = self.setup_game()
-        key_info = bowlRedis.RedisKeys(game_id, host_player_id)
+        key_info = bowl_redis.RedisKeys(game_id, host_player_id)
 
         test_deck = ['AS', 'KS', '3S', '5S']
         test_discard = ['7C', '3C', '2C']
         test_hand = ['7H', '8H', '2H', 'TH', 'JH', '9H', 'AH']
         self.setup_deck_discard_and_hand(key_info, test_deck, test_discard, test_hand)
 
-        discard_cards = bowlRedis.DiscardCards(game_id, host_player_id)
+        discard_cards = bowl_redis.DiscardCards(game_id, host_player_id)
         discard_cards.execute(['2H', 'AH'])
 
         pipe.lrange(key_info.game_deck(), 0, -1)
@@ -102,14 +102,14 @@ class Test_RedisDiscardCards:
         pipe.execute()
 
         (game_id, host_player_id) = self.setup_game()
-        key_info = bowlRedis.RedisKeys(game_id, host_player_id)
+        key_info = bowl_redis.RedisKeys(game_id, host_player_id)
 
         test_deck = ['AS', 'KS', '3S', '5S']
         test_discard = ['7C', '3C', '2C']
         test_hand = ['7H', '8H', '2H', 'TH', 'JH', '9H']
         self.setup_deck_discard_and_hand(key_info, test_deck, test_discard, test_hand)
 
-        discard_cards = bowlRedis.DiscardCards(game_id, host_player_id)
+        discard_cards = bowl_redis.DiscardCards(game_id, host_player_id)
         discard_cards.execute(['3H'])
 
         pipe.lrange(key_info.game_deck(), 0, -1)
@@ -129,14 +129,14 @@ class Test_RedisDiscardCards:
         pipe.execute()
 
         (game_id, host_player_id) = self.setup_game()
-        key_info = bowlRedis.RedisKeys(game_id, host_player_id)
+        key_info = bowl_redis.RedisKeys(game_id, host_player_id)
 
         test_deck = ['AS', 'KS', '3S', '5S']
         test_discard = ['7C', '3C', '2C']
         test_hand = ['7H', '8H', '2H', 'TH', 'JH', '9H', '3H']
         self.setup_deck_discard_and_hand(key_info, test_deck, test_discard, test_hand)
 
-        discard_cards = bowlRedis.DiscardCards(game_id, host_player_id)
+        discard_cards = bowl_redis.DiscardCards(game_id, host_player_id)
         discard_cards.execute(['2H', '4H'])
 
         pipe.lrange(key_info.game_deck(), 0, -1)

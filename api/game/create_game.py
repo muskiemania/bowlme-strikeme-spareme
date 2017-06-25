@@ -2,7 +2,7 @@ import hashlib
 import datetime
 from game import CreatePlayer
 import cards
-import bowlRedis
+import bowl_redis
 
 # 0. need a host
 # 1. need cards
@@ -45,7 +45,7 @@ class CreateGame(object):
         return CreateGame(game_id, host, players, deck, discard, status)
 
     def execute(self):
-        redis = bowlRedis.CreateGame()
+        redis = bowl_redis.CreateGame()
         redis.init(self)
 
         if redis.execute():

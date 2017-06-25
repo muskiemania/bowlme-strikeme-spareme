@@ -1,4 +1,4 @@
-import bowlRedis
+import bowl_redis
 
 class StartGame(object):
 
@@ -10,7 +10,7 @@ class StartGame(object):
         return StartGame(game_id=self.game_id, player_id=player_id)
 
     def execute(self):
-        redis = bowlRedis.start_game()
+        redis = bowl_redis.start_game()
         redis.init(self)
 
         if redis.execute():
