@@ -1,4 +1,7 @@
 import redis
+from . import RedisKeys
+from entities import GameStatus, PlayerStatus
+from scoring import Scorer
 
 class EndHand(object):
 
@@ -8,12 +11,22 @@ class EndHand(object):
         self.player_id = player_id
 
     def execute(self):
-
         pipe = self.redis.pipeline()
-        pipe.hmset('game-%s-status' % self.game_id, {'%s' % self.player_id: 0})
+
+        key_info = RedisKeys(self.game_id, self.player_id)
+
+        #first verify that game is started and player status is dealt
+        pipe.hget(key_info.game_info(), key_info.game_info_status_key())
+        pipe.hget(key_info.game_players_info(), key_info.game_players_status_key())
+        [game_status, player_status] = pipe.execute()
+
+        if game_status != GameStatus.STARTED.value:
+            return
+        if player_status != PlayerStatus.DEALT.value:
+            return
+
+        #then set player status to finished
+        pipe.hmset(key_info.game_players_info, key_info.game_players_status_key, PlayerStatus.FINISHED.value)
         pipe.execute()
 
-        return True
-
-    def get(self, key, field=None):
-        return self.redis.hget(key, field)
+        return

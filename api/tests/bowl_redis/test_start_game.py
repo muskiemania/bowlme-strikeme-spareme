@@ -9,8 +9,8 @@ class Test_RedisStartGame:
         game_id = 200
         start_game = bowl_redis.StartGame(game_id)
         assert start_game.game_id == game_id
-        
-    def test_create_game_execute_no_host(self):
+
+    def test_start_game_execute_no_host(self):
         r = redis.StrictRedis()
         pipe = r.pipeline()
         r.flushall()
@@ -21,7 +21,7 @@ class Test_RedisStartGame:
 
         pass
 
-    def test_create_game_execute_not_host(self):
+    def test_start_game_execute_not_host(self):
         r = redis.StrictRedis()
         pipe = r.pipeline()
         r.flushall()
@@ -35,7 +35,7 @@ class Test_RedisStartGame:
         
         pass
 
-    def test_create_game_execute_no_info(self):
+    def test_start_game_execute_no_info(self):
         r = redis.StrictRedis()
         pipe = r.pipeline()
         r.flushall()
@@ -52,7 +52,7 @@ class Test_RedisStartGame:
 
         pass
 
-    def test_create_game_execute_wrong_status(self):
+    def test_start_game_execute_wrong_status(self):
         r = redis.StrictRedis()
         pipe = r.pipeline()
         r.flushall()
@@ -63,12 +63,12 @@ class Test_RedisStartGame:
         game = create_game.execute()
 
         start_game = bowl_redis.StartGame(game.game_id)
-        #start_game.execute('asdfqwerty')
-        #start_game.execute('asdfqwerty')
+        #start_game.execute(game.players[0].player_id)
+        #start_game.execute(game.players[0].player_id)
 
         pass
 
-    def test_create_game_execute(self):
+    def test_start_game_execute(self):
         r = redis.StrictRedis()
         pipe = r.pipeline()
         r.flushall()
