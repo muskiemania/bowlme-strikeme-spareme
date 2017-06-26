@@ -11,6 +11,15 @@ class RedisKeys(object):
             raise Exception('no game_id')
         return 'game-%s-info' % self.game_id
 
+    def game_info_host_name_key(self):
+        return 'host_name'
+
+    def game_info_host_id_key(self):
+        return 'host_id'
+
+    def game_info_status_key(self):
+        return 'status'
+    
     def game_deck(self):
         if self.game_id is None:
             raise Exception('no game_id')
@@ -25,6 +34,31 @@ class RedisKeys(object):
         if self.game_id is None:
             raise Exception('no game_id')
         return 'game-%s-players' % self.game_id
+
+    def game_players_info(self):
+        if self.game_id is None:
+            raise Exception('no game_id')
+        return 'game-%s-players-info' % self.game_id
+
+    def game_players_name_key(self):
+        if self.player_id is None:
+            raise Exception('no player_id')
+        return '%s-name' % self.player_id
+
+    def game_players_status_key(self):
+        if self.player_id is None:
+            raise Exception('no player_id')
+        return '%s-status' % self.player_id
+
+    def game_players_score(self):
+        if self.player_id is None:
+            raise Exception('no player_id')
+        return '%s-score' % self.player_id
+
+    def game_players_rank(self):
+        if self.player_id is None:
+            raise Exception('no player_id')
+        return '%s-rank' % self.player_id
 
     def game_player_statuses(self):
         if self.game_id is None:

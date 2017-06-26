@@ -10,15 +10,15 @@ class CreatePlayer(object):
         self.player = player
 
     def execute(self, game_id):
-        players = {}
-        players[self.player.player_id] = self.player.player_name
+        key_info = RedisKeys(game_id, self.player.player_id)
 
-        statuses = {}
-        statuses[self.player.player_id] = str(self.player.player_status.value)
-
-        key_info = RedisKeys(game_id)
+        players_info = {} 
+        players_info[key_info.game_players_name_key()] = self.player.player_name
+        players_info[key_info.game_players_status_key()] = str(self.player.player_status.value)
 
         pipe = self.redis.pipeline()
-        pipe.hmset(key_info.game_players(), players)
-        pipe.hmset(key_info.game_player_statuses(), statuses)
+        pipe.rpush(key_info.game_players(), self.player.player_id)
+        pipe.hmset(key_info.game_players_info(), players_info)
         pipe.execute()
+
+        return self.player

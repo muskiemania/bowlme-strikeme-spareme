@@ -29,33 +29,42 @@ class Test_RedisCreateGame:
         create_game = bowl_redis.CreateGame('Justin')
         game = create_game.execute()
 
-        key_info = bowl_redis.RedisKeys(game.game_id)
-        
-        game_info_exists = pipe.exists(key_info.game_info()).execute()[0]
-        game_info = pipe.hgetall(key_info.game_info()).execute()[0]
+        key_info = bowl_redis.RedisKeys(game.game_id, game.players[0].player_id)
+
+        #verify game-[game_id]-info exists and is populated
+        pipe.exists(key_info.game_info())
+        pipe.hgetall(key_info.game_info())
+        [game_info_exists, game_info] = pipe.execute()
         
         assert game_info_exists
-        assert game_info['host_name'] == 'Justin'
-        assert 'host_id' in game_info.keys()
-        assert game_info['status'] == str(GameStatus.CREATED.value)
+        assert game_info[key_info.game_info_host_name_key()] == 'Justin'
+        assert key_info.game_info_host_id_key() in game_info.keys()
+        assert game_info[key_info.game_info_status_key()] == str(GameStatus.CREATED.value)
 
-        game_last_updated_exists = pipe.exists(key_info.game_last_updated()).execute()[0]
-        game_last_updated_info = pipe.hgetall(key_info.game_last_updated()).execute()[0]
-
+        #verify game_last_updated exists and is populated
+        pipe.exists(key_info.game_last_updated())
+        pipe.hgetall(key_info.game_last_updated())
+        [game_last_updated_exists, game_last_updated_info] = pipe.execute()
+        
         assert game_last_updated_exists
         assert game_last_updated_info[key_info.game_last_updated_key()] == str(game.last_updated)
         assert game_last_updated_info[key_info.game_last_updated_status_key()] == str(game.game_status.value)
 
-        player_exists = pipe.exists(key_info.game_players()).execute()[0]
-        player_name = pipe.hgetall(key_info.game_players()).execute()[0]
-        player_status_exists = pipe.exists(key_info.game_player_statuses()).execute()[0]
-        player_statuses = pipe.hgetall(key_info.game_player_statuses()).execute()[0]
+        #verify game-[game_id]-players exists and is populated
+        pipe.exists(key_info.game_players())
+        pipe.lrange(key_info.game_players(), 0, -1)
+        [players_exists, players_list] = pipe.execute()
 
-        assert player_exists
-        host_id = game_info['host_id']
-        assert host_id in player_name.keys()
-        assert player_name[host_id] == 'Justin'
+        assert players_exists
+        assert len(players_list) == 1
+        host_id = game_info[key_info.game_info_host_id_key()]
+        assert players_list[0] == host_id
 
-        assert player_status_exists
-        assert host_id in player_statuses.keys()
-        assert player_statuses[host_id] == str(PlayerStatus.JOINED.value)
+        #verify game-[game_id]-players-info exists and is populated
+        pipe.exists(key_info.game_players_info())
+        pipe.hgetall(key_info.game_players_info())
+        [player_info_exists, player_info] = pipe.execute()
+        
+        assert player_info_exists
+        assert player_info[key_info.game_players_name_key()] == 'Justin'
+        assert player_info[key_info.game_players_status_key()] == str(PlayerStatus.JOINED.value)

@@ -2,6 +2,7 @@ import datetime
 import redis
 from cards import Deck
 from entities import Game, GameStatus
+from .redis_keys import RedisKeys
 
 class StartGame(object):
 
@@ -10,10 +11,12 @@ class StartGame(object):
         self.game_id = game_id
 
     def execute(self, host_player_id):
+        key_info = RedisKeys(self.game_id)
+        
         #first check to see if player id host and that status is CREATED
         pipe = self.redis.pipeline()
-        pipe.hgetall('game-%s-info' % self.game_id)
-        info = pipe.execute()[0]
+        pipe.hgetall(key_info.game_info())
+        [info] = pipe.execute()
 
         if 'host_id' not in info:
             raise Exception('no host available for this game')
@@ -34,15 +37,15 @@ class StartGame(object):
         game.deck = Deck.generate_deck()
         game.deck.shuffle_deck()
 
-        info = {}
-        info['status'] = game.status.value
-        pipe.hmset('game-%s-info' % self.game_id, info)
-        pipe.rpush('game-%s-deck' % self.game_id, *Deck.show_cards(game.deck.cards))
+        game_info = {}
+        game_info[key_info.game_info_status_key()] = game.status.value
+        pipe.hmset(key_info.game_info(), info)
+        pipe.rpush(key_info.game_deck(), *Deck.show_cards(game.deck.cards))
 
-        updated = {}
-        updated['%s-updated' % self.game_id] = game.last_updated
-        updated['%s-status' % self.game_id] = game.status.value
-        pipe.hmset('game-last-updated', updated)
+        game_updated = {}
+        game_updated[key_info.game_last_updated_key()] = game.last_updated
+        game_updated[key_info.game_last_updated_status_key()] = game.status.value
+        pipe.hmset(key_info.game_last_updated, game_updated)
 
         pipe.execute()
         return game
