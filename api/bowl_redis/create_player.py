@@ -14,7 +14,7 @@ class CreatePlayer(object):
 
         players_info = {} 
         players_info[key_info.game_players_name_key()] = self.player.player_name
-        players_info[key_info.game_players_status_key()] = str(self.player.player_status.value)
+        players_info[key_info.game_players_status_key()] = self.player.player_status.value
 
         pipe = self.redis.pipeline()
         pipe.rpush(key_info.game_players(), self.player.player_id)

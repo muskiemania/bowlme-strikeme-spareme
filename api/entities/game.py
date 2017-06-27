@@ -14,7 +14,7 @@ class Game(object):
         self.players = []
 
 class GameStatus(Enum):
-    CREATED = 0
-    STARTED = 1
-    FINISHED = 2
-    ABANDONED = 3
+    CREATED = 1
+    STARTED = 2
+    FINISHED = 3
+    ABANDONED = 4

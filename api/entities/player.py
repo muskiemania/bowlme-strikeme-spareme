@@ -13,7 +13,8 @@ class Player(object):
         self.player_id = md5.hexdigest()
 
 class PlayerStatus(Enum):
-    JOINED = 0
-    DEALT = 1
-    FINISHED = 2
-    WINNER = 3
+    JOINED = 1
+    DEALT = 2
+    FINISHED = 3
+    WINNER = 4
+    ABANDONED = 5

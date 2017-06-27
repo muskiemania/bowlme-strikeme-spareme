@@ -20,13 +20,21 @@ class EndHand(object):
         pipe.hget(key_info.game_players_info(), key_info.game_players_status_key())
         [game_status, player_status] = pipe.execute()
 
-        if game_status != GameStatus.STARTED.value:
-            return
-        if player_status != PlayerStatus.DEALT.value:
-            return
+        print 'player-status: ' + PlayerStatus(player_status)
+        
+        if game_status not in [str(GameStatus.STARTED.value), str(GameStatus.CREATED.value)]:
+            raise Exception('cannot end a hand for a game that has not started')
+        if player_status not in [str(PlayerStatus.JOINED.value), str(PlayerStatus.DEALT.value)]:
+            raise Exception('cannot end a hand for this player')
+        
+        #game created                 --> player abandoned
+        #game started + player dealt  --> player finished
 
-        #then set player status to finished
-        pipe.hmset(key_info.game_players_info, key_info.game_players_status_key, PlayerStatus.FINISHED.value)
+        if game_status == str(GameStatus.CREATED.value):
+            pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), PlayerStatus.ABANDONED.value)
+        if game_status == str(GameStatus.STARTED.value) and player_status == str(PlayerStatus.DEALT):
+            pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), PlayerStatus.FINISHED.value)
+            
         pipe.execute()
 
         return

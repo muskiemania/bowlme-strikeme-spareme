@@ -2,6 +2,7 @@ from entities import GameStatus, PlayerStatus
 import bowl_redis
 import redis
 from cards import Deck
+import pytest
 
 class Test_RedisStartGame:
 
@@ -17,9 +18,11 @@ class Test_RedisStartGame:
         pipe.execute()
 
         start_game = bowl_redis.StartGame(200)
-        #game = create_game.execute('asdfqwerty')
-
-        pass
+        
+        with pytest.raises(Exception) as exception:
+            game = start_game.execute('asdfqwerty')
+    
+        assert exception.value.message == 'no host available for this game'
 
     def test_start_game_execute_not_host(self):
         r = redis.StrictRedis()
@@ -31,9 +34,11 @@ class Test_RedisStartGame:
         game = create_game.execute()
         
         start_game = bowl_redis.StartGame(game.game_id)
-        #game = start_game.execute('Sarah')
-        
-        pass
+
+        with pytest.raises(Exception) as exception:
+            game = start_game.execute('Sarah')
+
+        assert exception.value.message == 'only the host can start a game'
 
     def test_start_game_execute_no_info(self):
         r = redis.StrictRedis()
@@ -44,29 +49,33 @@ class Test_RedisStartGame:
         create_game = bowl_redis.CreateGame('Justin')
         game = create_game.execute()
 
-        pipe.delete('game-%s-info' % game.game_id)
+        key_info = bowl_redis.RedisKeys(game.game_id)
+        pipe.hdel(key_info.game_info(), key_info.game_info_status_key())
         pipe.execute()
 
         start_game = bowl_redis.StartGame(game.game_id)
-        #game = start_game.execute('Justin')
 
-        pass
+        with pytest.raises(Exception) as exception:
+            game = start_game.execute(game.players[0].player_id)
+
+        assert exception.value.message == 'status unknown - cannot start this game'
 
     def test_start_game_execute_wrong_status(self):
         r = redis.StrictRedis()
         pipe = r.pipeline()
         r.flushall()
         pipe.execute()
-        pass
 
         create_game = bowl_redis.CreateGame('Justin')
         game = create_game.execute()
 
         start_game = bowl_redis.StartGame(game.game_id)
-        #start_game.execute(game.players[0].player_id)
-        #start_game.execute(game.players[0].player_id)
+        start_game.execute(game.players[0].player_id)
 
-        pass
+        with pytest.raises(Exception) as exception:
+            start_game.execute(game.players[0].player_id)
+
+        assert exception.value.message == 'cannot start a game that is not in CREATED status'
 
     def test_start_game_execute(self):
         r = redis.StrictRedis()
