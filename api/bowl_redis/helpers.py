@@ -1,5 +1,6 @@
 from bowl_redis import RedisKeys
 from entities import GameStatus, PlayerStatus
+from cards import Deck
 import datetime
 
 class Helpers(object):
@@ -25,6 +26,11 @@ class Helpers(object):
         if isinstance(value, GameStatus) or isinstance(value, PlayerStatus):
             value = str(value.value)
 
+        print type(value)
+        print value
+        print type(result)
+        print result
+            
         return result == value
             
     #game-[game_id]-info: a hash of info specific to a single game
@@ -70,7 +76,7 @@ class Helpers(object):
         key_info = RedisKeys(game_id, player_id)
         return self.__value_exists_within_list(key_info.game_players(), player_id)
 
-    #game-[game_id]-plaers-info: a hash of specific info for all players in a single game
+    #game-[game_id]-players-info: a hash of specific info for all players in a single game
     def verify_player_info_exists(self, game_id, player_id):
         key_info = RedisKeys(game_id, player_id)
         return self.__key_exists(key_info.game_players_info())
@@ -107,8 +113,25 @@ class Helpers(object):
 
     def verify_game_updated_eq_in_game_last_updated(self, game_id, last_updated):
         key_info = RedisKeys(game_id)
+        print 'XXX'
         return self.__value_eq_within_hash(key_info.game_last_updated(), key_info.game_last_updated_key(), last_updated)
 
     def verify_game_status_eq_in_game_last_updated(self, game_id, status):
         key_info = RedisKeys(game_id)
         return self.__value_eq_within_hash(key_info.game_last_updated(), key_info.game_last_updated_status_key(), status)
+
+    #game-[game_id]-deck: a list of all cards
+    def verify_game_deck_exists(self, game_id):
+        key_info = RedisKeys(game_id)
+        return self.__key_exists(key_info.game_deck())
+
+    def verify_game_deck_is_valid(self, game_id, number_of_cards=None):
+        key_info = RedisKeys(game_id)
+        deck = Deck.generate_deck()
+        cards = Deck.show_cards(deck.cards)
+        for card in cards:
+            if not self.__value_exists_within_list(key_info.game_deck(), card):
+                return False
+        return True
+        
+        

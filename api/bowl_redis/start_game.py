@@ -27,8 +27,8 @@ class StartGame(object):
             raise Exception('only the host can start a game')
         
         #check to see if the game is in the proper state
-        if not helpers.verify_status_eq_in_game_info(self.game_id, GameStatus.CREATED.value):
-            raise Exception('cannot start a game that is not in CREATED state')
+        if not helpers.verify_status_eq_in_game_info(self.game_id, GameStatus.CREATED):
+            raise Exception('cannot start a game that is not in CREATED status')
 
         # Now Start The Game
         # 1 - set game status
@@ -40,18 +40,18 @@ class StartGame(object):
         [game_info] = pipe.execute()
 
         game = Game(self.game_id, game_info['host_name'])
-        game.status = GameStatus.STARTED
+        game.game_status = GameStatus.STARTED
         game.last_updated = datetime.datetime.now()
         game.deck = Deck.generate_deck()
         game.deck.shuffle_deck()
 
         #1
-        pipe.hmset(key_info.game_info(), key_info.game_info_status_key(), game.status.value)
+        pipe.hset(key_info.game_info(), key_info.game_info_status_key(), game.game_status.value)
         #2
         pipe.rpush(key_info.game_deck(), *Deck.show_cards(game.deck.cards))
         #3
-        pipe.hmset(key_info.game_last_updated(), key_info.game_last_updated_key, game.last_updated)
-        pipe.hmset(key_info.game_last_updated(), key_info.game_last_updated_status_key, game.staus.value)
+        pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_key(), game.last_updated)
+        pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_status_key(), game.game_status.value)
 
         pipe.execute()
 
