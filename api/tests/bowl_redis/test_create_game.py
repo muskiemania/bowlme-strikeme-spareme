@@ -47,8 +47,8 @@ class Test_RedisCreateGame:
         assert helpers.verify_game_updated_exists(game.game_id)
         assert helpers.verify_game_status_exists(game.game_id)
 
-        #assert helpers.verify_game_updated_eq_in_game_last_updated(game.game_id, game.last_updated)
-        #assert helpers.verify_game_status_eq_in_game_last_updated(game.game_id, game.game_status)
+        assert helpers.verify_game_updated_eq_in_game_last_updated(game.game_id, game.last_updated)
+        assert helpers.verify_game_status_eq_in_game_last_updated(game.game_id, game.game_status)
 
         #verify game-[game_id]-players exists and is populated
         assert helpers.verify_game_players_exists(game.game_id)
@@ -59,4 +59,4 @@ class Test_RedisCreateGame:
         assert helpers.verify_player_name_in_player_info(game.game_id, game.players[0].player_id)
         assert helpers.verify_player_status_in_player_info(game.game_id, game.players[0].player_id)
         assert helpers.verify_player_name_eq_in_player_info(game.game_id, game.players[0].player_id, game.players[0].player_name)
-        #assert helpers.verify_player_status_eq_in_player_info(game.game_id, game.players[0].player_id, game.players[0].game_status)
+        assert helpers.verify_player_status_eq_in_player_info(game.game_id, game.players[0].player_id, game.players[0].player_status)

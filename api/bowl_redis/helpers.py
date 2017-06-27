@@ -1,4 +1,6 @@
 from bowl_redis import RedisKeys
+from entities import GameStatus, PlayerStatus
+import datetime
 
 class Helpers(object):
     def __init__(self, pipe):
@@ -17,8 +19,14 @@ class Helpers(object):
     def __value_eq_within_hash(self, hash_key, lookup, value):
         self.pipe.hget(hash_key, lookup)
         [result] = self.pipe.execute()
+
+        if type(value) is datetime.datetime:
+            value = str(value)
+        if isinstance(value, GameStatus) or isinstance(value, PlayerStatus):
+            value = str(value.value)
+
         return result == value
-    
+            
     #game-[game_id]-info: a hash of info specific to a single game
     def verify_game_info_exists(self, game_id):
         key_info = RedisKeys(game_id)
@@ -46,7 +54,7 @@ class Helpers(object):
     
     def verify_status_eq_in_game_info(self, game_id, status):
         key_info = RedisKeys(game_id)
-        return self.__value_eq_within_hash(key_info.game_info(), key_info.game_info_status_key(), str(status.value))
+        return self.__value_eq_within_hash(key_info.game_info(), key_info.game_info_status_key(), status)
 
     def __value_exists_within_list(self, list_key, value):
         self.pipe.lrange(list_key, 0, -1)
@@ -81,7 +89,8 @@ class Helpers(object):
 
     def verify_player_status_eq_in_player_info(self, game_id, player_id, player_status):
         key_info = RedisKeys(game_id, player_id)
-        return self.__value_eq_within_hash(key_info.game_players_info(), key_info.game_players_status_key(), str(player_status.value))
+        print 'XXX'
+        return self.__value_eq_within_hash(key_info.game_players_info(), key_info.game_players_status_key(), player_status)
 
     #game_last_updated: a hash of all games, last updated and status
     def verify_game_last_updated_exists(self):
@@ -102,4 +111,4 @@ class Helpers(object):
 
     def verify_game_status_eq_in_game_last_updated(self, game_id, status):
         key_info = RedisKeys(game_id)
-        return self.__value_eq_within_hash(key_info.game_last_updated(), key_info.game_last_updated_status_key, str(status.value))
+        return self.__value_eq_within_hash(key_info.game_last_updated(), key_info.game_last_updated_status_key(), status)

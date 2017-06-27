@@ -11,6 +11,7 @@ class Player(object):
         md5.update(str(calendar.timegm(time.gmtime())))
         self.player_name = player_name
         self.player_id = md5.hexdigest()
+        self.player_status = None
 
 class PlayerStatus(Enum):
     JOINED = 1

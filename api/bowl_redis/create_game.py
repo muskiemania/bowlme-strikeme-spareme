@@ -14,23 +14,23 @@ class CreateGame(object):
 
         key_info = RedisKeys(game_id)
 
-        info = {}
-        info['status'] = game.game_status.value
-        info['host_name'] = self.host_player_name
-
         last_updated = {}
         last_updated[key_info.game_last_updated_key()] = game.last_updated
         last_updated[key_info.game_last_updated_status_key()] = game.game_status.value
 
         pipe = self.redis.pipeline()
-        pipe.hmset(key_info.game_info(), info)
-        pipe.hmset(key_info.game_last_updated(), last_updated)
+
+        pipe.hset(key_info.game_info(), key_info.game_info_host_name_key(), self.host_player_name)
+        pipe.hset(key_info.game_info(), key_info.game_info_status_key(), game.game_status.value)
+
+        pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_key(), game.last_updated)
+        pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_status_key(), game.game_status.value)
+
         pipe.execute()
 
         player = Player(self.host_player_name, game.game_id)
 
-        info['host_id'] = player.player_id
-        pipe.hmset(key_info.game_info(), info)
+        pipe.hset(key_info.game_info(), key_info.game_info_host_id_key(), player.player_id)
         pipe.execute()
 
         CreatePlayer(player).execute(game.game_id)
