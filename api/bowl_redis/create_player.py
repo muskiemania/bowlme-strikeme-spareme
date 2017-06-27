@@ -12,13 +12,10 @@ class CreatePlayer(object):
     def execute(self, game_id):
         key_info = RedisKeys(game_id, self.player.player_id)
 
-        players_info = {} 
-        players_info[key_info.game_players_name_key()] = self.player.player_name
-        players_info[key_info.game_players_status_key()] = self.player.player_status.value
-
         pipe = self.redis.pipeline()
         pipe.rpush(key_info.game_players(), self.player.player_id)
-        pipe.hmset(key_info.game_players_info(), players_info)
+        pipe.hset(key_info.game_players_info(), key_info.game_players_name_key(), self.player.player_name)
+        pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), self.player.player_status.value)
         pipe.execute()
 
         return self.player
