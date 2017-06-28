@@ -65,7 +65,8 @@ class StartGame(object):
         for player_id in players:
             key_info = RedisKeys(self.game_id, player_id)
             player_status = players_info[key_info.game_players_status_key()]
-            if player_status == PlayerStatus.JOINED.value:
+            
+            if player_status == str(PlayerStatus.JOINED.value):
                 pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), PlayerStatus.DEALT.value)
 
         pipe.execute()

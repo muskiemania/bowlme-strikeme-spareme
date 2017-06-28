@@ -1,5 +1,5 @@
 import redis
-from . import RedisKeys
+import bowl_redis
 from entities import GameStatus, PlayerStatus
 from scoring import Scorer
 
@@ -13,26 +13,32 @@ class EndHand(object):
     def execute(self):
         pipe = self.redis.pipeline()
 
-        key_info = RedisKeys(self.game_id, self.player_id)
+        key_info = bowl_redis.RedisKeys(self.game_id, self.player_id)
 
         #first verify that game is started and player status is dealt
-        pipe.hget(key_info.game_info(), key_info.game_info_status_key())
-        pipe.hget(key_info.game_players_info(), key_info.game_players_status_key())
-        [game_status, player_status] = pipe.execute()
+        helpers = bowl_redis.Helpers(pipe)
+        game_status_started = helpers.verify_status_eq_in_game_info(self.game_id, GameStatus.STARTED)
+        game_status_created = helpers.verify_status_eq_in_game_info(self.game_id, GameStatus.CREATED)
+        game_status_others = not game_status_started and not game_status_created
 
-        print 'player-status: ' + PlayerStatus(player_status)
-        
-        if game_status not in [str(GameStatus.STARTED.value), str(GameStatus.CREATED.value)]:
-            raise Exception('cannot end a hand for a game that has not started')
-        if player_status not in [str(PlayerStatus.JOINED.value), str(PlayerStatus.DEALT.value)]:
-            raise Exception('cannot end a hand for this player')
-        
-        #game created                 --> player abandoned
-        #game started + player dealt  --> player finished
+        if game_status_others:
+            raise Exception('cannot end a hand for a game that is not started or created')
 
-        if game_status == str(GameStatus.CREATED.value):
+        player_in_game = helpers.verify_player_id_in_game_players(self.game_id, self.player_id)
+
+        if not player_in_game:
+            raise Exception('cannot end a hand for a player that is not playing this game')
+
+        player_status_joined = helpers.verify_player_status_eq_in_player_info(self.game_id, self.player_id, PlayerStatus.JOINED)
+        player_status_dealt = helpers.verify_player_status_eq_in_player_info(self.game_id, self.player_id, PlayerStatus.DEALT)
+        player_status_others = not player_status_joined and not player_status_dealt
+
+        if player_status_others:
+            raise Exception('cannot end a hand for a player that is not joined or dealt')
+        
+        if game_status_created:
             pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), PlayerStatus.ABANDONED.value)
-        if game_status == str(GameStatus.STARTED.value) and player_status == str(PlayerStatus.DEALT):
+        if game_status_started:
             pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), PlayerStatus.FINISHED.value)
             
         pipe.execute()

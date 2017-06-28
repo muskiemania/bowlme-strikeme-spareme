@@ -31,22 +31,29 @@ class Test_RedisEndHand:
 
         create_game = bowl_redis.CreateGame('Justin')
         game = create_game.execute()
+        game_id = game.game_id
+        host_player_id = game.players[0].player_id
 
-        #verify game exists, player exists, player info exists
+        #verify game info exists, player exists, player info exists
         #verify player is in game
         #verify player info exists, player info has status and player info status is JOINED
-        helper = bowl_redis.Helpers(pipe)
-        assert helper.verify_game_exists(game.game_id)
-        assert helper.verify_player_exists(game.game_id, game.players[0].player_id)
-        assert helper.verify_player_info_exists(game.game_id, game.players[0].player_id)
-        assert helper.verify_player_status_in_player_info(game.game_id, game.players[0].player_id)
-        assert helper.verify_player_status_eq_in_player_info(game.game_id, game.players[0].player_id, PlayerStatus.JOINED)
+
+        helpers = bowl_redis.Helpers(pipe)
+        assert helpers.verify_game_info_exists(game_id)
+        assert helpers.verify_status_exists_in_game_info(game_id)
+
+        assert helpers.verify_game_players_exists(game_id)
+        assert helpers.verify_player_id_in_game_players(game_id, host_player_id)
+
+        assert helpers.verify_player_info_exists(game_id, host_player_id)
+        assert helpers.verify_player_status_in_player_info(game_id, host_player_id)
+        assert helpers.verify_player_status_eq_in_player_info(game_id, host_player_id, PlayerStatus.JOINED)
         
         #now end hand and verify output
-        end_hand = bowl_redis.EndHand(game.game_id, game.players[0].player_id)
+        end_hand = bowl_redis.EndHand(game_id, host_player_id)
         end_hand.execute()
 
-        assert helper.verify_player_status_eq_in_player_info(game.game_id, game.players[0].player_id, PlayerStatus.ABANDONED)
+        assert helpers.verify_player_status_eq_in_player_info(game_id, host_player_id, PlayerStatus.ABANDONED)
     
     def test_end_hand_after_started(self):
         r = redis.StrictRedis()
@@ -59,18 +66,22 @@ class Test_RedisEndHand:
         #verify game exists, player exists, player info exists
         #verify player is in game
         #verify player info exists, player info has status and player info status is JOINED
-        helper = bowl_redis.Helpers(pipe)
-        assert helper.verify_game_exists(game_id)
-        assert helper.verify_player_exists(game_id, host_player_id)
-        assert helper.verify_player_info_exists(game_id, host_player_id)
-        assert helper.verify_player_status_in_player_info(game_id, host_player_id)
-        assert helper.verify_player_status_eq_in_player_info(game_id, host_player_id, PlayerStatus.DEALT)
-        
+        helpers = bowl_redis.Helpers(pipe)
+        assert helpers.verify_game_info_exists(game_id)
+        assert helpers.verify_status_exists_in_game_info(game_id)
+
+        assert helpers.verify_game_players_exists(game_id)
+        assert helpers.verify_player_id_in_game_players(game_id, host_player_id)
+
+        assert helpers.verify_player_info_exists(game_id, host_player_id)
+        assert helpers.verify_player_status_in_player_info(game_id, host_player_id)
+        assert helpers.verify_player_status_eq_in_player_info(game_id, host_player_id, PlayerStatus.DEALT)
+
         #now end hand and verify output
         end_hand = bowl_redis.EndHand(game_id, host_player_id)
         end_hand.execute()
 
-        #assert helper.verify_player_status_eq_in_player_info(game_id, host_player_id, PlayerStatus.FINISHED)
+        assert helpers.verify_player_status_eq_in_player_info(game_id, host_player_id, PlayerStatus.FINISHED)
 
     def test_end_hand_after_abandoned(self):
         r = redis.StrictRedis()
@@ -78,25 +89,34 @@ class Test_RedisEndHand:
         pipe.flushall()
         pipe.execute()
 
-        (game_id, host_player_id) = self.setup_game()
+        create_game = bowl_redis.CreateGame('Justin')
+        game = create_game.execute()
+        game_id = game.game_id
+        host_player_id = game.players[0].player_id
         end_hand = bowl_redis.EndHand(game_id, host_player_id)
-
+        end_hand.execute()
+        
         #verify game exists, player exists, player info exists
         #verify player is in game
         #verify player info exists, player info has status and player info status is ABANDONED
-        helper = bowl_redis.Helpers(pipe)
-        assert helper.verify_game_exists(game_id)
-        assert helper.verify_player_exists(game_id, host_player_id)
-        assert helper.verify_player_info_exists(game_id, host_player_id)
-        assert helper.verify_player_status_in_player_info(game_id, host_player_id)
-        #assert helper.verify_player_status_eq_in_player_info(game_id, host_player_id, PlayerStatus.ABANDONED)
-        
+        helpers = bowl_redis.Helpers(pipe)
+
+        assert helpers.verify_game_info_exists(game_id)
+        assert helpers.verify_status_exists_in_game_info(game_id)
+
+        assert helpers.verify_game_players_exists(game_id)
+        assert helpers.verify_player_id_in_game_players(game_id, host_player_id)
+
+        assert helpers.verify_player_info_exists(game_id, host_player_id)
+        assert helpers.verify_player_status_in_player_info(game_id, host_player_id)
+        assert helpers.verify_player_status_eq_in_player_info(game_id, host_player_id, PlayerStatus.ABANDONED)
+                
         #now end hand again and verify output
         end_hand = bowl_redis.EndHand(game_id, host_player_id)
         with pytest.raises(Exception) as err:
             end_hand.execute()
 
-        assert err.value.message == 'cannot end a hand for this player'
+        assert err.value.message == 'cannot end a hand for a player that is not joined or dealt'
 
     def test_end_hand_after_finished(self):
         r = redis.StrictRedis()
@@ -105,23 +125,27 @@ class Test_RedisEndHand:
         pipe.execute()
 
         (game_id, host_player_id) = self.setup_game()
-        start_game = bowl_redis.StartGame(game_id)
-        game = start_game.execute(host_player_id)
         end_hand = bowl_redis.EndHand(game_id, host_player_id)
-
+        end_hand.execute()
+        
         #verify game exists, player exists, player info exists
         #verify player is in game
         #verify player info exists, player info has status and player info status is ABANDONED
-        helper = bowl_redis.Helpers(pipe)
-        assert helper.verify_game_exists(game_id)
-        assert helper.verify_player_exists(game_id, host_player_id)
-        assert helper.verify_player_info_exists(game_id, host_player_id)
-        assert helper.verify_player_status_in_player_info(game_id, host_player_id)
-        assert helper.verify_player_status_eq_in_player_info(game_id, host_player_id, PlayerStatus.FINISHED)
-        
+        helpers = bowl_redis.Helpers(pipe)
+
+        assert helpers.verify_game_info_exists(game_id)
+        assert helpers.verify_status_exists_in_game_info(game_id)
+
+        assert helpers.verify_game_players_exists(game_id)
+        assert helpers.verify_player_id_in_game_players(game_id, host_player_id)
+
+        assert helpers.verify_player_info_exists(game_id, host_player_id)
+        assert helpers.verify_player_status_in_player_info(game_id, host_player_id)
+        assert helpers.verify_player_status_eq_in_player_info(game_id, host_player_id, PlayerStatus.FINISHED)                
+
         #now end hand again and verify output
         end_hand = bowl_redis.EndHand(game_id, host_player_id)
         with pytest.raises(Exception) as err:
             end_hand.execute()
 
-        assert err.value.message == 'cannot end a hand for this player'
+        assert err.value.message == 'cannot end a hand for a player that is not joined or dealt'

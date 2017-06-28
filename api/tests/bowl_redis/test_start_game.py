@@ -105,10 +105,15 @@ class Test_RedisStartGame:
 
         create_game = bowl_redis.CreateGame('Justin')
         game = create_game.execute()
-        players = game.players
 
-        start_game = bowl_redis.StartGame(game.game_id)
-        game = start_game.execute(game.players[0].player_id)
+        game_id = game.game_id
+        player = game.players[0]
+        player_name = player.player_name
+        player_id = player.player_id
+
+        start_game = bowl_redis.StartGame(game_id)
+        game = start_game.execute(player_id)
+        last_updated = game.last_updated
         
         # 1 - verify game status
         # 2 - verify deck
@@ -117,19 +122,19 @@ class Test_RedisStartGame:
 
         helpers = bowl_redis.Helpers(pipe)
         #1
-        assert helpers.verify_game_info_exists(game.game_id)
+        assert helpers.verify_game_info_exists(game_id)
         #2
-        assert helpers.verify_game_deck_exists(game.game_id)
-        assert helpers.verify_game_deck_is_valid(game.game_id)
+        assert helpers.verify_game_deck_exists(game_id)
+        assert helpers.verify_game_deck_is_valid(game_id)
         #3
         assert helpers.verify_game_last_updated_exists()
-        assert helpers.verify_game_updated_exists(game.game_id)
-        assert helpers.verify_game_status_exists(game.game_id)
-        assert helpers.verify_game_updated_eq_in_game_last_updated(game.game_id, game.last_updated)
-        assert helpers.verify_game_status_eq_in_game_last_updated(game.game_id, game.game_status)
+        assert helpers.verify_game_updated_exists(game_id)
+        assert helpers.verify_game_status_exists(game_id)
+        assert helpers.verify_game_updated_eq_in_game_last_updated(game_id, last_updated)
+        assert helpers.verify_game_status_eq_in_game_last_updated(game_id, GameStatus.STARTED)
         #4
-        assert helpers.verify_player_info_exists(game.game_id, players[0].player_id)
-        assert helpers.verify_player_name_in_player_info(game.game_id, players[0].player_id)
-        assert helpers.verify_player_status_in_player_info(game.game_id, players[0].player_id)
-        assert helpers.verify_player_name_eq_in_player_info(game.game_id, players[0].player_id, players[0].player_name)
-        assert helpers.verify_player_status_eq_in_player_info(game.game_id, players[0].player_id, players[0].player_status)
+        assert helpers.verify_player_info_exists(game_id, player_id)
+        assert helpers.verify_player_name_in_player_info(game_id, player_id)
+        assert helpers.verify_player_status_in_player_info(game_id, player_id)
+        assert helpers.verify_player_name_eq_in_player_info(game_id, player_id, player_name)
+        assert helpers.verify_player_status_eq_in_player_info(game_id, player_id, PlayerStatus.DEALT)
