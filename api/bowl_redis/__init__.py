@@ -7,6 +7,8 @@ from .end_game import EndGame
 from .draw_cards import DrawCards
 from .discard_cards import DiscardCards
 from .helpers import Helpers
+
+from .get_game import GetGame
 #from joinGame import JoinGame
 #from startGame import StartGame
 #from endHand import EndHand

@@ -1,51 +1,29 @@
-import hashlib
-import datetime
-from game import CreatePlayer
-import cards
 import bowl_redis
-
-# 0. need a host
-# 1. need cards
-# 2. need to shuffle cards
-# 3. store data
-# 4. return unique game id
+import entities
 
 class CreateGame(object):
 
-    def __init__(self, game_id=0, host=None, players=None, deck=None, discard=None, status=0):
-        self.game_id = game_id
-        self.host = host
-        self.players = players
-        self.deck = deck
-        self.discard = discard
-        self.status = status
+    def __init__(self):
+        pass
 
-    def create_game_id(self, host_name=None, hash_key=datetime.datetime.now()):
-        md5 = hashlib.md5()
-        md5.update(host_name)
-        md5.update(hash_key)
-        return md5.hexdigest()
+    @staticmethod
+    def create(host_player_name):
+        create_game = bowl_redis.CreateGame(host_player_name)
+        game = create_game.execute()
 
-    def create(self, host_name=None, hash_key=None):
-        game_id = self.create_game_id(host_name, hash_key)
+        response = entities.APIGameResponse()
+        response.game_id = game.game_id
 
-        host_player = CreatePlayer(host_name, game_id)
-        host = host_player.player_id
-
-        players = {}
-        players[host] = host_player.__dict__
-
-        deck = cards.Deck()
-        deck.shuffle_deck()
-
-        discard = []
-
-        status = 0
-
-        return CreateGame(game_id, host, players, deck, discard, status)
-
-    def execute(self):
-        create_game = bowl_redis.CreateGame()
+        game_status = entities.APIGameStatus()
+        game_status.game_status_id = game.game_status.value
+        game_status.game_status_text = entities.GameStatus.text(game.game_status)
         
-        if create_game.execute():
-            return self.game_id
+        response.game_status = game_status
+        
+        response.last_updated = entities.APILastUpdated(game.last_updated)
+
+        player = game.players[0]
+        response_player = entities.APIPlayerBase(player.player_id, player.player_name)
+        response.player = response_player
+
+        return response

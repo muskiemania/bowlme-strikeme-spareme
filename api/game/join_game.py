@@ -1,20 +1,31 @@
-from game import CreatePlayer
 import bowl_redis
+import entities
 
 class JoinGame(object):
 
-    def __init__(self, game_id=0, player=None):
-        self.game_id = game_id
-        self.player = player
+    def __init__(self):
+        pass
 
-    def join(self, player_name=None):
-        player = CreatePlayer(player_name, self.game_id)
+    @staticmethod
+    def join(game_id, player_name=None):
+        player = entities.Player(player_name, game_id)
+        create_player = bowl_redis.CreatePlayer(player)
+        player = create_player.execute(game_id)
 
-        return JoinGame(game_id=self.game_id, player=player)
+        response = entities.APIGameResponse()
+        response.game_id = game_id
 
-    def execute(self):
-        redis = bowl_redis.join_game()
-        redis.init(self)
+        get_game = bowl_redis.GetGame(game_id)
+        game = get_game.get()
 
-        if redis.execute():
-            return self.player.player_id
+        game_status = entities.APIGameStatus()
+        game_status.game_status_id = game.game_status.value
+        game_status.game_status_text = entities.GameStatus.text(game.game_status)
+        response.game_status = game_status
+
+        response.last_updated = entities.APILastUpdated(game.last_updated)
+
+        response_player = entities.APIPlayerBase(player.player_id, player.player_name)
+        response.player = response_player
+
+        return response

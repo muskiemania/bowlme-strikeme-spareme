@@ -18,3 +18,21 @@ class GameStatus(Enum):
     STARTED = 2
     FINISHED = 3
     ABANDONED = 4
+
+    @classmethod
+    def text(cls, status):
+        t = {}
+        t[1] = 'created'
+        t[2] = 'started'
+        t[3] = 'finished'
+        t[4] = 'abandoned'
+        return t[status.value]
+
+    @classmethod
+    def enum(cls, status):
+        e = {}
+        e['1'] = GameStatus.CREATED
+        e['2'] = GameStatus.STARTED
+        e['3'] = GameStatus.FINISHED
+        e['4'] = GameStatus.ABANDONED
+        return e[status]

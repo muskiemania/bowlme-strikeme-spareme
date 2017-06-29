@@ -19,3 +19,13 @@ class PlayerStatus(Enum):
     FINISHED = 3
     WINNER = 4
     ABANDONED = 5
+
+    @classmethod
+    def text(cls, status):
+        t = {}
+        t[1] = 'joined'
+        t[2] = 'dealt'
+        t[3] = 'finished'
+        t[4] = 'winner'
+        t[5] = 'abandoned'
+        return t[status.value]
