@@ -26,10 +26,10 @@ class Helpers(object):
         if isinstance(value, GameStatus) or isinstance(value, PlayerStatus):
             value = str(value.value)
 
-        print type(value)
-        print value
-        print type(result)
-        print result
+        #print type(value)
+        #print value
+        #print type(result)
+        #print result
             
         return result == value
             
@@ -95,7 +95,6 @@ class Helpers(object):
 
     def verify_player_status_eq_in_player_info(self, game_id, player_id, player_status):
         key_info = RedisKeys(game_id, player_id)
-        print 'XXX'
         return self.__value_eq_within_hash(key_info.game_players_info(), key_info.game_players_status_key(), player_status)
 
     #game_last_updated: a hash of all games, last updated and status
