@@ -20,7 +20,7 @@ class APIGameResponse(object):
             j['player'] = self.player.json(dict_only=True)
 
         if self.players is not None:
-            j['players'] = self.players.json(dict_only=True)
+            j['players'] = [player.json(dict_only=True) for player in self.players]
 
         if self.is_host is not None:
             j['isHost'] = self.is_host
@@ -88,7 +88,7 @@ class APIPlayerStatus(object):
     
 class APIPlayer(APIPlayerBase):
     def __init__(self, player_id, player_name):
-        APIPlayerBase.__init__(player_id, player_name)
+        APIPlayerBase.__init__(self, player_id, player_name)
         self.player_status = None
         self.player_score = None
         self.player_rank = None
@@ -97,7 +97,7 @@ class APIPlayer(APIPlayerBase):
         j = {}
         j['playerId'] = self.player_id
         j['playerName'] = self.player_name
-        j['playerStatus'] = self.player_status.json()
+        j['playerStatus'] = self.player_status.json(dict_only)
         j['playerScore'] = self.player_score
         j['playerRank'] = self.player_rank
 

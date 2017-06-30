@@ -16,11 +16,13 @@ class GetGame(object):
         key_info = RedisKeys(self.game_id)
 
         pipe.hget(key_info.game_last_updated(), key_info.game_last_updated_key())
-        pipe.hget(key_info.game_last_updated(), key_info.game_last_updated_status_key())
+        pipe.hget(key_info.game_info(), key_info.game_info_status_key())
+        pipe.hget(key_info.game_info(), key_info.game_info_host_id_key())
         
-        [last_updated, game_status] = pipe.execute()
+        [last_updated, game_status, host_player_id] = pipe.execute()
 
         game.last_updated = parser.parse(last_updated)
         game.game_status = GameStatus.enum(game_status)
+        game.host_player_id = host_player_id
         
         return game
