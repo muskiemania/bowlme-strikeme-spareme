@@ -3,3 +3,4 @@ from .create_game_controller import CreateGameController
 from .join_game_controller import JoinGameController
 from .start_game_controller import StartGameController
 from .draw_cards_controller import DrawCardsController
+from .discard_cards_controller import DiscardCardsController

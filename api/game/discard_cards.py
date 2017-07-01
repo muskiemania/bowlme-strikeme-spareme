@@ -12,4 +12,4 @@ class DiscardCards(object):
         discard_cards = bowl_redis.DiscardCards(game_id, player_id)
         discard_cards.execute(cards)
 
-        return game.Game.get(game_id)
+        return game.Game.get(game_id, player_id)

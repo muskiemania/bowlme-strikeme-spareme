@@ -2,7 +2,7 @@ import cherrypy
 import json
 import game
 
-class StartGameController(object):
+class DiscardCardsController(object):
 
     def __init__(self):
         pass
@@ -17,7 +17,8 @@ class StartGameController(object):
 
     @cherrypy.expose
     @cherrypy.tools.json_in()
-    def start(self):
+    def discard(self):
         game_id = cherrypy.request.json['gameId']
-        host_player_id = cherrypy.request.json['hostPlayerId']
-        return game.StartGame.start(game_id, host_player_id).json()
+        player_id = cherrypy.request.json['playerId']
+        discard_cards = cherrypy.request.json['discardCards']
+        return game.DiscardCards.discard(game_id, player_id, discard_cards).json()
