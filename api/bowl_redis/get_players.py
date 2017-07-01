@@ -1,5 +1,6 @@
 import redis
 from entities import Player, PlayerStatus
+from cards import Card, Hand
 from . import RedisKeys
 
 class GetPlayers(object):
@@ -24,6 +25,11 @@ class GetPlayers(object):
             player_name = player_info[key_info.game_players_name_key()]
             player = Player(player_name, self.game_id, player_id)
             player.player_status = PlayerStatus.enum(player_info[key_info.game_players_status_key()])
+
+            pipe.lrange(key_info.game_player_hand(), 0, -1)
+            [cards] = pipe.execute()
+            player.hand = Hand([Card(key) for key in cards])
+            
             players.append(player)
         
         return players

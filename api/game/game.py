@@ -1,5 +1,7 @@
 import bowl_redis
 import entities
+import cards
+import scoring
 
 class Game(object):
 
@@ -31,8 +33,18 @@ class Game(object):
             player_status.player_status_id = player.player_status.value
             player_status.player_status_text = entities.PlayerStatus.text(player.player_status)
             api_player.player_status = player_status
+
+            scorer = scoring.Scorer(game.game_status, player.player_status, player.hand)
+            
+            api_player.hand_rating = entities.APIHandRating(scorer.get_rating(), show_cards=game.game_status==entities.GameStatus.FINISHED)
+                            
             api_players.append(api_player)
 
+            if player.player_id == player_id:
+                response.cards = [entities.APICard(card) for card in player.hand.cards]
+
         response.players = api_players
+
+        
         
         return response

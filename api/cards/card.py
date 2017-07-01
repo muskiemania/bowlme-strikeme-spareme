@@ -11,9 +11,11 @@ class Card(object):
             if card:
                 self.card = card
                 self.strength = self.__get_strength()
-
+                self.card_display = self.__get_card_display()
+                
             if suit:
                 self.suit = suit
+                self.suit_name = self.__get_suit_display()
 
     def __get_card_and_suit(self, card, suit=None):
 
@@ -45,6 +47,17 @@ class Card(object):
 
         return 0
 
+    def __get_card_display(self):
+        return str(self.card) if self.card is not 'T' else '10'
+        
+    def __get_suit_display(self):
+        suits = {}
+        suits['C'] = 'clubs'
+        suits['D'] = 'diamonds'
+        suits['H'] = 'hearts'
+        suits['S'] = 'spades'
+        return suits[self.suit]
+        
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return (self.card, self.suit) == (other.card, other.suit)

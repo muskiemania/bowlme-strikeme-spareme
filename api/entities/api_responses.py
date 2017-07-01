@@ -26,7 +26,7 @@ class APIGameResponse(object):
             j['isHost'] = self.is_host
 
         if self.cards is not None:
-            j['cards'] = self.cards.json(dict_only=True)
+            j['cards'] = [card.json(dict_only=True) for card in self.cards]
 
         return json.dumps(j)
 
@@ -90,7 +90,6 @@ class APIPlayer(APIPlayerBase):
     def __init__(self, player_id, player_name):
         APIPlayerBase.__init__(self, player_id, player_name)
         self.player_status = None
-        self.player_score = None
         self.player_rank = None
 
     def json(self, dict_only=False):
@@ -98,7 +97,43 @@ class APIPlayer(APIPlayerBase):
         j['playerId'] = self.player_id
         j['playerName'] = self.player_name
         j['playerStatus'] = self.player_status.json(dict_only)
-        j['playerScore'] = self.player_score
+
+        rating = self.hand_rating.json(dict_only)
+        if rating:
+            j['handRating'] = rating
+        
         j['playerRank'] = self.player_rank
 
         return dict_only and j or json.dumps(j)
+
+class APICard(object):
+    def __init__(self, card):
+        self.card = { 'card': card.card, 'display': card.card_display }
+        self.suit = { 'suit': card.suit, 'suitName': card.suit_name }
+
+    def json(self, dict_only=False):
+        card = {}
+        card['card'] = self.card
+        card['suit'] = self.suit
+        return dict_only and card or json.dumps(card)
+
+class APIHandRating(object):
+    def __init__(self, rating, show_cards):
+        self.rating = rating
+        self.show_cards = show_cards
+
+    def get_null_rating(self):
+        rating = list(self.rating)[1:]
+        return ['X' for card in rating if card is not 0]
+        
+    def json(self, dict_only=False):
+
+        if not self.show_cards:
+            null_rating = self.get_null_rating()
+            return dict_only and null_rating or json.dumps(null_rating)
+        
+        rating = {}
+        rating['handType'] = 'TODO: rating here'
+        rating['cards'] = list(self.rating)[1:]
+        return dict_only and rating or json.dumps(rating)
+        

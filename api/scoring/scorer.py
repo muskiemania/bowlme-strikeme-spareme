@@ -1,12 +1,18 @@
 import cards
+from entities import GameStatus
 
 class Scorer(object):
 
-    def __init__(self):
-        pass
+    def __init__(self, game_status, player_status, player_hand):
+        self.game_status = game_status
+        self.player_status = player_status
+        self.poker_hand = cards.PokerHand(player_hand)
 
-    @staticmethod
-    def get_rating(poker_hand):
+    def get_rating(self):
+        if self.game_status is not GameStatus.FINISHED:
+            hand = cards.HighCard(self.poker_hand)
+            return hand.get_rating()
+
         hands = []
         hands.append(cards.StraightFlush(poker_hand))
         hands.append(cards.FourOfAKind(poker_hand))
