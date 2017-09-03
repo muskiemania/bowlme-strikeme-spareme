@@ -1,0 +1,65 @@
+.a-card {
+       @font-face {
+                  font-family: 'carddeck';
+                  src: url('/static/CARDC___.woff') format('woff');
+                  font-weight: normal;
+                  font-style: normal;
+       }
+
+       font-family: 'carddeck';
+       font-size: 2.75em;
+       display: block;
+       background-color: white;
+       height: 250px;
+
+       border-left: beige solid 2px;
+       border-bottom: beige solid 2px;
+       border-top-left-radius: 15px;
+       border-bottom-left-radius: 15px;
+
+       &.last-card {
+              border-top-right-radius: 15px;
+              border-bottom-right-radius: 15px;
+       }
+
+       .reg {
+            width: 80px;
+       }
+       .big {
+            width: 200px;
+       }
+
+       &.hearts, &.diamonds {
+                 color: red;
+
+                 &.selected {
+                            color: cyan;
+                 }
+       }
+
+       .reg {
+            width: auto;
+            span {
+                  display: none;
+            }
+       }
+
+       .big {
+            .suit {
+                        span {
+                             width: auto;
+                             font-size: 5.5rem;
+                        }           
+            }
+       }
+
+       &.selected {
+                  background-color: black;
+                  color: white;
+                  
+                  border-left: white solid 2px;
+                  border-bottom: white solid 2px;
+       }
+}
+
+
