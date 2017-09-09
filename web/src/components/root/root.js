@@ -6,11 +6,13 @@ import { Router, Route, browserHistory, IndexRoute} from 'react-router'
 import PokerHand from '../pokerHand/pokerHand'
 
 const Root = ({ store }) => (
-    <Provider store={store}>
-        <Router history={browserHistory}>
-            <Route path="/(:filter)" component={PokerHand} />
-        </Router>
-    </Provider>
+    <div className={'poker-table'}>
+        <Provider store={store}>
+            <Router history={browserHistory}>
+                <Route path="/(:filter)" component={PokerHand} />
+            </Router>
+        </Provider>
+    </div>
 )
 
 Root.propTypes = {

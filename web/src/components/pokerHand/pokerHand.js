@@ -8,6 +8,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import { itemsFetchData } from '../../actions/pokerGameActions';
 
 import _ from 'lodash';
+import './pokerHand.less';
 import Cards from '../shared/cards/cards';
 
 class PokerHand extends Component {
