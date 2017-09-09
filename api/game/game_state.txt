@@ -1,0 +1,51 @@
+CreateGame --> POST
+CreatePlayer --> POST
+
+gameId: number
+gameStatus:
+  gameStatusId: number
+  gameStatusText: string
+lastUpdated:
+  month: number
+  date: number
+  year: number
+  hour: number
+  minute: number
+  second: number
+player:
+  playerId: string
+  playerName: string
+
+GetGame --> GET
+StartGame --> POST
+DrawCards --> POST
+DiscardCards --> POST
+EndGame --> POST
+EndHand --> POST
+
+gameId: number
+gameStatus:
+  gameStatusId: number
+  gameStatusText: string
+lastUpdated:
+  month: number
+  date: number
+  year: number
+  hour: number
+  minute: number
+  second: number
+players: [
+  playerId: string
+  playerName: string
+  playerStatus:
+    playerStatusId: number
+    playerStatusText: string
+  playerScore:
+  playerRank:
+]
+isHost: boolean
+cards: undefined
+
+as players join/leave, players array updates
+
+
