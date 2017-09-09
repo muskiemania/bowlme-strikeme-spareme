@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Immutable from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import {render} from 'react-dom';
-//import './myHand.less';
 import _ from 'lodash';
 import Cards from '../shared/cards/cards';
 
-const MyHand = ((props) => {
+const PokerHand = ((props) => {
 
     let {cards} = props;
 
@@ -14,16 +14,16 @@ const MyHand = ((props) => {
         <div className='grid-x row'>
             <div className='small-12 columns'>
                 <div className='grid-x row align-center'>
-                    <Cards cards={cards} />
+                    <Cards cards={cards || Immutable.List()} />
                 </div>
             </div>
         </div>
     );
 });
 
-MyHand.propTypes = {
+PokerHand.propTypes = {
     cards: ImmutablePropTypes.list
 };
 
-export default MyHand;
+export default PokerHand;
 
