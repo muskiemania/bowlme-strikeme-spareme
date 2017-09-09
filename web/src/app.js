@@ -1,10 +1,9 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { createStore } from 'redux'
-import todoApp from './reducers'
+import configureStore from './store/configureStore'
 import Root from './components/root/root'
 
-let store = createStore(todoApp)
+const store = configureStore();
 
 render(
     <Root store={store} />,
