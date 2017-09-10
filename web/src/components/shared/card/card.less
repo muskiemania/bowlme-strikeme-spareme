@@ -11,25 +11,18 @@
        display: block;
        background-color: white;
        height: 250px;
+       float: left;
+       margin-left: -150px;
+       border-radius: 15px;
 
        &.selected {
                   background-color: black;
                   color: white;
+                  margin-top: -40px;
        }
 
-       border-left: beige solid 2px;
-       border-bottom: beige solid 2px;
-       border-top-left-radius: 15px;
-       border-bottom-left-radius: 15px;
-
-       &.last-card {
-              border-top-right-radius: 15px;
-              border-bottom-right-radius: 15px;
-       }
-
-       .reg {
-            width: 80px;
-       }
+       box-shadow: -1px 1px 5px #004400;
+       
        .big {
             width: 200px;
        }
@@ -40,13 +33,6 @@
                  &.selected {
                             color: cyan;
                  }
-       }
-
-       .reg {
-            width: auto;
-            span {
-                  display: none;
-            }
        }
 
        .big {
@@ -61,10 +47,17 @@
        &.selected {
                   background-color: black;
                   color: white;
-                  
-                  border-left: white solid 2px;
-                  border-bottom: white solid 2px;
        }
+
+       @cardClasses: 15;
+       .loopingClass (@index) when (@index <= @cardClasses) {
+                     &.card-@{index}{
+                        z-index: (300 + (5 * @index));
+                        }
+       .loopingClass(@index+1);
+       }
+
+       .loopingClass(1);
 }
 
 

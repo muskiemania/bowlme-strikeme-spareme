@@ -49,13 +49,13 @@ class Card extends Component {
     }
     
     render() {
-        let {card, isLast} = this.props;
+        let {card, index} = this.props;
 
         return (
-            <div className={classnames('column', 'a-card', this.getSuit(card), isLast ? 'last-card' : '', this.isSelected() ? 'selected' : '')} onTouchStart={this.handleTouchStart} onClick={this.handleTouchStart}>
+            <div className={classnames('column', 'a-card', this.getSuit(card), `card-${index}`, this.isSelected() ? 'selected' : '')} onTouchStart={this.handleTouchStart} onClick={this.handleTouchStart}>
                 <Cardinality value={this.getCardinality(card)} />
                 <Suit value={this.getSuit(card)} />
-                <div className={isLast ? 'big' : 'reg'}>
+                <div className={'big'}>
                     <Suit value={this.getSuit(card)} />
                 </div>         
             </div>
@@ -65,7 +65,7 @@ class Card extends Component {
 
 Card.propTypes = {
     card: PropTypes.string,
-    isLast: PropTypes.bool
+    index: PropTypes.number
 };
 
 export default Card;

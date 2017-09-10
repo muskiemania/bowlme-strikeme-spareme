@@ -11,16 +11,10 @@ const Cards = ((props) => {
 
     let {cards} = props;
 
-    let firstCards = cards.pop();
-    let lastCard = cards.last();
-    
     return (
         <div className='cards-collection grid-x row'>
             {
-                cards.size > 1 ? cards.pop().map((card, i) => { return <Card card={card} key={i} />}) : null
-            }
-            {
-                cards.size > 0 ? <Card card={cards.last()} isLast={true} /> : null
+                cards.size > 0 ? cards.map((card, i) => { return <Card card={card} index={ i+1 } key={`card-${i}`} />}) : null
             }
         </div>
     );
