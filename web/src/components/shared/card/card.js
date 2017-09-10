@@ -11,13 +11,6 @@ import _ from 'lodash';
 
 class Card extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = { isSelected: false };
-
-        this.handleTouchStart = this.handleTouchStart.bind(this);
-    }
-    
     getSuit(card) {
 
         let suit = card.charAt(1);
@@ -40,19 +33,16 @@ class Card extends Component {
         return card.charAt(0);
     }
 
-    isSelected() {
-        return this.state.isSelected;
-    }
-    
     handleTouchStart(){
-        this.setState({ isSelected: !this.isSelected() });
+        console.log('touchStarted in card');
+        this.props.toggleSelected(this.props.card);
     }
     
     render() {
-        let {card, index} = this.props;
+        let {card, index, isSelected} = this.props;
 
         return (
-            <div className={classnames('column', 'a-card', this.getSuit(card), `card-${index}`, this.isSelected() ? 'selected' : '')} onTouchStart={this.handleTouchStart} onClick={this.handleTouchStart}>
+            <div className={classnames('column', 'a-card', this.getSuit(card), `card-${index}`, isSelected ? 'selected' : '')} onTouchStart={this.handleTouchStart.bind(this)} onClick={this.handleTouchStart.bind(this)}>
                 <Cardinality value={this.getCardinality(card)} />
                 <Suit value={this.getSuit(card)} />
                 <div className={'big'}>
@@ -65,7 +55,9 @@ class Card extends Component {
 
 Card.propTypes = {
     card: PropTypes.string,
-    index: PropTypes.number
+    index: PropTypes.number,
+    isSelected: PropTypes.bool,
+    toggleSelected: PropTypes.func
 };
 
 export default Card;

@@ -13,10 +13,41 @@ import Cards from '../shared/cards/cards';
 
 class PokerHand extends Component {
 
+    constructor(props) {
+        super(props);
+
+        this.state  = { selected: Immutable.List() };
+    }
+    
     componentDidMount() {
         this.props.fetchData('http://localhost:5000/static/mock.js');
     }
 
+    drawCards(numberOfCards) {
+        alert(`will draw ${numberOfCards} cards`);
+    }
+
+    discardCards(cards) {
+        alert(`will discard ${cards}`);
+    }
+
+    getSelectedCards() {
+        return this.state.selected;
+    }
+
+    toggleCardSelected(card) {
+        let selected = this.state.selected;
+
+        if(selected.contains(card)) {
+            selected = selected.filter(c => c != card);
+        }
+        else {
+            selected = selected.push(card);
+        }
+        
+        this.setState({ selected: selected });
+    }
+    
     render() {
         let {cards, hasErrored, isLoading, items} = this.props;
         
@@ -32,7 +63,7 @@ class PokerHand extends Component {
             <div className='grid-x row'>
                 <div className='small-12 columns'>
                     <div className='grid-x row align-center'>
-                        <Cards cards={cards || Immutable.List()} />
+                        <Cards cards={cards || Immutable.List()} selected={this.getSelectedCards()} toggleSelected={this.toggleCardSelected.bind(this)} />
                     </div>
                 </div>
             </div>
