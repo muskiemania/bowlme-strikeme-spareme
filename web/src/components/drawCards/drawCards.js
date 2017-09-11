@@ -1,20 +1,26 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import {render} from 'react-dom';
 
-export default class DrawCardsOrDiscard extends React.Component {
+import './drawCards.less';
+
+import Button from '../shared/button/button';
+
+export default class DrawCards extends Component {
 
     render() {
         let {cardsInHand, canDrawAgain} = this.props;
 
-        let mustDiscard = cardsInHand > 5;
-
+        //let mustDiscard = cardsInHand > 5;
+        let mustDiscard = false;
+        
         if(mustDiscard) {
             return (
-                <div className='buttons grid-x row'>                    
+                <div className='draw-cards grid-x row'>                    
                     <div className='small-4 column'>&nbsp;</div>
-                    <div className='small-4 column'>Discard</div>
+                    <div className='small-4 column text-center'>
+                        <Button text='Discard' />
+                    </div>
                     <div className='small-4 column'>&nbsp;</div>
                 </div>
                 
@@ -23,15 +29,23 @@ export default class DrawCardsOrDiscard extends React.Component {
 
         if(canDrawAgain) {
             return (
-                <div className='buttons grid-x row'>
-                    <div className='small-1 column'>&nbsp;</div>
-                    <div className='small-3 column'>Spare</div>
-                    <div className='small-3 column'>Strike</div>
-                    <div className='small-1 column'>&nbsp;</div>
-                    <div className='small-1 column'>+3</div>
-                    <div className='small-1 column'>+4</div>
-                    <div className='small-1 column'>+6</div>
-                    <div className='small-1 column'>&nbsp;</div>
+                <div className='draw-cards grid-x row'>
+                    <div className='small-1'>&nbsp;</div>
+                    <div className='small-3 column text-center'>
+                        <Button text='Spare' />
+                    </div>
+                    <div className='small-3 column text-center'>
+                        <Button text='Strike' />
+                    </div>
+                    <div className='small-4 column text-center'>
+                        <ul className='button-group draw-button-group'>
+                            <li><a className='small button'>+3</a></li>
+                            <li><a className='small button'>+4</a></li>
+                            <li><a className='small button'>+6</a></li>
+                            <li><a className='small button'>Finish</a></li>
+                        </ul>
+                    </div>
+                    <div className='small-1'>&nbsp;</div>
                 </div>
             );
         }
@@ -40,9 +54,9 @@ export default class DrawCardsOrDiscard extends React.Component {
     };
 }
 
-DrawCardsOrDiscard.propTypes = {
+DrawCards.propTypes = {
     cardsInHand: PropTypes.number,
-    canDrawAgain: PropTypes.boolean
+    canDrawAgain: PropTypes.bool
 };
 
 /*

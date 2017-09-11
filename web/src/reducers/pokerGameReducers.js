@@ -1,15 +1,15 @@
 import Immutable from 'immutable';
 
-export function itemsHasErrored(state = false, action) {
+export function isError(state = false, action) {
     switch(action.type) {
         case 'ITEMS_HAS_ERRORED':
-            return action.hasErrored;
+            return action.isError;
         default:
             return state;
     }
 }
 
-export function itemsIsLoading(state = false, action) {
+export function isLoading(state = false, action) {
     switch(action.type) {
         case 'ITEMS_IS_LOADING':
             return action.isLoading;

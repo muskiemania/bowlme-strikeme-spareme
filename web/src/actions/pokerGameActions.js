@@ -2,23 +2,22 @@ export const ITEMS_HAS_ERRORED = 'ITEMS_HAS_ERRORED'
 export const ITEMS_IS_LOADING = 'ITEMS_IS_LOADING'
 export const ITEMS_FETCH_DATA_SUCCESS = 'ITEMS_FETCH_DATA_SUCCESS'
 
-export function itemsHasErrored(bool) {
+export function isError(bool) {
     return {
         type: ITEMS_HAS_ERRORED,
-        hasErrored: bool
+        isErrored: bool
     };
 }
 
-export function itemsIsLoading(bool) {
+export function isLoading(bool) {
     return {
         type: ITEMS_IS_LOADING,
         isLoading: bool
     };
 }
 
-export function itemsFetchDataSuccess(data) {
+export function fetchDataSuccess(data) {
 
-    console.log('I: ' + JSON.stringify(data));
     let cards = data['cards'];
     
     return {
@@ -27,9 +26,9 @@ export function itemsFetchDataSuccess(data) {
     };
 }
 
-export function itemsFetchData(url) {
+export function pokerGameFetchData(url) {
     return (dispatch) => {
-        dispatch(itemsIsLoading(true));
+        dispatch(isLoading(true));
         
         fetch(url)
             .then((response) => {
@@ -38,15 +37,14 @@ export function itemsFetchData(url) {
                     throw Error(response.statusText);
                 }
                 
-                dispatch(itemsIsLoading(false));
+                dispatch(isLoading(false));
 
                 return response;
             })
             .then((response) => response.json())
-            .then((data) => dispatch(itemsFetchDataSuccess(data)))
+            .then((data) => dispatch(fetchDataSuccess(data)))
             .catch((e) => {
-                console.log(e);
-                dispatch(itemsHasErrored(true))
+                dispatch(isError(true))
             });
     };
 }

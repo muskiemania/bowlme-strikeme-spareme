@@ -34,7 +34,6 @@ class Card extends Component {
     }
 
     handleTouchStart(){
-        console.log('touchStarted in card');
         this.props.toggleSelected(this.props.card);
     }
     

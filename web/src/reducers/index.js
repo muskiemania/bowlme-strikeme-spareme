@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import { cards, itemsHasErrored, itemsIsLoading } from './pokerGameReducers';
+import { cards, isError, isLoading } from './pokerGameReducers';
 
 export default combineReducers({
     cards,
-    itemsHasErrored,
-    itemsIsLoading
+    isError,
+    isLoading
 });

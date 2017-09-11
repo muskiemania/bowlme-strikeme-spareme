@@ -3,16 +3,14 @@ import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
 import { Router, Route, browserHistory, IndexRoute} from 'react-router'
 
-import PokerHand from '../pokerHand/pokerHand'
+import PokerTable from '../../containers/pokerTable/pokerTable';
 
 const Root = ({ store }) => (
-    <div className={'poker-table'}>
-        <Provider store={store}>
-            <Router history={browserHistory}>
-                <Route path="/(:filter)" component={PokerHand} />
-            </Router>
-        </Provider>
-    </div>
+    <Provider store={store}>
+        <Router history={browserHistory}>
+            <Route path="/(:filter)" component={PokerTable} />
+        </Router>
+    </Provider>
 )
 
 Root.propTypes = {
