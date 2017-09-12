@@ -16,12 +16,8 @@ export default class DrawCards extends Component {
         
         if(mustDiscard) {
             return (
-                <div className='draw-cards grid-x row'>                    
-                    <div className='small-4 column'>&nbsp;</div>
-                    <div className='small-4 column text-center'>
-                        <Button text='Discard' />
-                    </div>
-                    <div className='small-4 column'>&nbsp;</div>
+                <div className='draw-cards'>                    
+                    <Button text='Discard' />
                 </div>
                 
             );
@@ -29,15 +25,10 @@ export default class DrawCards extends Component {
 
         if(canDrawAgain) {
             return (
-                <div className='draw-cards grid-x row'>
-                    <div className='small-1'>&nbsp;</div>
-                    <div className='small-3 column text-center'>
+                <div className='draw-cards'>
+                    <div className='button-overlay'>
                         <Button text='Spare' />
-                    </div>
-                    <div className='small-3 column text-center'>
                         <Button text='Strike' />
-                    </div>
-                    <div className='small-4 column text-center'>
                         <ul className='button-group draw-button-group'>
                             <li><a className='small button'>+3</a></li>
                             <li><a className='small button'>+4</a></li>
@@ -45,7 +36,6 @@ export default class DrawCards extends Component {
                             <li><a className='small button'>Finish</a></li>
                         </ul>
                     </div>
-                    <div className='small-1'>&nbsp;</div>
                 </div>
             );
         }

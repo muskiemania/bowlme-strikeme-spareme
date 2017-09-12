@@ -9,6 +9,7 @@ import { pokerGameFetchData } from '../../actions/pokerGameActions';
 
 import _ from 'lodash';
 import './pokerTable.less';
+import Seats from '../../components/seats/seats';
 import PokerHand from '../../components/pokerHand/pokerHand';
 import DrawCards from '../../components/drawCards/drawCards';
 
@@ -69,10 +70,13 @@ class PokerTable extends Component {
         }
         
         return (
-            <div className='poker-table'>
-                <PokerHand cards={cards} selected={this.getSelectedCards()} toggleSelected={this.toggleCard.bind(this)} />
+            <div>
+                <div className='poker-table'>
+                    <Seats players={Immutable.fromJS(['A','B','C','D'])} />
+                    
+                    <PokerHand cards={cards} selected={this.getSelectedCards()} toggleSelected={this.toggleCard.bind(this)} />                    
+                </div>
                 <DrawCards cardsInHand={cards.size} canDrawAgain={true} />
-                
             </div>
         );
     }
