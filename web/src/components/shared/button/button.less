@@ -1,7 +1,7 @@
 .draw-button {
 
                  float: left;
-                 margin-right: 75px;
+                 margin-right: 44px;
 
                  .button {
                                   background: radial-gradient(yellow, orange);
@@ -24,6 +24,7 @@
 .draw-button-group {
 
                    float: left;
+                   margin-left: auto;
 
                    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.6), 0 6px 20px 0 rgba(0,0,0,0.6);
                    border-radius: 5px;
@@ -33,6 +34,7 @@
                       .button {
                               color: white;
                               background: none;
+                              font-size: 1rem;
                       }
 
                       border-left: 2px solid #880000;
@@ -49,6 +51,17 @@
                  font-weight: bold;
                  min-height: 44px;
                  min-width: 44px;
+
+                 @font-face {
+                         font-family: 'carddeck';
+                         src: url('/static/CARDC___.woff') format('woff');
+                         font-weight: normal;
+                         font-style: normal;
+                 }
+
+       font-family: 'carddeck';
+       font-size: 1em;
+
         }
 
 

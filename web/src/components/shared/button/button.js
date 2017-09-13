@@ -3,17 +3,31 @@ import PropTypes from 'prop-types';
 import classname from 'classnames';
 import './button.less';
 
-const Button = ((props) => {
+class Button extends Component {
 
-    let {text, disabled, isGrouped} = props;
+    render() {
     
-    if(isGrouped) {
-        return (<a href='#' className='small button'><div className='inner-box'>{text}</div></a>);
+        let {text, disabled, isGrouped} = this.props;
+        
+        if(isGrouped) {
+            return (
+                <a href='#' className='small button'>
+                    <div className='inner-box'>
+                        {text}
+                    </div>
+                </a>);
+        }
+    
+        return (<div className={classname('draw-button', disabled ? 'disabled' : null)}>
+            <a href='#' className='button'>
+                <div className='inner-box'>
+                    {text}
+                </div>
+            </a>
+        </div>
+        );
     }
-    
-    return (<div className={classname('draw-button', disabled ? 'disabled' : null)}><a href='#' className='button'><div className='inner-box'>{text}</div></a></div>
-    );
-});
+}
 
 Button.propTypes = {
     text: PropTypes.string,
