@@ -4,6 +4,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import './drawCards.less';
 
+import ButtonGroup from '../shared/buttonGroup/buttonGroup';
 import Button from '../shared/button/button';
 
 export default class DrawCards extends Component {
@@ -29,12 +30,12 @@ export default class DrawCards extends Component {
                     <div className='button-overlay'>
                         <Button text='Spare' />
                         <Button text='Strike' />
-                        <ul className='button-group draw-button-group'>
-                            <li><a className='small button'>+3</a></li>
-                            <li><a className='small button'>+4</a></li>
-                            <li><a className='small button'>+6</a></li>
-                            <li><a className='small button'>Finish</a></li>
-                        </ul>
+                        <ButtonGroup>
+                            <Button text='+3' isGrouped={true} />
+                            <Button text='+4' isGrouped={true} />
+                            <Button text='+6' isGrouped={true} />
+                            <Button text='Finish' isGrouped={true} />
+                        </ButtonGroup>                        
                     </div>
                 </div>
             );
