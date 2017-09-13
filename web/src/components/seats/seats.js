@@ -7,14 +7,13 @@ import Player from '../shared/player/player';
 const Seats = ((props) => {
 
     let players = props.players;
-    console.log(players.size);
     
     return (
         <div className='poker-table-seats grid-x row align-center'>
             {
                     players.size ? players.map((player, i) => {
                         return <Player key={`player-${i}`} player={player} />
-                    }) : <Player key='player-none' player={'Waiting...'} />
+                    }) : <Player key='player-none' isWaiting={true} />
             }
         </div>
     );

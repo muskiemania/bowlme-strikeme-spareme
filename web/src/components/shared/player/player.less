@@ -7,4 +7,53 @@
                     color: white;
                     border-radius: 5px;
                     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.6), 0 6px 20px 0 rgba(0,0,0,0.6);
+
+    
+                 @font-face {
+                         font-family: 'carddeck';
+                         src: url('/static/CARDC___.woff') format('woff');
+                         font-weight: normal;
+                         font-style: normal;
+                 }
+
+       font-family: 'carddeck';
+       font-size: 1em;
+
+       .player-name {
+                    &.is-finished {
+                                  color: #00ff00;
+                    }
+       }
+
+       .player-cards {
+                     margin-top: 5px;
+
+                     span {
+                          display: inline-block;
+                          color: none;
+                          height: 1.5em;
+                     
+                     }
+                     .player-card {
+                          width: 1em;
+                          background-color: white;
+                          border-radius: 2px;
+                          margin-left: -0.5em;
+                          border: 1px solid #888888;
+                     }
+
+                     .player-card:first-child {
+                                              margin-left: auto;
+                     }
+
+                     .extra-cards {
+                                  margin-left: 0.5em;
+                                  vertical-align: 5px;
+                     }
+
+
+}
+
+
+
 }

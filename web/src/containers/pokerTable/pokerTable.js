@@ -72,8 +72,15 @@ class PokerTable extends Component {
         return (
             <div>
                 <div className='poker-table'>
-                    <Seats players={Immutable.fromJS(['A','B','C','D'])} />
-                    
+                    <Seats players={Immutable.fromJS([
+                            {name: 'SARAH', cards:[1,2,3,4]},
+                            {name: 'JUSTIN', cards:[]},
+                            {name: 'PAUL', cards:[1,2,3]},
+                            {name: 'SARA', cards:[1,2,3,4,5,6]},
+                            {name: 'JENNA', cards:[1,2,3,4,5], finished: true},
+                            {name: 'NEWBABY', cards:[1,2,3,4,5,6,7,8,9,10,11]}
+                    ])} />
+
                     <PokerHand cards={cards} selected={this.getSelectedCards()} toggleSelected={this.toggleCard.bind(this)} />                    
                 </div>
                 <DrawCards cardsInHand={cards.size} cardsSelected={this.getSelectedCards().size} canDrawAgain={true} />
