@@ -10,15 +10,17 @@ import Button from '../shared/button/button';
 export default class DrawCards extends Component {
 
     render() {
-        let {cardsInHand, canDrawAgain} = this.props;
+        let {cardsInHand, cardsSelected, canDrawAgain} = this.props;
 
-        //let mustDiscard = cardsInHand > 5;
-        let mustDiscard = false;
+        let mustDiscard = cardsInHand > 5;
+        //let mustDiscard = false;
         
         if(mustDiscard) {
             return (
-                <div className='draw-cards'>                    
-                    <Button text='Discard' />
+                <div className='draw-cards'>
+                    <div className='button-overlay'>
+                    <Button text='Discard' disabled={(cardsInHand-cardsSelected) != 5} />
+                    </div>
                 </div>
                 
             );
@@ -47,6 +49,7 @@ export default class DrawCards extends Component {
 
 DrawCards.propTypes = {
     cardsInHand: PropTypes.number,
+    cardsSelected: PropTypes.number,
     canDrawAgain: PropTypes.bool
 };
 

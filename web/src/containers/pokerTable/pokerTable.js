@@ -76,7 +76,7 @@ class PokerTable extends Component {
                     
                     <PokerHand cards={cards} selected={this.getSelectedCards()} toggleSelected={this.toggleCard.bind(this)} />                    
                 </div>
-                <DrawCards cardsInHand={cards.size} canDrawAgain={true} />
+                <DrawCards cardsInHand={cards.size} cardsSelected={this.getSelectedCards().size} canDrawAgain={true} />
             </div>
         );
     }
