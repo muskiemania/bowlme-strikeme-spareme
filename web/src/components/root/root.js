@@ -10,7 +10,11 @@ const Root = ({ store }) => (
     <Provider store={store}>
         <Router history={browserHistory}>
             <Route path="/" component={PokerTable}>
+            </Route>
+            <Route path="/game/(:gameId)" component={PokerTable}>
                 <IndexRoute component={PokerGame} />
+            </Route>
+            <Route path="/results/(:gameId)" component={PokerTable}>
             </Route>
         </Router>
     </Provider>
