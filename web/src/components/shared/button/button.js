@@ -7,7 +7,7 @@ class Button extends Component {
 
     render() {
     
-        let {text, disabled, isGrouped} = this.props;
+        let {text, disabled, isGrouped, click} = this.props;
         
         if(isGrouped) {
             return (
@@ -19,7 +19,7 @@ class Button extends Component {
         }
     
         return (<div className={classname('draw-button', disabled ? 'disabled' : null)}>
-            <a href='#' className='button'>
+            <a href='#' className='button' onClick={click} onTouchStart={click}>
                 <div className='inner-box'>
                     {text}
                 </div>
@@ -32,7 +32,8 @@ class Button extends Component {
 Button.propTypes = {
     text: PropTypes.string,
     disabled: PropTypes.bool,
-    isGrouped: PropTypes.bool
+    isGrouped: PropTypes.bool,
+    click: PropTypes.func
 };
 
 export default Button;

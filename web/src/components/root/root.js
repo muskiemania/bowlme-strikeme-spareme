@@ -5,11 +5,13 @@ import { Router, Route, browserHistory, IndexRoute} from 'react-router'
 
 import PokerTable from '../../containers/pokerTable/pokerTable';
 import PokerGame from '../../components/pokerGame/pokerGame';
+import JoinCreate from '../../components/joinCreate/joinCreate';
 
 const Root = ({ store }) => (
     <Provider store={store}>
         <Router history={browserHistory}>
             <Route path="/" component={PokerTable}>
+                <IndexRoute component={JoinCreate} />
             </Route>
             <Route path="/game/(:gameId)" component={PokerTable}>
                 <IndexRoute component={PokerGame} />
