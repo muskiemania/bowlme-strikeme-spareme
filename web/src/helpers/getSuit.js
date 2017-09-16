@@ -1,11 +1,11 @@
-export default function getSuit(card) {
+export function getSuit(card) {
     let cardPart = card.charAt(1);
 
     let xlate = {};
-    xlate['clubs'] = ']';
-    xlate['diamonds'] = '[';
-    xlate['hearts'] = '{';
-    xlate['spades'] = '}';
+    xlate['C'] = ']';
+    xlate['D'] = '[';
+    xlate['H'] = '{';
+    xlate['S'] = '}';
 
     let xlated = cardPart;
     if(cardPart in xlate) {

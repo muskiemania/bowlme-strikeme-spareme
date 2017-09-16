@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-export default function getCardinality(card) {
+export function getCardinality(card) {
     let cardPart = card.charAt(0);
 
     let xlate = {};

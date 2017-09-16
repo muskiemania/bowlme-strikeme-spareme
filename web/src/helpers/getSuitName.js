@@ -1,4 +1,4 @@
-export default function getSuitName(card) {
+export function getSuitName(card) {
 
     let cardPart = card.charAt(1);
 
