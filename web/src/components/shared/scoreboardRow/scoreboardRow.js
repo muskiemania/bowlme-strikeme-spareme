@@ -15,21 +15,23 @@ const ScoreboardRow = ((props) => {
     
     return (
         <div className='grid-x row align-center'>
-        <div className='column'>
+        <div className='column small-2'>
         {player.get('name')}
         </div>
-        <div className='column cards'>
+        <div className='column cards small-2'>
         {        
             player.get('cards').map((card, i) => {
-                let cardinality = card.charAt(0);
-                let suit = card.charAt(1);
                 
                 return (<div className={classnames('card', getSuitName(card))} key={`card-${i}`}>
-                    <span>{ `${getCardinality(card)} ${getSuit(card)}` }</span>               </div>)
+                    <span>
+                        {getCardinality(card)}
+                        {getSuit(card)}
+                    </span>
+                </div>)
             })
         }
         </div>
-        <div>?</div>
+        <div className='column small-2'>?</div>
         </div>
     );
 });
