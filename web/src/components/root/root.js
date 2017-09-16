@@ -4,8 +4,11 @@ import { Provider } from 'react-redux'
 import { Router, Route, browserHistory, IndexRoute} from 'react-router'
 
 import PokerTable from '../../containers/pokerTable/pokerTable';
-import PokerGame from '../../components/pokerGame/pokerGame';
-import JoinCreate from '../../components/joinCreate/joinCreate';
+import PokerGame from '../pokerGame/pokerGame';
+import JoinCreate from '../joinCreate/joinCreate';
+import Scoreboard from '../scoreboard/scoreboard';
+
+import './root.less';
 
 const Root = ({ store }) => (
     <Provider store={store}>
@@ -17,6 +20,7 @@ const Root = ({ store }) => (
                 <IndexRoute component={PokerGame} />
             </Route>
             <Route path="/results/(:gameId)" component={PokerTable}>
+                <IndexRoute component={Scoreboard} />
             </Route>
         </Router>
     </Provider>
