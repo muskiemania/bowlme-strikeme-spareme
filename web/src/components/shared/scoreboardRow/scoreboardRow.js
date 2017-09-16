@@ -15,7 +15,7 @@ const ScoreboardRow = ((props) => {
     
     return (
         <div className='grid-x row align-center'>
-        <div className='column small-2'>
+        <div className='column small-2 name'>
         {player.get('name')}
         </div>
         <div className='column cards small-2'>
