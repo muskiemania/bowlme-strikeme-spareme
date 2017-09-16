@@ -4,7 +4,9 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { getCardinality } from '../../../helpers/getCardinality';
 import { getSuit } from '../../../helpers/getSuit';
+import { getSuitName } from '../../../helpers/getSuitName';
 
+import classnames from 'classnames';
 import './scoreboardRow.less';
 
 const ScoreboardRow = ((props) => {
@@ -22,7 +24,8 @@ const ScoreboardRow = ((props) => {
                 let cardinality = card.charAt(0);
                 let suit = card.charAt(1);
                 
-                return <div className='card' key={`card-${i}`}><Cardinality value={cardinality} /><Suit value={suit} /></div>
+                return (<div className={classnames('card', getSuitName(card))} key={`card-${i}`}>
+                    <span>{ `${getCardinality(card)} ${getSuit(card)}` }</span>               </div>)
             })
         }
         </div>
