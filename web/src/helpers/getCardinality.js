@@ -1,6 +1,11 @@
 import _ from 'lodash';
 
 export function getCardinality(card) {
+
+    if (card === '') {
+        return 'E';
+    }
+    
     let cardPart = card.charAt(0);
 
     let xlate = {};

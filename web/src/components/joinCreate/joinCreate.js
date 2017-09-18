@@ -10,7 +10,7 @@ import Join from '../shared/join/join';
 import Create from '../shared/create/create';
 import Welcome from '../shared/welcome/welcome';
 
-
+import './joinCreate.less';
 
 class JoinCreate extends Component {
 

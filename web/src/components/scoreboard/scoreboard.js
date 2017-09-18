@@ -5,21 +5,23 @@ import Immutable from 'immutable';
 
 import ScoreboardRow from '../shared/scoreboardRow/scoreboardRow';
 
+import './scoreboard.less';
+
 class Scoreboard extends Component {
 
     render() {
         //let {players} = this.props;
         
         let players = Immutable.fromJS([
-            { name: 'Justin', cards: ['AS','2D','3H'] },
-            { name: 'Sarah', cards: ['2H','4H','6H','8H','JH'] },
-            { name: 'Jenna', cards: ['KS','KD','KC','KH','7C'] }
+            { name: 'Justin', cards: ['AS','2D','3H'], handDetails: { rank: 3, title: 'High Card' } },
+            { name: 'Sarah', cards: ['2H','4H','6H','8H','JH'], handDetails: { rank: 2, title: 'Flush' } },
+            { name: 'Jenna', cards: ['KS','KD','KC','KH','7C'], handDetails: { rank: 1, title: 'Four-Of-A-Kind' } }
         ]);
         
         return (
             <div className='scoreboard'>
             {
-                players.map((player, i) => {
+                players.sortBy(player => player.get('handDetails').get('rank')).map((player, i) => {
                     return <ScoreboardRow player={player} key={`player-${i}`} />
                 })
             }

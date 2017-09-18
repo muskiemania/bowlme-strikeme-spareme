@@ -1,4 +1,9 @@
 export function getSuit(card) {
+
+    if(card === '') {
+        return 'E';
+    }
+    
     let cardPart = card.charAt(1);
 
     let xlate = {};
