@@ -20,7 +20,7 @@ const ScoreboardRow = ((props) => {
             <div className='column small-3 name'>
                 {player.get('name')}
             </div>
-            <div className='column small-2 cards'>
+            <div className='column small-4 cards'>
                 <div className='float-center'>
                     {
                         player.get('cards').concat(Immutable.List(['','','','',''])).take(5).map((card, i) => {
@@ -35,7 +35,7 @@ const ScoreboardRow = ((props) => {
                     }
                 </div>
             </div>
-            <div className='column small-3 hand-details'>
+            <div className='column small-5 hand-details'>
                 {
                     player.get('handDetails').get('title')
                 }

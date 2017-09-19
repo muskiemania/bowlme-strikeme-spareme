@@ -15,7 +15,8 @@ class Scoreboard extends Component {
         let players = Immutable.fromJS([
             { name: 'Justin', cards: ['AS','2D','3H'], handDetails: { rank: 3, title: 'High Card' } },
             { name: 'Sarah', cards: ['2H','4H','6H','8H','JH'], handDetails: { rank: 2, title: 'Flush' } },
-            { name: 'Jenna', cards: ['KS','KD','KC','KH','7C'], handDetails: { rank: 1, title: 'Four-Of-A-Kind' } }
+            { name: 'Jenna', cards: ['KS','KD','KC','KH','7C'], handDetails: { rank: 1, title: 'Four-Of-A-Kind' } },
+	    { name: 'Someone', cards: ['2D'], handDetails: { rank: 4, title: 'High Card' } }
         ]);
         
         return (
@@ -25,7 +26,7 @@ class Scoreboard extends Component {
                     return <ScoreboardRow player={player} key={`player-${i}`} />
                 })
             }
-        </div>
+            </div>
         );        
     }
 }

@@ -1,78 +1,77 @@
 .a-card {
-  font-family: 'carddeck';
-  font-size: 2.75em;
-  display: block;
-  background-color: white;
-  height: 250px;
-  float: left;
-  margin-left: -150px;
-  border-radius: 15px;
-
-  &.selected {
-    background-color: black;
-    color: white;
-    margin-top: -40px;
-    border: white solid 1px;
-    }
-
-  box-shadow: -1px 1px 5px #004400;
-       
-  .big {
-    width: 200px;
-    }
-
-  &.hearts, &.diamonds {
-    color: red;
-
+    font-family: 'carddeck';
+    font-size: 4em;
+    display: block;
+    background-color: white;
+    height: 450px;
+    float: left;
+    margin-left: -240px;
+    border-radius: 15px;
+    
     &.selected {
-      color: cyan;
-      }
+	background-color: black;
+	color: white;
+	margin-top: -40px;
+	border: white solid 1px;
     }
-
-  .big {
+    
+    box-shadow: -1px 1px 5px #004400;
+    
+    .big {
+	width: 300px;
+    }
+    
+    &.hearts, &.diamonds {
+	color: red;
+	
+	&.selected {
+	    color: cyan;
+	}
+    }
+    
+    .big {
+	.suit {
+	    span {
+		width: auto;
+		font-size: 12rem;
+		margin-top: -0.5em;
+            }           
+	}
+    }
+    
+    &.selected {
+	background-color: black;
+	color: white;
+    }
+    
+    @cardClasses: 15;
+    .loopingClass (@index) when (@index <= @cardClasses) {
+	&.card-@{index}{
+	    z-index: (300 + (5 * @index));
+	}
+	.loopingClass(@index+1);
+    }
+    
+    .loopingClass(1);
+    
+    .cardinality {
+        margin-left: -0.25em;
+	
+        span {
+            width: 100px;
+            display: block;
+            text-align: center;
+        }
+    }
+    
     .suit {
-      span {
-        width: auto;
-        font-size: 5.5rem;
-        }           
-      }
-    }
-
-  &.selected {
-    background-color: black;
-    color: white;
-    }
-
-  @cardClasses: 15;
-  .loopingClass (@index) when (@index <= @cardClasses) {
-    &.card-@{index}{
-      z-index: (300 + (5 * @index));
-      }
-    .loopingClass(@index+1);
-    }
-
-  .loopingClass(1);
-
-  .cardinality {
-               margin-left: -5px;
-
-               span {
-                    width: 60px;
-                    display: block;
-                    text-align: center;
-                    }
-                    }
-
-                    .suit {
-                          margin-left: -5px;
-                          margin-top: -15px;
-
-                          span {
-                               width: 60px;
-                               display: block;
-                               text-align: center;
-                               }
-                               }
-                          
-
-  }
+        margin-left: -.25em;
+        margin-top: -1.5rem;
+	
+        span {
+            width: 100px;
+            display: block;
+            text-align: center;
+        }
+    }    
+}

@@ -1,60 +1,58 @@
 .scoreboard-row {
-                color: white;
-                text-shadow: 2px 2px 2px rgba(0,0,0,0.6);
-                font-size: 1.5rem;
-
-                &.winner {
-                         color: #ffdd00;
-                         text-shadow: 2px 2px 3px rgba(221,0,221,0.8);
+    color: white;
+    text-shadow: 2px 2px 2px rgba(0,0,0,0.6);
+    font-size: 2rem;
+    
+    &.winner {
+        color: #ffdd00;
+        text-shadow: 2px 2px 3px rgba(221,0,221,0.8);
+    }
+    
+    .name {
+        text-align: right;
+        padding-right: 1em;
+    }
+    
+    .hand-details {
+        padding-left: 1em;
+    }
+    
+    .cards {
+        div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            .playing-card {
+                float: left;
+                min-width: 1.75em;
+                margin-left: 0.1em;
+		
+                color: black;
+                text-shadow: 2px 2px 2px rgba(255,255,255,0.6),
+                2px -2px 2px rgba(255,255,255,0.6),
+                -2px 2px 2px rgba(255,255,255,0.6),
+                -2px -2px 2px rgba(255,255,255,0.6);
+		
+                &.hearts, &.diamonds {
+                    color: red;
                 }
-
-                .name {
-                      text-align: right;
-                      margin-right: 1em;
+		
+                .empty-card {
+                    display: none;
                 }
-
-                .hand-details {
-                              margin-left: 1em;
-                }
-
-                .cards {
-                       div {
-                           display: flex;
-                           justify-content: center;
-                           align-items: center;
-                
-                           .playing-card {
-                                         float: left;
-                                         min-width: 1.75em;
-                                         margin-left: 0.1em;
-
-                                         color: black;
-                                         text-shadow: 2px 2px 2px rgba(255,255,255,0.6),
-                                                   2px -2px 2px rgba(255,255,255,0.6),
-                                                   -2px 2px 2px rgba(255,255,255,0.6),
-                                                   -2px -2px 2px rgba(255,255,255,0.6);
-
-                                          &.hearts, &.diamonds {
-                                                color: red;
-                                          }
-
-                                          .empty-card {
-                                                display: none;
-                                          }
-                            }
-                        }
-              }
-
-              &.winner {
-                       .cards {
-                              .playing-card {
-                                   text-shadow: 2px 2px 2px rgba(255,238,0,0.6),
-                                                   2px -2px 2px rgba(255,238,0,0.6),
-                                                   -2px 2px 2px rgba(255,238,0,0.6),
-                                                   -2px -2px 2px rgba(255,238,0,0.6);
-                     
-                                }
-                       }
-              }
-      
+            }
+        }
+    }
+    
+    &.winner {
+        .cards {
+            .playing-card {
+                text-shadow: 2px 2px 2px rgba(255,238,0,0.6),
+                2px -2px 2px rgba(255,238,0,0.6),
+                -2px 2px 2px rgba(255,238,0,0.6),
+                -2px -2px 2px rgba(255,238,0,0.6);           
+            }
+        }
+    }   
 }
