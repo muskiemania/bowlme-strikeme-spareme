@@ -4,6 +4,8 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import Player from '../shared/player/player';
 
+import './seats.less';
+
 const Seats = ((props) => {
 
     let players = props.players;

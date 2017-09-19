@@ -9,7 +9,8 @@ import classnames from 'classnames';
 
 class Card extends Component {
 
-    handleTouchStart(){
+    handleTouch(e){
+	e.preventDefault();
         this.props.toggleSelected(this.props.card);
     }
     
@@ -17,7 +18,7 @@ class Card extends Component {
         let {card, index, isSelected} = this.props;
         
         return (
-            <div className={classnames('column', 'a-card', getSuitName(card), `card-${index}`, isSelected ? 'selected' : '')} onTouchStart={this.handleTouchStart.bind(this)} onClick={this.handleTouchStart.bind(this)}>
+            <div className={classnames('column', 'a-card', getSuitName(card), `card-${index}`, isSelected ? 'selected' : '')} onTouchEnd={this.handleTouch.bind(this)} onClick={this.handleTouch.bind(this)}>
                 <div className='cardinality'>
                     <span>
                         { getCardinality(card) }
