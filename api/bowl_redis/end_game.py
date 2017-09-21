@@ -42,9 +42,9 @@ class EndGame(object):
             player_is_dealt = helpers.verify_player_status_eq_in_player_info(self.game_id, player_id, PlayerStatus.DEALT)
 
             if player_is_joined:
-                pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), PlayerStatus.ABANDONED.value)
+                pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), PlayerStatus.ABANDONED)
             if player_is_dealt:
-                pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), PlayerStatus.FINISHED.value)
+                pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), PlayerStatus.FINISHED)
 
         game = Game(self.game_id, game_info[key_info.game_info_host_name_key()])
         game.last_updated = datetime.datetime.now()
@@ -54,7 +54,7 @@ class EndGame(object):
         if game_status_created:
             game.game_status = GameStatus.ABANDONED
             
-        pipe.hset(key_info.game_info(), key_info.game_info_status_key(), game.game_status.value)
+        pipe.hset(key_info.game_info(), key_info.game_info_status_key(), game.game_status)
         pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_key(), game.last_updated)
 
         pipe.execute()

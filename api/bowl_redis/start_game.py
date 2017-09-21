@@ -46,12 +46,12 @@ class StartGame(object):
         game.deck.shuffle_deck()
 
         #1
-        pipe.hset(key_info.game_info(), key_info.game_info_status_key(), game.game_status.value)
+        pipe.hset(key_info.game_info(), key_info.game_info_status_key(), game.game_status)
         #2
         pipe.rpush(key_info.game_deck(), *Deck.show_cards(game.deck.cards))
         #3
         pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_key(), game.last_updated)
-        pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_status_key(), game.game_status.value)
+        pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_status_key(), game.game_status)
 
         pipe.execute()
 
@@ -66,8 +66,8 @@ class StartGame(object):
             key_info = RedisKeys(self.game_id, player_id)
             player_status = players_info[key_info.game_players_status_key()]
             
-            if player_status == str(PlayerStatus.JOINED.value):
-                pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), PlayerStatus.DEALT.value)
+            if player_status == str(PlayerStatus.JOINED):
+                pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), PlayerStatus.DEALT)
 
         pipe.execute()
         

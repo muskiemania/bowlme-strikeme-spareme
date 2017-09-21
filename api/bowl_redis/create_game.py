@@ -16,15 +16,15 @@ class CreateGame(object):
 
         last_updated = {}
         last_updated[key_info.game_last_updated_key()] = game.last_updated
-        last_updated[key_info.game_last_updated_status_key()] = game.game_status.value
+        last_updated[key_info.game_last_updated_status_key()] = game.game_status
 
         pipe = self.redis.pipeline()
 
         pipe.hset(key_info.game_info(), key_info.game_info_host_name_key(), self.host_player_name)
-        pipe.hset(key_info.game_info(), key_info.game_info_status_key(), game.game_status.value)
+        pipe.hset(key_info.game_info(), key_info.game_info_status_key(), game.game_status)
 
         pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_key(), game.last_updated)
-        pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_status_key(), game.game_status.value)
+        pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_status_key(), game.game_status)
 
         pipe.execute()
 

@@ -15,7 +15,7 @@ class CreatePlayer(object):
         pipe = self.redis.pipeline()
         pipe.rpush(key_info.game_players(), self.player.player_id)
         pipe.hset(key_info.game_players_info(), key_info.game_players_name_key(), self.player.player_name)
-        pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), self.player.player_status.value)
+        pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), self.player.player_status)
         pipe.execute()
 
         return self.player

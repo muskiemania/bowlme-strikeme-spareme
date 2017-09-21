@@ -21,17 +21,25 @@ class Helpers(object):
         self.pipe.hget(hash_key, lookup)
         [result] = self.pipe.execute()
 
-        if type(value) is datetime.datetime:
-            value = str(value)
-        if isinstance(value, GameStatus) or isinstance(value, PlayerStatus):
-            value = str(value.value)
-
         #print type(value)
         #print value
         #print type(result)
         #print result
-            
-        return result == value
+        
+        
+        if type(value) is datetime.datetime:
+            #print 'a'
+            return result == str(value)
+        if isinstance(value, GameStatus) or isinstance(value, PlayerStatus):
+            #print 'b'
+            return result == value
+        if isinstance(value, str):
+            #print 'c'
+            return result == value
+        if isinstance(value, int):
+            #print 'd'
+            return result == str(value)
+        
             
     #game-[game_id]-info: a hash of info specific to a single game
     def verify_game_info_exists(self, game_id):
@@ -56,10 +64,16 @@ class Helpers(object):
     
     def verify_host_id_eq_in_game_info(self, game_id, host_id):
         key_info = RedisKeys(game_id)
+        #print key_info.game_info()
+        #print key_info.game_info_host_id_key()
+        #print host_id
         return self.__value_eq_within_hash(key_info.game_info(), key_info.game_info_host_id_key(), host_id)
     
     def verify_status_eq_in_game_info(self, game_id, status):
         key_info = RedisKeys(game_id)
+        #print key_info.game_info()
+        #print key_info.game_info_status_key()
+        #print status
         return self.__value_eq_within_hash(key_info.game_info(), key_info.game_info_status_key(), status)
 
     def __value_exists_within_list(self, list_key, value):
