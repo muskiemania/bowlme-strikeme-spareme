@@ -1,3 +1,4 @@
+*.pyc
 tasjaevan_redis.pdf
 Welcome to redis-py’s documentation! — redis-py 2.10.5 documentation.html
 web/node_modules
