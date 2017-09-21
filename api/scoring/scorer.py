@@ -3,26 +3,20 @@ from entities import GameStatus
 
 class Scorer(object):
 
-    def __init__(self, game_status, player_status, player_hand):
-        self.game_status = game_status
-        self.player_status = player_status
+    def __init__(self, player_hand):
         self.poker_hand = cards.PokerHand(player_hand)
 
     def get_rating(self):
-        if self.game_status is not GameStatus.FINISHED:
-            hand = cards.HighCard(self.poker_hand)
-            return hand.get_rating()
-
         hands = []
-        hands.append(cards.StraightFlush(poker_hand))
-        hands.append(cards.FourOfAKind(poker_hand))
-        hands.append(cards.FullHouse(poker_hand))
-        hands.append(cards.Flush(poker_hand))
-        hands.append(cards.Straight(poker_hand))
-        hands.append(cards.ThreeOfAKind(poker_hand))
-        hands.append(cards.TwoPairs(poker_hand))
-        hands.append(cards.OnePair(poker_hand))
-        hands.append(cards.HighCard(poker_hand))
+        hands.append(cards.StraightFlush(self.poker_hand))
+        hands.append(cards.FourOfAKind(self.poker_hand))
+        hands.append(cards.FullHouse(self.poker_hand))
+        hands.append(cards.Flush(self.poker_hand))
+        hands.append(cards.Straight(self.poker_hand))
+        hands.append(cards.ThreeOfAKind(self.poker_hand))
+        hands.append(cards.TwoPairs(self.poker_hand))
+        hands.append(cards.OnePair(self.poker_hand))
+        hands.append(cards.HighCard(self.poker_hand))
 
         for hand in hands:
             if hand.is_match():
@@ -32,7 +26,7 @@ class Scorer(object):
     def score_hands(player_hands):
         scored = []
         for (player, hand) in player_hands:
-            rating = Scorer.get_rating(hand)
+            rating = Scorer(hand).get_rating()
             scored.append((player, hand, rating))
 
         return scored

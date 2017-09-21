@@ -5,52 +5,52 @@ from scoring import Scorer
 class Test_Scorer:
     def test_get_rating_royal_flush(self):
         hand = Hand([Card('AH'), Card('KH'), Card('QH'), Card('JH'), Card('TH')])
-        rating = Scorer.get_rating(hand)
+        rating = Scorer(hand).get_rating()
         assert rating == (10, 14, 13, 12, 11, 10)
 
     def test_get_rating_straight_flush(self):
         hand = Hand([Card('9H'), Card('KH'), Card('QH'), Card('JH'), Card('TH')])
-        rating = Scorer.get_rating(hand)
+        rating = Scorer(hand).get_rating()
         assert rating == (9, 13, 12, 11, 10, 9)
 
     def test_get_rating_four_of_a_kind(self):
         hand = Hand([Card('KH'), Card('KD'), Card('KC'), Card('KS'), Card('TH')])
-        rating = Scorer.get_rating(hand)
+        rating = Scorer(hand).get_rating()
         assert rating == (8, 13, 10, 99, 99, 99)
 
     def test_get_rating_full_house(self):
         hand = Hand([Card('AH'), Card('AS'), Card('QH'), Card('QD'), Card('QC')])
-        rating = Scorer.get_rating(hand)
+        rating = Scorer(hand).get_rating()
         assert rating == (7, 12, 14, 99, 99, 99)
 
     def test_get_rating_flush(self):
         hand = Hand([Card('AH'), Card('9H'), Card('QH'), Card('JH'), Card('4H')])
-        rating = Scorer.get_rating(hand)
+        rating = Scorer(hand).get_rating()
         assert rating == (6, 14, 12, 11, 9, 4)
 
     def test_get_rating_straight(self):
         hand = Hand([Card('9H'), Card('KS'), Card('QD'), Card('JH'), Card('TC')])
-        rating = Scorer.get_rating(hand)
+        rating = Scorer(hand).get_rating()
         assert rating == (5, 13, 12, 11, 10, 9)
 
     def test_get_rating_three_of_a_kind(self):
         hand = Hand([Card('AH'), Card('KH'), Card('KD'), Card('KC'), Card('TH')])
-        rating = Scorer.get_rating(hand)
+        rating = Scorer(hand).get_rating()
         assert rating == (4, 13, 14, 10, 99, 99)
 
     def test_get_rating_two_pairs(self):
         hand = Hand([Card('AH'), Card('AS'), Card('QH'), Card('JH'), Card('JS')])
-        rating = Scorer.get_rating(hand)
+        rating = Scorer(hand).get_rating()
         assert rating == (3, 14, 11, 12, 99, 99)
 
     def test_get_rating_one_pair(self):
         hand = Hand([Card('AH'), Card('KH'), Card('QH'), Card('JH'), Card('JS')])
-        rating = Scorer.get_rating(hand)
+        rating = Scorer(hand).get_rating()
         assert rating == (2, 11, 14, 13, 12, 99)
 
     def test_get_rating_high_card(self):
         hand = Hand([Card('AH'), Card('QS'), Card('JD'), Card('9H'), Card('4H')])
-        rating = Scorer.get_rating(hand)
+        rating = Scorer(hand).get_rating()
         assert rating == (1, 14, 12, 11, 9, 4)
 
     def test_score_hands(self):
