@@ -6,7 +6,7 @@ class Test_PokerHand():
         hand = Hand(cards=[Card('2S'),Card('4H'),Card('3D')])
         pokerhand = PokerHand(hand)
         pokerhand.sort_cards()
-        assert pokerhand.hand.show_cards() == ['4H','3D','2S']
+        assert pokerhand.show_cards() == ['4H','3D','2S']
 
         
     def test_cardTally(self):

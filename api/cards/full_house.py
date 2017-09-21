@@ -1,4 +1,4 @@
-from cards import PokerHand, FourOfAKind, ThreeOfAKind, TwoPairs
+from cards import Hand, PokerHand, FourOfAKind, ThreeOfAKind, TwoPairs
 
 class FullHouse(PokerHand):
 
@@ -7,10 +7,10 @@ class FullHouse(PokerHand):
         PokerHand.__init__(self, hand)
 
     def is_match(self):
-        four_of_kind = FourOfAKind(self.hand).is_match()
-        three_of_kind = ThreeOfAKind(self.hand).is_match()
-        two_pairs = TwoPairs(self.hand).is_match()
-        five_cards = len(self.hand.cards) == 5
+        four_of_kind = FourOfAKind(Hand(self.cards)).is_match()
+        three_of_kind = ThreeOfAKind(Hand(self.cards)).is_match()
+        two_pairs = TwoPairs(Hand(self.cards)).is_match()
+        five_cards = len(self.cards) == 5
 
         return not four_of_kind and three_of_kind and two_pairs and five_cards
 

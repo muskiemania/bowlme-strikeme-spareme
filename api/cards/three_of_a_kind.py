@@ -17,7 +17,7 @@ class ThreeOfAKind(PokerHand):
         trips = {k: v for (k, v) in tally.items() if len(v) == 3}.keys()
         others = sorted({k: v for (k, v) in tally.items() if len(v) < 3}.keys(), reverse=True)
         coalesce = self.coalesce
-        if len(self.hand.cards) == 5 and len(others) == 1:
+        if len(self.cards) == 5 and len(others) == 1:
             return (self.__rating, trips[0], coalesce(others, 0), 99, 99, 99)
 
         return (self.__rating, trips[0], coalesce(others, 0, 0), coalesce(others, 1, 0), 99, 99)

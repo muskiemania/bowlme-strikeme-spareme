@@ -3,8 +3,8 @@ from entities import GameStatus
 
 class Scorer(object):
 
-    def __init__(self, player_hand):
-        self.poker_hand = cards.PokerHand(player_hand)
+    def __init__(self, hand):
+        self.poker_hand = cards.PokerHand(hand)
 
     def get_rating(self):
         hands = []
