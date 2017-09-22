@@ -1,4 +1,4 @@
-from entities import GameStatus, PlayerStatus
+from bowl_redis_dto import GameDto, GameStatus, PlayerDto, PlayerStatus
 import bowl_redis
 import redis
 
@@ -28,7 +28,7 @@ class Test_RedisCreateGame:
 
         create_game = bowl_redis.CreateGame('Justin')
         game = create_game.execute()
-
+        
         key_info = bowl_redis.RedisKeys(game.game_id, game.players[0].player_id)
 
         #verify game-[game_id]-info exists and is populated

@@ -1,5 +1,5 @@
 import bowl_redis
-import entities
+from bowl_redis_dto import PlayerDto
 
 class JoinGame(object):
 
@@ -8,24 +8,26 @@ class JoinGame(object):
 
     @staticmethod
     def join(game_id, player_name=None):
-        player = entities.Player(player_name, game_id)
-        create_player = bowl_redis.CreatePlayer(player)
-        player = create_player.execute(game_id)
+        playerDto = PlayerDto(player_name, game_id)
 
-        response = entities.APIGameResponse()
-        response.game_id = game_id
+        create_player = bowl_redis.CreatePlayer(playerDto)
+        playerDto = create_player.execute(game_id)
 
-        get_game = bowl_redis.GetGame(game_id)
-        game = get_game.get()
+        #response = entities.APIGameResponse()
+        #response.game_id = game_id
 
-        game_status = entities.APIGameStatus()
-        game_status.game_status_id = game.game_status.value
-        game_status.game_status_text = entities.GameStatus.text(game.game_status)
-        response.game_status = game_status
+        gameDto = bowl_redis.GetGame(game_id)
+        print gameDto.__dict__
+        #game = get_game.get()
 
-        response.last_updated = entities.APILastUpdated(game.last_updated)
+        #game_status = entities.APIGameStatus()
+        #game_status.game_status_id = game.game_status.value
+        #game_status.game_status_text = entities.GameStatus.text(game.game_status)
+        #response.game_status = game_status
 
-        response_player = entities.APIPlayerBase(player.player_id, player.player_name)
-        response.player = response_player
+        #response.last_updated = entities.APILastUpdated(game.last_updated)
 
-        return response
+        #response_player = entities.APIPlayerBase(player.player_id, player.player_name)
+        #response.player = response_player
+
+        return gameDto

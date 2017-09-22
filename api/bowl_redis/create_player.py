@@ -1,5 +1,5 @@
 import redis
-from entities import PlayerStatus
+from bowl_redis_dto import PlayerStatus
 from . import RedisKeys
 
 class CreatePlayer(object):

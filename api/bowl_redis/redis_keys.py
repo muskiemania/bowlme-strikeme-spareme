@@ -84,3 +84,6 @@ class RedisKeys(object):
         if self.game_id is None:
             raise Exception('no game_id')
         return 'g%s_status' % self.game_id
+
+    def game_hashes_key(self):
+        return 'all_game_hashes'

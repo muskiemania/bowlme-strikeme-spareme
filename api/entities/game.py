@@ -26,7 +26,7 @@ class GameStatus(Enum):
         t[2] = 'started'
         t[3] = 'finished'
         t[4] = 'abandoned'
-        return t[status.value]
+        return t[status]
 
     @classmethod
     def enum(cls, status):
@@ -35,4 +35,4 @@ class GameStatus(Enum):
         e['2'] = GameStatus.STARTED
         e['3'] = GameStatus.FINISHED
         e['4'] = GameStatus.ABANDONED
-        return e[status]
+        return e[str(status)]

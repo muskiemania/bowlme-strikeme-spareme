@@ -1,11 +1,13 @@
 from game import CreatePlayer
+from bowl_redis_dto import PlayerStatus
 
 class Test_GameCreatePlayer:
 
-    def test_createPlayerConstructor(self):
-        p = CreatePlayer('justin', 'key')
+    def test_createPlayer_create(self):
+        playerDto = CreatePlayer.create('justin', 'key')
 
-        assert p.player_id == '1dd8752235b0f14436f3940d4df5cae4'
-        assert p.player_name == 'justin'
-        assert len(p.cards) == 0
-        assert p.status == 0
+        assert playerDto.player_id is not None
+        assert playerDto.player_name == 'justin'
+        assert playerDto.player_status == PlayerStatus.JOINED
+        assert playerDto.player_score == None
+        assert playerDto.player_rank == None

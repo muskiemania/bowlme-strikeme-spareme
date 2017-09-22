@@ -3,13 +3,13 @@ import cards
 
 class Test_GameJoinGame:
 
-    def test_joinGameConstructor_noArgs(self):
+    def _test_joinGameConstructor_noArgs(self):
         g = JoinGame()
 
         assert g.game_id == 0
         assert g.player == None
 
-    def test_joinGameConstructor_args(self):
+    def _test_joinGameConstructor_args(self):
         p = CreatePlayer('player two', '1')
         j = JoinGame(game_id = '1', player = p)
 
@@ -17,12 +17,14 @@ class Test_GameJoinGame:
         assert j.player.player_name == 'player two'
         assert j.player.status == 0
 
-    def test_joinGameCreate(self):
-        j = JoinGame('1').join('player two')
+    def test_joinGame_join(self):
+        gameDto = JoinGame.join('1', 'player two')
 
-        assert j.game_id == '1'
-        assert j.player.player_name == 'player two'
-        assert j.player.status == 0
+        print gameDto.__dict__
+        
+        assert gameDto.game_id == '1'
+        assert 'player two' in map(lambda p: p.player_name, gameDto.players)
+        #assert gameDto.player.status == 0
 
         
         

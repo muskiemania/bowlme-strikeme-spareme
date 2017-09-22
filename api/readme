@@ -2,3 +2,30 @@ to start redis:
 
 redis-server &
 
+flow:
+
+main landing:
+     - user can create new game
+     - user can join existing game
+
+create new game:
+     - creates the game
+     - creates cookie for the game
+     - creates cookie for the user
+     - redirect to game
+
+join existing:
+     - first check for cookie in case user is re-joining a game
+     - cookie will identify game
+     - if cookie identifies a game that is in-progress
+       - check cookie to identify user. if ok, then redirect straight to game
+       - if cannot identify user, then redirect to form entry
+       - form entry will generate cookies and then redirect to game
+
+layers:
+
+	service layer		from web: json		to web: json		to busn:	from busn:
+	-------------------------------------------------------------------------------------------------
+	business layer		from serv:		to serv:		from redis:	to redis:
+	-----------------------------------------------------------
+	redis layer		from busn: 		to busn: dto		

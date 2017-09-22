@@ -19,3 +19,6 @@ game_[game_id]_hands_[player_id]: list [cards]
 game_last_updated : hash
           g[game_id]_updated: timestamp
           g[game_id]_status: [0, 1, 2]
+
+auth_hashes: hash
+	     [hash]: game id

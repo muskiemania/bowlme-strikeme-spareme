@@ -1,24 +1,20 @@
 from game import CreateGame
+from bowl_redis_dto import GameStatus
 import cards
 
 class Test_GameCreateGame:
 
-    def test_createGameConstructor_noArgs(self):
-        g = CreateGame()
+    def _test_createGameConstructor_noArgs(self):
+        dto = CreateGame()
 
-        assert g.game_id == 0
-        assert g.host == None
-        assert g.players == None
-        assert g.deck == None
-        assert g.discard == None
-        assert g.status == 0
+        assert dto == None
 
-    def test_createGameCreateGameId(self):
+    def _test_createGameCreateGameId(self):
         g = CreateGame()
         id = g.create_game_id('justin', 'key')
         assert id == '1dd8752235b0f14436f3940d4df5cae4'
         
-    def test_createGameConstructor_args(self):
+    def _test_createGameConstructor_args(self):
         d = cards.Deck()
         g = CreateGame(game_id = 1, host = 'Me', players = ['Me'], deck = d, discard = [], status = 1)
 
@@ -30,11 +26,13 @@ class Test_GameCreateGame:
         assert g.status == 1
 
     def test_createGameCreate(self):
-        g = CreateGame().create(host_name='justin',hash_key='key')
-
-        assert g.game_id == CreateGame().create_game_id(host_name='justin', hash_key='key')
-        assert len(g.players.keys()) == 1 and g.host in g.players.keys()
-        assert g.players[g.host]['player_name'] == 'justin'
-        assert len(g.deck.cards) == 52
-        assert len(g.discard) == 0
-        assert g.status == 0
+        gameDto = CreateGame.create(host_player_name='justin')
+        #print dto.__dict__
+        #assert g.game_id == CreateGame.create(host_player_name='justin')
+        assert len(gameDto.players) == 1
+        assert gameDto.host_player_name in map(lambda p: p.player_name, gameDto.players)
+        assert gameDto.host_player_id in map(lambda p: p.player_id, gameDto.players)
+        #assert dto.players[g.host]['player_name'] == 'justin'
+        #assert g.deck.cards == None
+        #assert g.discard == None
+        assert gameDto.game_status == GameStatus.CREATED

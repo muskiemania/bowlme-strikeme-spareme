@@ -1,5 +1,5 @@
 import bowl_redis
-import entities
+from bowl_redis_dto import PlayerDto 
 
 class CreatePlayer(object):
 
@@ -7,7 +7,7 @@ class CreatePlayer(object):
         pass
 
     @staticmethod
-    def create(self, player_name, game_id):
-        player = entities.Player(player_name, game_id)
-        create_player = bowl_redis.CreatePlayer(player)
+    def create(player_name, game_id):
+        playerDto = PlayerDto(player_name, game_id)
+        create_player = bowl_redis.CreatePlayer(playerDto)
         return create_player.execute(game_id)

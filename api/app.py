@@ -3,6 +3,10 @@ import controllers
 
 dispatcher = cherrypy.dispatch.RoutesDispatcher()
 
+dispatcher.connect(name='api_auth', route='/api/auth', controller=controllers.AuthorizeController(), action='index', conditions=dict(method=['GET']))
+dispatcher.mapper.connect('/api/auth/game', controller='api_auth', action='verify_game', conditions=dict(method=['GET']))
+dispatcher.mapper.connect('/api/auth/player', controller='api_auth', action='verify_player', conditions=dict(method=['GET']))
+
 dispatcher.connect(name='api_create_game', route='/api/game/create', controller=controllers.CreateGameController(), action='index', conditions=dict(method=['GET']))
 dispatcher.mapper.connect('/api/game/create', controller='api_create_game', action='create', conditions=dict(method=['POST']))
 

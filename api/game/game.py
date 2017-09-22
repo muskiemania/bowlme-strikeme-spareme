@@ -16,7 +16,7 @@ class Game(object):
         response.game_id = game_id
 
         game_status = entities.APIGameStatus()
-        game_status.game_status_id = game.game_status.value
+        game_status.game_status_id = game.game_status
         game_status.game_status_text = entities.GameStatus.text(game.game_status)
 
         response.game_status = game_status
@@ -30,11 +30,11 @@ class Game(object):
         for player in bowl_redis.GetPlayers(game_id).get():
             api_player = entities.APIPlayer(player.player_id, player.player_name)
             player_status = entities.APIPlayerStatus()
-            player_status.player_status_id = player.player_status.value
+            player_status.player_status_id = player.player_status
             player_status.player_status_text = entities.PlayerStatus.text(player.player_status)
             api_player.player_status = player_status
 
-            scorer = scoring.Scorer(game.game_status, player.player_status, player.hand)
+            scorer = scoring.Scorer(player.hand)
             
             api_player.hand_rating = entities.APIHandRating(scorer.get_rating(), show_cards=game.game_status==entities.GameStatus.FINISHED)
                             

@@ -31,7 +31,7 @@ class PlayerStatus(Enum):
         t[3] = 'finished'
         t[4] = 'winner'
         t[5] = 'abandoned'
-        return t[status.value]
+        return t[status]
 
     @classmethod
     def enum(cls, status):
@@ -41,4 +41,4 @@ class PlayerStatus(Enum):
         e['3'] = PlayerStatus.FINISHED
         e['4'] = PlayerStatus.WINNER
         e['5'] = PlayerStatus.ABANDONED
-        return e[status]
+        return e[str(status)]
