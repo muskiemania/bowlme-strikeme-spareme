@@ -23,7 +23,7 @@ class AuthorizeController(object):
         auth_response = game.Verify.verify(game_id, player_id)
 
         verify_response = {}
-        if auth_response not None:
+        if auth_response is not None:
             verify_response['gameId'] = auth_response.game_key;
             verify_response['playerId'] = auth_response.player_key;
 

@@ -20,5 +20,5 @@ game_last_updated : hash
           g[game_id]_updated: timestamp
           g[game_id]_status: [0, 1, 2]
 
-auth_hashes: hash
+game_keys: hash
 	     [hash]: game id

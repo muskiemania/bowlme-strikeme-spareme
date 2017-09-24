@@ -1,33 +1,30 @@
 import bowl_redis
+from viewmodels import JoinGameModel
 from bowl_redis_dto import PlayerDto
 
 class JoinGame(object):
 
-    def __init__(self):
-        pass
+    def __init__(self, game_key=None, game_id=None):
+        self.game_id = game_id
+        self.game_key = game_key
+        
+    def execute(self, player_name=None, player_id=None):
+        if self.game_key is None and player_name is None:
+            #verify only
+            verify = bowl_redis.VerifyGame(self.game_id, player_id)
+            dto = verify.execute()
+            
+            return JoinGameModel(dto.game.game_id, 0 if dto.game.game_id is 0 else player_id)
+        
+        #check game then join
+        verify = bowl_redis.VerifyGame()
+        verify_dto = join.execute(self.game_key)
 
-    @staticmethod
-    def join(game_id, player_name=None):
-        playerDto = PlayerDto(player_name, game_id)
+        if verify_dto.game_id == 0:
+            return JoinGameModel(verify_dto.game_id, 0)
+                
+        player_dto = PlayerDto(player_name, verify_dto.game_id)
+        create_player = bowl_redis.CreatePlayer(player_dto)
+        create_player.execute(game_id)
 
-        create_player = bowl_redis.CreatePlayer(playerDto)
-        playerDto = create_player.execute(game_id)
-
-        #response = entities.APIGameResponse()
-        #response.game_id = game_id
-
-        gameDto = bowl_redis.GetGame(game_id)
-        print gameDto.__dict__
-        #game = get_game.get()
-
-        #game_status = entities.APIGameStatus()
-        #game_status.game_status_id = game.game_status.value
-        #game_status.game_status_text = entities.GameStatus.text(game.game_status)
-        #response.game_status = game_status
-
-        #response.last_updated = entities.APILastUpdated(game.last_updated)
-
-        #response_player = entities.APIPlayerBase(player.player_id, player.player_name)
-        #response.player = response_player
-
-        return gameDto
+        return JoinGameModel(verify_dto.game.game_id, player_dto.player_id)

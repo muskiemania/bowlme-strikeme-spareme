@@ -8,37 +8,38 @@ class CreateGame(object):
         self.host_player_name = host_player_name
 
     def execute(self):
-        game_id = self.__get_new_game_id()
-        gameDto = GameDto(game_id, self.host_player_name)
-        gameDto.game_status = GameStatus.CREATED
+        game_dto = GameDto()
+        game_dto.game_id = self.__get_new_game_id()
+        game_dto.host_player_name = self.host_player_name
+        game_dto.game_status = GameStatus.CREATED
 
-        key_info = RedisKeys(game_id)
+        key_info = RedisKeys(game_dto.game_id)
 
         last_updated = {}
-        last_updated[key_info.game_last_updated_key()] = gameDto.last_updated
-        last_updated[key_info.game_last_updated_status_key()] = gameDto.game_status
+        last_updated[key_info.game_last_updated_key()] = game_dto.last_updated
+        last_updated[key_info.game_last_updated_status_key()] = game_dto.game_status
 
         pipe = self.redis.pipeline()
 
         pipe.hset(key_info.game_info(), key_info.game_info_host_name_key(), self.host_player_name)
-        pipe.hset(key_info.game_info(), key_info.game_info_status_key(), gameDto.game_status)
+        pipe.hset(key_info.game_info(), key_info.game_info_status_key(), game_dto.game_status)
 
-        pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_key(), gameDto.last_updated)
-        pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_status_key(), gameDto.game_status)
+        pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_key(), game_dto.last_updated)
+        pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_status_key(), game_dto.game_status)
 
         pipe.execute()
 
-        playerDto = PlayerDto(self.host_player_name, gameDto.game_id)
+        player_dto = PlayerDto(self.host_player_name, game_dto.game_id)
 
-        pipe.hset(key_info.game_info(), key_info.game_info_host_id_key(), playerDto.player_id)
+        pipe.hset(key_info.game_info(), key_info.game_info_host_id_key(), player_dto.player_id)
         pipe.execute()
 
-        CreatePlayer(playerDto).execute(gameDto.game_id)
+        CreatePlayer(player_dto).execute(game_dto.game_id)
 
-        gameDto.host_player_id = playerDto.player_id
-        gameDto.players.append(playerDto)
+        game_dto.host_player_id = player_dto.player_id
+        game_dto.players.append(player_dto)
 
-        return gameDto
+        return game_dto
 
     def __get_new_game_id(self):
         key_info = RedisKeys()
