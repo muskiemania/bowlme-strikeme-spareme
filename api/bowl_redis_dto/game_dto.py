@@ -1,4 +1,5 @@
 from enum import Enum
+import hashlib
 
 class GameDto(object):
     def __init__(self):
@@ -8,6 +9,13 @@ class GameDto(object):
         self.host_player_id = None
         self.game_status = None
         self.players = []
+        self.game_key = None
+
+    def generate_game_key(self):
+        md5 = hashlib.md5()
+        md5.update(self.host_player_name)
+        md5.update(str(self.game_id))
+        self.game_key = md5.hexdigest()[-6:]
 
 class GameStatus(Enum):
     CREATED = 1

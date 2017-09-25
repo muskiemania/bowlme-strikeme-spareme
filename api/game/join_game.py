@@ -14,17 +14,20 @@ class JoinGame(object):
             verify = bowl_redis.VerifyGame(self.game_id, player_id)
             dto = verify.execute()
             
-            return JoinGameModel(dto.game.game_id, 0 if dto.game.game_id is 0 else player_id)
+            if dto.game.game_id == 0:
+                return JoinGameModel(0, 0, '')
+            
+            return JoinGameModel(dto.game.game_id, player_id, dto.game.game_key)
         
         #check game then join
         verify = bowl_redis.VerifyGame()
-        verify_dto = join.execute(self.game_key)
+        verify_dto = verify.execute(self.game_key)
 
-        if verify_dto.game_id == 0:
-            return JoinGameModel(verify_dto.game_id, 0)
+        if verify_dto.game.game_id == 0:
+            return JoinGameModel(verify_dto.game_id, 0, '')
                 
-        player_dto = PlayerDto(player_name, verify_dto.game_id)
+        player_dto = PlayerDto(player_name, verify_dto.game.game_id)
         create_player = bowl_redis.CreatePlayer(player_dto)
-        create_player.execute(game_id)
+        create_player.execute(verify_dto.game.game_id)
 
-        return JoinGameModel(verify_dto.game.game_id, player_dto.player_id)
+        return JoinGameModel(verify_dto.game.game_id, player_dto.player_id, verify_dto.game.game_key)

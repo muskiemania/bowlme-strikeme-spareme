@@ -13,10 +13,17 @@ class VerifyGame(object):
         pipe = self.redis.pipeline()
 
         pipe.hget(key_info.game_info(), key_info.game_info_status_key())
+        pipe.hget(key_info.game_info(), key_info.game_info_host_name_key())
+
+        result = pipe.execute()
+
+        print result
         
         game_dto = GameDto()
         game_dto.game_id = self.game_id
-        game_dto.game_status = pipe.execute()
+        game_dto.game_status = result[0]
+        game_dto.host_player_name = result[1]
+        game_dto.generate_game_key()
 
         return VerifyDto(game_dto)
         
@@ -36,12 +43,14 @@ class VerifyGame(object):
         pipe = self.redis.pipeline()
 
         pipe.hgetall(key_info.game_hashes_key())
-        hashes = pipe.execute()
+        hashes = pipe.execute()[0]
+        
+        matches = filter(lambda x: x == game_key, hashes.keys())
 
-        matches = filter(lambda x: x[:-6] == game_key, hashes.keys())
-
+        print matches
+        
         if len(matches) == 1:
-            self.game_id = matches[0]
+            self.game_id = hashes[matches[0]]
             return self.__verifyGameOnly()
 
         raise Exception('too many games with key ' + game_key)

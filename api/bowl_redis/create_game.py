@@ -12,7 +12,8 @@ class CreateGame(object):
         game_dto.game_id = self.__get_new_game_id()
         game_dto.host_player_name = self.host_player_name
         game_dto.game_status = GameStatus.CREATED
-
+        game_dto.generate_game_key()
+        
         key_info = RedisKeys(game_dto.game_id)
 
         last_updated = {}
@@ -27,6 +28,8 @@ class CreateGame(object):
         pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_key(), game_dto.last_updated)
         pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_status_key(), game_dto.game_status)
 
+        pipe.hset(key_info.game_hashes_key(), game_dto.game_key, game_dto.game_id)
+        
         pipe.execute()
 
         player_dto = PlayerDto(self.host_player_name, game_dto.game_id)

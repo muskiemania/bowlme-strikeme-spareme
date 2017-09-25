@@ -16,7 +16,6 @@ class JoinGameController(object):
         #try:
         cookie_value = cherrypy.request.cookie[Helpers().get_cookie_name()].value
         decoded = Helpers().decode_jwt(cookie_value)
-        print decoded
         join_game = game.JoinGame(game_id=decoded['gameId'])
         joined_game = join_game.execute(player_id=decoded['playerId'])
 
@@ -38,7 +37,7 @@ class JoinGameController(object):
         join_game = game.JoinGame(game_key=game_key)
         joined_game = join_game.execute(player_name=player_name)
 
-        if joined_game.game_id != 0:
+        if not joined_game.is_game_id_zero():
             jwt = Helpers().get_jwt(joined_game.get_jwt_data())
             cherrypy.response.cookie[Helpers().get_cookie_name()] = jwt
             cherrypy.response.cookie[Helpers().get_cookie_name()]['expires'] = 7200
