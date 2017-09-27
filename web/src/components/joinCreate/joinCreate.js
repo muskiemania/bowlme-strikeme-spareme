@@ -28,12 +28,21 @@ class JoinCreate extends Component {
         this.setState({ mode: 'join' });
     }
 
+    clickCreateGame() {
+	
+	
+    }
+
+    clickJoinGame() {
+
+    }
+
     factory() {
         switch(this.state.mode) {
             case 'create':
-                return (<Create />);
+            return (<Create click={this.clickCreateGame.bind(this)} />);
             case 'join':
-                return (<Join />);
+            return (<Join click={this.clickJoinGame.bind(this)} />);
             default:
                 return (<Welcome clickCreate={this.clickSetModeCreate.bind(this)} clickJoin={this.clickSetModeJoin.bind(this)} />);
         }

@@ -27,4 +27,4 @@ class Verify(object):
         verify = bowl_redis.Verify(game_id, player_id)
         reply = verify.execute()
 
-        return reply.player.player_status in (PlayerStatus.JOINED, PlayerStatus.DEALT)
+        return reply.player.player_status in (PlayerStatus.JOINED, PlayerStatus.DEALT, PlayerStatus.MUST_DISCARD)

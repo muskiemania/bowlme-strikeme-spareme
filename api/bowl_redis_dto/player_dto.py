@@ -21,18 +21,20 @@ class PlayerDto(object):
 class PlayerStatus(Enum):
     JOINED = 1
     DEALT = 2
-    FINISHED = 3
-    WINNER = 4
-    ABANDONED = 5
+    MUST_DISCARD = 3
+    FINISHED = 4
+    WINNER = 5
+    ABANDONED = 6
 
     @classmethod
     def text(cls, status):
         t = {}
         t[1] = 'joined'
         t[2] = 'dealt'
-        t[3] = 'finished'
-        t[4] = 'winner'
-        t[5] = 'abandoned'
+        t[3] = 'must discard'
+        t[4] = 'finished'
+        t[5] = 'winner'
+        t[6] = 'abandoned'
         return t[status.value]
 
     @classmethod
@@ -40,7 +42,8 @@ class PlayerStatus(Enum):
         e = {}
         e['1'] = PlayerStatus.JOINED
         e['2'] = PlayerStatus.DEALT
-        e['3'] = PlayerStatus.FINISHED
-        e['4'] = PlayerStatus.WINNER
-        e['5'] = PlayerStatus.ABANDONED
+        e['3'] = PlayerStatus.MUST_DISCARD
+        e['4'] = PlayerStatus.FINISHED
+        e['5'] = PlayerStatus.WINNER
+        e['6'] = PlayerStatus.ABANDONED
         return e[status]

@@ -9,42 +9,35 @@ class Game(object):
         pass
 
     @staticmethod
-    def get(game_id, player_id):
-        game = bowl_redis.GetGame(game_id).get()
+    def get(game_id, player_id=None):
 
-        response = entities.APIGameResponse()
-        response.game_id = game_id
+        players = bowl_redis.GetPlayers(game_id)
+        player_dto = players.execute()
 
-        game_status = entities.APIGameStatus()
-        game_status.game_status_id = game.game_status
-        game_status.game_status_text = entities.GameStatus.text(game.game_status)
+        game_details = bowl_redis.GetGameDetails(game_id)
+        game_details_dto = game_details.execute()
 
-        response.game_status = game_status
+        #needs:
+        #all players, including name, hand, status
+        #if player specified, then
+        #  -- exclude "me" from players
+        #  -- fetch my cards
+        #  -- fetch my status
+        #for the game
+        #  -- need game status
+        #  -- need to know if "I" am the host
 
-        response.last_updated = entities.APILastUpdated(game.last_updated)
+        cards = []
+        
+        if player_id is not None:
+            player_dto = filter(lambda x: x.player_id != player_id, player_dto)
+            me = filter(lambda x: x.player_id == player_id)
+            cards = me.cards
 
-        if player_id == game.host_player_id:
-            response.is_host = True
-
-        api_players = []
-        for player in bowl_redis.GetPlayers(game_id).get():
-            api_player = entities.APIPlayer(player.player_id, player.player_name)
-            player_status = entities.APIPlayerStatus()
-            player_status.player_status_id = player.player_status
-            player_status.player_status_text = entities.PlayerStatus.text(player.player_status)
-            api_player.player_status = player_status
-
-            scorer = scoring.Scorer(player.hand)
+        my_game = MyGameModel()
+        my_game.setPlayers(player_dto)
+        my_game.setCards(cards)
+        my_game.setStatus(player_status=me.status)
+        my_game.setStatus(game_status=game_details_dto.game_status)
             
-            api_player.hand_rating = entities.APIHandRating(scorer.get_rating(), show_cards=game.game_status==entities.GameStatus.FINISHED)
-                            
-            api_players.append(api_player)
-
-            if player.player_id == player_id:
-                response.cards = [entities.APICard(card) for card in player.hand.cards]
-
-        response.players = api_players
-
-        
-        
-        return response
+        return my_game.json()
