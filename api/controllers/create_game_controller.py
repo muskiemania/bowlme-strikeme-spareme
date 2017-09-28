@@ -8,18 +8,22 @@ class CreateGameController(object):
     def __init__(self):
         pass
 
-    @cherrypy.config(**{'tools.response_headers.on': True, 'tools.response_headers.headers': [('Content-Language', 'en-US'), ('Content-Type', 'application/json')]})
+    #@cherrypy.config(**{'tools.response_headers.on': True, 'tools.response_headers.headers': [('Content-Language', 'en-US'), ('Content-Type', 'application/json')]})
 
     @cherrypy.expose
     def index(self):
-        response = {}
-        response['message'] = 'this controller is post only'
-        return json.dumps(response)
+        cherrypy.response.headers['Access-Control-Allow-Methods'] = 'POST'
+        cherrypy.response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+        cherrypy.response.headers['Access-Control-Allow-Origin'] = 'http://localhost:5000'
+        return 'True'
+        #response = {}
+        #response['message'] = 'this controller is post only'
+        #return json.dumps(response)
 
     @cherrypy.expose
     @cherrypy.tools.json_in()
     def create(self):
-        host_player_name = cherrypy.request.json['host_player_name']
+        host_player_name = cherrypy.request.json['playerName']
 
         #create game
         created_game = game.CreateGame.create(host_player_name)

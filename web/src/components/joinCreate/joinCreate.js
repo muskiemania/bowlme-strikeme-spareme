@@ -10,6 +10,8 @@ import Join from '../shared/join/join';
 import Create from '../shared/create/create';
 import Welcome from '../shared/welcome/welcome';
 
+import { post } from '../../helpers/http';
+
 import './joinCreate.less';
 
 class JoinCreate extends Component {
@@ -28,21 +30,42 @@ class JoinCreate extends Component {
         this.setState({ mode: 'join' });
     }
 
-    clickCreateGame() {
-	
-	
+    clickCreateGame(playerName) {
+	console.log('inside joinCreate.js clickCreateGame');
+	post('http://localhost:5001/api/game/create', { 'playerName': playerName})
+	    .then((resp) => {
+		console.log('inside then');
+		if(resp.gameId === 0) {
+		    throw 'Could not create game';
+		}
+
+		window.location.replace('http://localhost:5000/game/');
+	    })
+	    .catch((err) => {
+		//animation to show error message
+	    });
     }
 
-    clickJoinGame() {
+    clickJoinGame(gameKey, playerName) {
+	post('http://localhost:5001/api/game/join', {gameKey, playerName})
+	    .then((resp) => {
+		if(resp.gameId === 0) {
+		    throw 'Could not create game';
+		}
 
+		window.location.replace('http://localhost:5000/game/');
+	    })
+	    .catch((err) => {
+		//animation to show error message
+	    });	
     }
 
     factory() {
         switch(this.state.mode) {
             case 'create':
-            return (<Create click={this.clickCreateGame.bind(this)} />);
+            return (<Create clickCreate={this.clickCreateGame.bind(this)} />);
             case 'join':
-            return (<Join click={this.clickJoinGame.bind(this)} />);
+            return (<Join clickJoin={this.clickJoinGame.bind(this)} />);
             default:
                 return (<Welcome clickCreate={this.clickSetModeCreate.bind(this)} clickJoin={this.clickSetModeJoin.bind(this)} />);
         }

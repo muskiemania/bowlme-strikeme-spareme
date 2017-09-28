@@ -7,7 +7,7 @@ dispatcher.connect(name='api_auth', route='/api/auth', controller=controllers.Au
 dispatcher.mapper.connect('/api/auth/game', controller='api_auth', action='verify_game', conditions=dict(method=['GET']))
 dispatcher.mapper.connect('/api/auth/player', controller='api_auth', action='verify_player', conditions=dict(method=['GET']))
 
-dispatcher.connect(name='api_create_game', route='/api/game/create', controller=controllers.CreateGameController(), action='index', conditions=dict(method=['GET']))
+dispatcher.connect(name='api_create_game', route='/api/game/create', controller=controllers.CreateGameController(), action='index', conditions=dict(method=['OPTIONS']))
 dispatcher.mapper.connect('/api/game/create', controller='api_create_game', action='create', conditions=dict(method=['POST']))
 
 dispatcher.connect(name='api_get_game', route='/api/game/{game_id}/player/{player_id}', controller=controllers.GameController(), action='index', conditions=dict(method=['GET']))
@@ -34,7 +34,7 @@ dispatcher.mapper.connect('/game/discard', controller='api_discard_cards', actio
 conf = {}
 conf['/'] = {'request.dispatch': dispatcher}
 
-cherrypy.config.update({'server.socket_port': 5001})
+cherrypy.config.update({'server.socket_port': 5001, 'tools.response_headers.on': True, 'tools.response_headers.headers': [('Content-Type', 'application/json'), ('Access-Control-Allow-Origin', 'http://localhost:5000')]})
 cherrypy.tree.mount(root=None, config=conf)
 
 if hasattr(cherrypy.engine, 'block'):
