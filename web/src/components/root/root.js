@@ -16,10 +16,10 @@ const Root = ({ store }) => (
             <Route path="/" component={PokerTable}>
                 <IndexRoute component={JoinCreate} />
             </Route>
-            <Route path="/game/(:gameId)" component={PokerTable}>
+            <Route path="/game/" component={PokerTable}>
                 <IndexRoute component={PokerGame} />
             </Route>
-            <Route path="/results/(:gameId)" component={PokerTable}>
+            <Route path="/results/" component={PokerTable}>
                 <IndexRoute component={Scoreboard} />
             </Route>
         </Router>

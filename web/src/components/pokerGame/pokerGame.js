@@ -12,6 +12,8 @@ import Seats from '../../components/seats/seats';
 import PokerHand from '../../components/pokerHand/pokerHand';
 import DrawCards from '../../components/drawCards/drawCards';
 
+import './pokerGame.less';
+
 class PokerGame extends Component {
 
     constructor(props) {
@@ -69,8 +71,9 @@ class PokerGame extends Component {
         }
         
         return (
-            <div>
+		<div>
                 <div>
+		<span id="game-id">{'X0X0X0'}</span>
                     <Seats players={Immutable.fromJS([
                             {name: 'SARAH', cards:[1,2,3,4]},
                             {name: 'JUSTIN', cards:[]},
