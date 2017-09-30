@@ -5,9 +5,14 @@ import './button.less';
 
 class Button extends Component {
 
+    handleTouchClick(e) {
+	e.preventDefault();
+	this.props.click();
+    }
+    
     render() {
     
-        let {text, disabled, isGrouped, click} = this.props;
+        let {text, disabled, isGrouped} = this.props;
         
         if(isGrouped) {
             return (
@@ -19,7 +24,7 @@ class Button extends Component {
         }
     
         return (<div className={classname('draw-button', disabled ? 'disabled' : null)}>
-            <a href='#' className='button' onClick={click} onTouchStart={click}>
+		<a href='#' className='button' onClick={(e) => this.handleTouchClick(e)}>
                 <div className='inner-box'>
                     {text}
                 </div>

@@ -4,8 +4,9 @@ import Immutable from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import _ from 'lodash';
-import Button from '../shared/button/button';
+import Promise from 'bluebird';
 
+import Button from '../shared/button/button';
 import Join from '../shared/join/join';
 import Create from '../shared/create/create';
 import Welcome from '../shared/welcome/welcome';
@@ -33,9 +34,9 @@ class JoinCreate extends Component {
     clickCreateGame(playerName) {
 	console.log('inside joinCreate.js clickCreateGame');
 	post('http://localhost:5001/api/game/create', { 'playerName': playerName})
-	    .then((resp) => {
+	    .then((respJson) => {
 		console.log('inside then');
-		if(resp.gameId === 0) {
+		if(respJson.gameId === 0) {
 		    throw 'Could not create game';
 		}
 
@@ -43,6 +44,7 @@ class JoinCreate extends Component {
 	    })
 	    .catch((err) => {
 		//animation to show error message
+		console.log(err);
 	    });
     }
 

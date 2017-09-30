@@ -13,9 +13,10 @@ class CreateGameController(object):
     @cherrypy.expose
     def index(self):
         cherrypy.response.headers['Access-Control-Allow-Methods'] = 'POST'
-        cherrypy.response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+        cherrypy.response.headers['Access-Control-Allow-Headers'] = 'Accept, Content-Type'
         cherrypy.response.headers['Access-Control-Allow-Origin'] = 'http://localhost:5000'
-        return 'True'
+        cherrypy.response.headers['Access-Control-Allow-Credentials'] = 'true'
+        return json.dumps({ 'ok': True })
         #response = {}
         #response['message'] = 'this controller is post only'
         #return json.dumps(response)
@@ -23,6 +24,12 @@ class CreateGameController(object):
     @cherrypy.expose
     @cherrypy.tools.json_in()
     def create(self):
+
+        print '---'
+        x = cherrypy.request.body.fp.read()
+        print x
+        print '---'
+        
         host_player_name = cherrypy.request.json['playerName']
 
         #create game

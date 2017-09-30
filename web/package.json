@@ -40,6 +40,7 @@
     "less-loader": "^4.0.5",
     "react-immutable-proptypes": "^2.1.0",
     "redux-thunk": "^2.2.0",
-    "style-loader": "^0.18.2"
+    "style-loader": "^0.18.2",
+    "whatwg-fetch": "^2.0.3"
   }
 }
