@@ -18,10 +18,10 @@ export function isLoading(state = false, action) {
     }
 }
 
-export function cards(state = Immutable.List(), action) {
+export function cards(state = Immutable.Map(), action) {
     switch(action.type) {
         case 'ITEMS_FETCH_DATA_SUCCESS':
-            return Immutable.fromJS(action.cards);
+            return Immutable.fromJS(action.game);
         default:
             return state;
     }

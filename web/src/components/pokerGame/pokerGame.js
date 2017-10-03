@@ -53,7 +53,8 @@ class PokerGame extends Component {
     render() {
 
         let {cards, isError, isLoading} = this.props;
-
+	let game = cards;
+	
         if(isError) {
             return (
                 <div className='poker-table'>
@@ -69,23 +70,20 @@ class PokerGame extends Component {
                 </div>
             );
         }
-        
+
+	let players = game.get('players') || Immutable.List();
+	let myCards = game.get('cards') || Immutable.List();
+	let gameStatus = game.get('gameStatus') || Immutable.Map();
+	let playerStatus = game.get('playerStatus') || Immutable.Map();
+	
         return (
 		<div>
                 <div>
-		<span id="game-id">{'X0X0X0'}</span>
-                    <Seats players={Immutable.fromJS([
-                            {name: 'SARAH', cards:[1,2,3,4]},
-                            {name: 'JUSTIN', cards:[]},
-                            {name: 'PAUL', cards:[1,2,3]},
-                            {name: 'SARA', cards:[1,2,3,4,5,6]},
-                            {name: 'JENNA', cards:[1,2,3,4,5], finished: true},
-                            {name: 'NEWBABY', cards:[1,2,3,4,5,6,7,8,9,10,11]}
-                    ])} />
-                    
-                    <PokerHand cards={cards} selected={this.getSelectedCards()} toggleSelected={this.toggleCard.bind(this)} />                    
+		<span id="game-id">{gameStatus.get('gameId') || '??????'}</span>
+                <Seats players={players} />
+                <PokerHand cards={myCards} selected={this.getSelectedCards()} toggleSelected={this.toggleCard.bind(this)} />                    
                 </div>
-                <DrawCards cardsInHand={cards.size} cardsSelected={this.getSelectedCards().size} canDrawAgain={true} />
+                <DrawCards cardsInHand={myCards.size} cardsSelected={this.getSelectedCards().size} canDrawAgain={ _.includes([1,2], playerStatus.get('statusId') || 0)} />
             </div>
         );
     }
@@ -93,7 +91,7 @@ class PokerGame extends Component {
 
 PokerGame.propTypes = {
     fetchData: PropTypes.func.isRequired,
-    cards: ImmutablePropTypes.list,
+    cards: ImmutablePropTypes.map,
     isError: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired
 };

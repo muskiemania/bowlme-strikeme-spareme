@@ -1,12 +1,29 @@
 import Promise from 'bluebird';
 
+export function get(url) {
+    console.log('getting...');
+    return Promise.resolve(fetch(url, {
+	method: 'GET',
+	credentials: 'include',
+	headers: {
+	    'Accept': 'application/json',
+	    'Content-Type': 'application/json',
+	}}))
+	.then((resp) => {
+	    console.log('get return...');
+	    return resp.json();
+	});
+}
+
 export function post(url, postData) {
     
     return Promise.resolve(fetch(url, {
-	    method: 'POST',
+	method: 'POST',
+	credentials: 'include',
 	    headers: {
 		'Accept': 'application/json',
-		'Content-Type': 'application/json'},
+		'Content-Type': 'application/json'
+	    },
 	body: JSON.stringify(postData) }))
 	.then((resp) => {
 	    return resp.json();

@@ -34,7 +34,7 @@ class VerifyGame(object):
         pipe.hget(key_info.game_players_info(), key_info.game_players_status_key())
 
         player_dto = PlayerDto('name', self.game_id, self.player_id)
-        player_dto = pipe.execute()
+        player_dto.player_status = pipe.execute()[0]
 
         return player_dto
         

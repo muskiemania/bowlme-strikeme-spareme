@@ -18,11 +18,12 @@ export function isLoading(bool) {
 
 export function fetchDataSuccess(data) {
 
+    let game = data['game'];
     let cards = data['cards'];
-    
+
     return {
         type: ITEMS_FETCH_DATA_SUCCESS,
-        cards
+	game
     };
 }
 

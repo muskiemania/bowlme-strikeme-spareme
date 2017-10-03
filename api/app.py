@@ -9,6 +9,7 @@ dispatcher.mapper.connect('/api/auth/player', controller='api_auth', action='ver
 
 dispatcher.connect(name='api_create_game', route='/api/game/create', controller=controllers.CreateGameController(), action='index', conditions=dict(method=['OPTIONS']))
 dispatcher.mapper.connect('/api/game/create', controller='api_create_game', action='create', conditions=dict(method=['POST']))
+dispatcher.mapper.connect('/api/game/create', controller='api_create_game', action='verify', conditions=dict(method=['GET']))
 
 dispatcher.connect(name='api_get_game', route='/api/game/{game_id}/player/{player_id}', controller=controllers.GameController(), action='index', conditions=dict(method=['GET']))
 

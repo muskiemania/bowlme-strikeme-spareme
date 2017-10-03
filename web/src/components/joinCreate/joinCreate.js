@@ -11,7 +11,7 @@ import Join from '../shared/join/join';
 import Create from '../shared/create/create';
 import Welcome from '../shared/welcome/welcome';
 
-import { post } from '../../helpers/http';
+import { post, get } from '../../helpers/http';
 
 import './joinCreate.less';
 
@@ -24,7 +24,23 @@ class JoinCreate extends Component {
     }
 
     clickSetModeCreate() {
-        this.setState({ mode: 'create' });
+	console.log('entered create');
+	get('http://localhost:5001/api/game/create')
+	    .then((respJson) => {
+		if(respJson.gameId === 0) {
+		    this.setState({ mode: 'create' });
+		}
+		else if (respJson.gameId > 0) {
+		    console.log('ready to redirect');
+		    window.location.replace('http://localhost:5000/game/');
+		}
+		else {
+		    throw 'Unable to determine game';
+		}
+	    })
+	    .catch((err) => {
+		console.log(err);
+	    });
     }
 
     clickSetModeJoin() {
