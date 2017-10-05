@@ -1,6 +1,7 @@
 import redis
 from bowl_redis_dto import GameDto, GameStatus, PlayerDto
 from . import RedisKeys, CreatePlayer
+import datetime
 
 class CreateGame(object):
     def __init__(self, host_player_name):
@@ -12,6 +13,7 @@ class CreateGame(object):
         game_dto.game_id = self.__get_new_game_id()
         game_dto.host_player_name = self.host_player_name
         game_dto.game_status = GameStatus.CREATED
+        game_dto.last_updated = str(datetime.datetime.now())
         game_dto.generate_game_key()
         
         key_info = RedisKeys(game_dto.game_id)

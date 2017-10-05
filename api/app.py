@@ -11,10 +11,18 @@ dispatcher.connect(name='api_create_game', route='/api/game/create', controller=
 dispatcher.mapper.connect('/api/game/create', controller='api_create_game', action='create', conditions=dict(method=['POST']))
 dispatcher.mapper.connect('/api/game/create', controller='api_create_game', action='verify', conditions=dict(method=['GET']))
 
-dispatcher.connect(name='api_get_game', route='/api/game/{game_id}/player/{player_id}', controller=controllers.GameController(), action='index', conditions=dict(method=['GET']))
 
-dispatcher.connect(name='api_join_game', route='/api/game/join', controller=controllers.JoinGameController(), action='index', conditions=dict(method=['GET']))
+
+dispatcher.connect(name='api_join_game', route='/api/game/join', controller=controllers.JoinGameController(), action='index', conditions=dict(method=['OPTIONS']))
 dispatcher.mapper.connect('/api/game/join', controller='api_join_game', action='join', conditions=dict(method=['POST']))
+dispatcher.mapper.connect('/api/game/join', controller='api_join_game', action='verify', conditions=dict(method=['GET']))
+
+
+
+
+dispatcher.connect(name='api_get_game', route='/api/game', controller=controllers.GameController(), action='index', conditions=dict(method=['OPTIONS']))
+dispatcher.mapper.connect('/api/game', controller='api_get_game', action='game', conditions=dict(method=['GET']))
+
 
 dispatcher.connect(name='api_start_game', route='/api/game/start', controller=controllers.StartGameController(), action='index', conditions=dict(method=['GET']))
 dispatcher.mapper.connect('/api/game/start', controller='api_start_game', action='start', conditions=dict(method=['POST']))
@@ -35,7 +43,8 @@ dispatcher.mapper.connect('/game/discard', controller='api_discard_cards', actio
 conf = {}
 conf['/'] = {'request.dispatch': dispatcher}
 
-cherrypy.config.update({'server.socket_port': 5001, 'tools.response_headers.on': True, 'tools.response_headers.headers': [('Content-Type', 'application/json'), ('Access-Control-Allow-Origin', 'http://localhost:5000')]})
+cherrypy.config.update({'server.socket_port': 5001, 'tools.response_headers.on': True, 'tools.response_headers.headers': [('Content-Type', 'application/json'), ('Access-Control-Allow-Origin', 'http://localhost:5000'), ('Access-Control-Allow-Headers', 'Accept, Content-Type'), ('Access-Control-Allow-Origin', 'http://localhost:5000'), ('Access-Control-Allow-Credentials', 'true')]})
+
 cherrypy.tree.mount(root=None, config=conf)
 
 if hasattr(cherrypy.engine, 'block'):

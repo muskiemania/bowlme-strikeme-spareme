@@ -23,6 +23,8 @@ class JoinGame(object):
         verify = bowl_redis.VerifyGame()
         verify_dto = verify.execute(self.game_key)
 
+        print verify_dto.__dict__
+
         if verify_dto.game.game_id == 0:
             return JoinGameModel(verify_dto.game_id, 0, '')
                 

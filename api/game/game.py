@@ -2,6 +2,7 @@ import bowl_redis
 import entities
 import cards
 import scoring
+import viewmodels
 
 class Game(object):
 
@@ -14,7 +15,7 @@ class Game(object):
         players = bowl_redis.GetPlayers(game_id)
         player_dto = players.execute()
 
-        game_details = bowl_redis.GetGameDetails(game_id)
+        game_details = bowl_redis.GetGame(game_id)
         game_details_dto = game_details.execute()
 
         #needs:
@@ -27,17 +28,20 @@ class Game(object):
         #  -- need game status
         #  -- need to know if "I" am the host
 
-        cards = []
-        
+        my_game = viewmodels.MyGameModel()
+
         if player_id is not None:
             player_dto = filter(lambda x: x.player_id != player_id, player_dto)
-            me = filter(lambda x: x.player_id == player_id)
-            cards = me.cards
+            my_game.setPlayers(player_dto)
 
-        my_game = MyGameModel()
-        my_game.setPlayers(player_dto)
-        my_game.setCards(cards)
-        my_game.setStatus(player_status=me.status)
-        my_game.setStatus(game_status=game_details_dto.game_status)
+            me = filter(lambda x: x.player_id == player_id, player_dto)
+            print player_id
+            print player_dto
+            if len(me) == 1:
+                me = me[0]
+                my_game.setCards(me.cards)
+                my_game.setStatus(player_status=me.player_status)
+
+            my_game.setStatus(game_status=game_details_dto.game_status)
             
-        return my_game.json()
+        return my_game

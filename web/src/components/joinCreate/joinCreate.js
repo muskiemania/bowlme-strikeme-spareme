@@ -24,14 +24,12 @@ class JoinCreate extends Component {
     }
 
     clickSetModeCreate() {
-	console.log('entered create');
 	get('http://localhost:5001/api/game/create')
 	    .then((respJson) => {
 		if(respJson.gameId === 0) {
 		    this.setState({ mode: 'create' });
 		}
 		else if (respJson.gameId > 0) {
-		    console.log('ready to redirect');
 		    window.location.replace('http://localhost:5000/game/');
 		}
 		else {
@@ -44,7 +42,21 @@ class JoinCreate extends Component {
     }
 
     clickSetModeJoin() {
-        this.setState({ mode: 'join' });
+	get('http://localhost:5001/api/game/join')
+	    .then((respJson) => {
+		if(respJson.gameId === 0) {
+		    this.setState({ mode: 'join' });
+		}
+		else if(respJson.gameId > 0) {
+		    window.location.replace('http://localhost:5000/game/');
+		}
+		else {
+		    throw 'Unable to determine game';
+		}
+	    })
+	    .catch((err) => {
+		console.log(err);
+	    });		
     }
 
     clickCreateGame(playerName) {
@@ -65,7 +77,7 @@ class JoinCreate extends Component {
     }
 
     clickJoinGame(gameKey, playerName) {
-	post('http://localhost:5001/api/game/join', {gameKey, playerName})
+	post('http://localhost:5001/api/game/join', { 'gameKey': gameKey, 'playerName': playerName})
 	    .then((resp) => {
 		if(resp.gameId === 0) {
 		    throw 'Could not create game';

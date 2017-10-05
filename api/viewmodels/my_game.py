@@ -21,7 +21,12 @@ class MyGameModel(object):
             self.__player_status = player_status
         
     def json(self):
-        return json.dumps({'players': self.__players,
-                           'myCards': self.__my_cards,
-                           'gameStatus': self.__game_status,
-                           'playerStatus': self.__player_status})
+        return json.dumps({'players': PlayerModel.fromDto(self.__players), 'myCards': self.__my_cards, 'gameStatus': self.__game_status, 'playerStatus': self.__player_status})
+
+class PlayerModel(object):
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def fromDto(players):
+        return json.dumps(map(lambda x: x.__dict__, players))
