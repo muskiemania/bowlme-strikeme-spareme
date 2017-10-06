@@ -12,7 +12,7 @@ class MyGameModel(object):
         self.__players = players
 
     def setCards(self, cards):
-        self.__cards = cards
+        self.__my_cards = cards
 
     def setStatus(self, game_status=None, player_status=None):
         if game_status is not None:

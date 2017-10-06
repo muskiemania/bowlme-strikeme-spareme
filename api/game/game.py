@@ -52,7 +52,8 @@ class Game(object):
                 print me.__dict__
                 print '555'
                 my_game.setStatus(player_status=me.player_status)
-
+                my_game.setCards(me.player_cards)
+                
             my_game.setStatus(game_status=game_details_dto.game_status)
             
         return my_game

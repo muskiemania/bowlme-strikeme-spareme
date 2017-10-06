@@ -17,6 +17,7 @@ class PlayerDto(object):
         self.player_status = None
         self.player_score = None
         self.player_rank = None
+        self.player_cards = []
 
 class PlayerStatus(Enum):
     JOINED = 1
