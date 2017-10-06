@@ -14,8 +14,6 @@ class GameController(object):
         cherrypy.response.headers['Access-Control-Allow-Methods'] = 'GET'
         return json.dumps({ 'ok': True })
 
-
-
     @cherrypy.expose
     def game(self):
 

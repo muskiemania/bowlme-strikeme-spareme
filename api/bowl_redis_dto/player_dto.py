@@ -28,6 +28,9 @@ class PlayerStatus(Enum):
 
     @classmethod
     def text(cls, status):
+        print ';;;'
+        print status
+        print ';;;;'
         t = {}
         t[1] = 'joined'
         t[2] = 'dealt'
@@ -35,7 +38,7 @@ class PlayerStatus(Enum):
         t[4] = 'finished'
         t[5] = 'winner'
         t[6] = 'abandoned'
-        return t[status.value]
+        return t[status]
 
     @classmethod
     def enum(cls, status):
