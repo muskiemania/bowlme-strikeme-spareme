@@ -17,12 +17,12 @@ class GameController(object):
     @cherrypy.expose
     def game(self):
 
-        #try:
-        cookie_value = cherrypy.request.cookie[Helpers().get_cookie_name()].value
-        decoded = Helpers().decode_jwt(cookie_value)
+        x_header = cherrypy.serving.request.headers['X-Bowl-Token'] or ''
 
+        decoded = Helpers().decode_jwt(x_header)
+        gameVerified = game.Verify.verify_game_by_id(decoded['gameId'])
+        playerVerified = game.Verify.verify_player_in_game(decoded['gameId'], decoded['playerId'])
+        
         my_game = game.Game.get(game_id=decoded['gameId'], player_id=decoded['playerId'])
 
-        print my_game
-        
         return my_game.json()

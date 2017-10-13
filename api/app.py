@@ -11,13 +11,9 @@ dispatcher.connect(name='api_create_game', route='/api/game/create', controller=
 dispatcher.mapper.connect('/api/game/create', controller='api_create_game', action='create', conditions=dict(method=['POST']))
 dispatcher.mapper.connect('/api/game/create', controller='api_create_game', action='verify', conditions=dict(method=['GET']))
 
-
-
 dispatcher.connect(name='api_join_game', route='/api/game/join', controller=controllers.JoinGameController(), action='index', conditions=dict(method=['OPTIONS']))
 dispatcher.mapper.connect('/api/game/join', controller='api_join_game', action='join', conditions=dict(method=['POST']))
 dispatcher.mapper.connect('/api/game/join', controller='api_join_game', action='verify', conditions=dict(method=['GET']))
-
-
 
 
 dispatcher.connect(name='api_get_game', route='/api/game', controller=controllers.GameController(), action='index', conditions=dict(method=['OPTIONS']))
@@ -43,7 +39,7 @@ dispatcher.mapper.connect('/game/discard', controller='api_discard_cards', actio
 conf = {}
 conf['/'] = {'request.dispatch': dispatcher}
 
-cherrypy.config.update({'server.socket_port': 5001, 'tools.response_headers.on': True, 'tools.response_headers.headers': [('Content-Type', 'application/json'), ('Access-Control-Allow-Origin', 'http://localhost:5000'), ('Access-Control-Allow-Headers', 'Accept, Content-Type'), ('Access-Control-Allow-Origin', 'http://localhost:5000'), ('Access-Control-Allow-Credentials', 'true')]})
+cherrypy.config.update({'server.socket_port': 5001, 'tools.response_headers.on': True, 'tools.response_headers.headers': [('Content-Type', 'application/json'), ('Access-Control-Allow-Origin', 'http://127.0.0.1:5000'), ('Access-Control-Allow-Headers', 'Accept, Content-Type, X-Bowl-Token'), ('Access-Control-Allow-Origin', 'http://127.0.0.1:5000')]})
 
 cherrypy.tree.mount(root=None, config=conf)
 

@@ -23,7 +23,6 @@ class JoinGameController(object):
             return null_game.json()
 
         jwt = cherrypy.request.cookie[Helpers().get_cookie_name()]
-
         decoded = Helpers().decode_jwt(jwt.value)
         gameVerified = game.Verify.verify_game_by_id(decoded['gameId'])
         playerVerified = game.Verify.verify_player_in_game(decoded['gameId'], decoded['playerId'])
@@ -49,6 +48,8 @@ class JoinGameController(object):
         if not reply.is_game_id_zero():
             jwt = Helpers().get_jwt(reply.get_jwt_data())
             cherrypy.response.cookie[Helpers().get_cookie_name()] = jwt
+            #cherrypy.response.cookie[Helpers().get_cookie_name()]['path'] = '/'
+            #cherrypy.response.cookie[Helpers().get_cookie_name()]['domain'] = 'localhost:5001'
             cherrypy.response.cookie[Helpers().get_cookie_name()]['expires'] = 7200
 
         return reply.json()

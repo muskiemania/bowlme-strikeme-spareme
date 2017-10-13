@@ -30,7 +30,7 @@ class GameStatus(Enum):
         t[2] = 'started'
         t[3] = 'ended'
         t[4] = 'abandoned'
-        return t[status.value]
+        return t[status]
 
     @classmethod
     def enum(cls, status):

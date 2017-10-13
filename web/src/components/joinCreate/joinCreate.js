@@ -11,7 +11,7 @@ import Join from '../shared/join/join';
 import Create from '../shared/create/create';
 import Welcome from '../shared/welcome/welcome';
 
-import { post, get } from '../../helpers/http';
+import { post, postAnonymous, get } from '../../helpers/http';
 
 import './joinCreate.less';
 
@@ -24,7 +24,7 @@ class JoinCreate extends Component {
     }
 
     clickSetModeCreate() {
-	get('http://localhost:5001/api/game/create')
+	get('http://127.0.0.1:5001/api/game/create')
 	    .then((respJson) => {
 		if(respJson.gameId === 0) {
 		    this.setState({ mode: 'create' });
@@ -42,7 +42,7 @@ class JoinCreate extends Component {
     }
 
     clickSetModeJoin() {
-	get('http://localhost:5001/api/game/join')
+	get('http://127.0.0.1:5001/api/game/join')
 	    .then((respJson) => {
 		if(respJson.gameId === 0) {
 		    this.setState({ mode: 'join' });
@@ -61,14 +61,14 @@ class JoinCreate extends Component {
 
     clickCreateGame(playerName) {
 	console.log('inside joinCreate.js clickCreateGame');
-	post('http://localhost:5001/api/game/create', { 'playerName': playerName})
+	postAnonymous('http://127.0.0.1:5001/api/game/create', { 'playerName': playerName})
 	    .then((respJson) => {
 		console.log('inside then');
 		if(respJson.gameId === 0) {
 		    throw 'Could not create game';
 		}
 
-		window.location.replace('http://localhost:5000/game/');
+		window.location.replace('http://127.0.0.1:5000/game/');
 	    })
 	    .catch((err) => {
 		//animation to show error message
@@ -77,13 +77,13 @@ class JoinCreate extends Component {
     }
 
     clickJoinGame(gameKey, playerName) {
-	post('http://localhost:5001/api/game/join', { 'gameKey': gameKey, 'playerName': playerName})
+	postAnonymous('http://127.0.0.1:5001/api/game/join', { 'gameKey': gameKey, 'playerName': playerName})
 	    .then((resp) => {
 		if(resp.gameId === 0) {
 		    throw 'Could not create game';
 		}
 
-		window.location.replace('http://localhost:5000/game/');
+		window.location.replace('http://127.0.0.1:5000/game/');
 	    })
 	    .catch((err) => {
 		//animation to show error message

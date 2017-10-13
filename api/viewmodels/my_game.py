@@ -3,24 +3,19 @@ from viewmodels import PlayerModel, PlayerStatusModel
 
 class MyGameModel(object):
     def __init__(self):
-        self.__players = []
-        self.__my_cards = []
+        self.__player = None
+        self.__others = []
         self.__game_status = None
-        self.__player_status = None
 
-    def setPlayers(self, players):
-        self.__players = players
+    def setPlayer(self, player):
+        self.__player = player
 
-    def setCards(self, cards):
-        self.__my_cards = cards
+    def setOthers(self, others):
+        self.__others = others or []
 
-    def setStatus(self, game_status=None, player_status=None):
-        if game_status is not None:
-            self.__game_status = game_status
+    def setStatus(self, game_status):
+        self.__game_status = game_status
 
-        if player_status is not None:
-            self.__player_status = player_status
-        
-    def json(self):
-        return json.dumps({'players': PlayerModel.fromDto(self.__players), 'myCards': self.__my_cards, 'gameStatus': self.__game_status, 'playerStatus': PlayerStatusModel(self.__player_status).fromDto()})
+    def json(self): 
+        return json.dumps({'player': PlayerModel.fromDto(self.__player, True), 'otherPlayers': map(lambda x: PlayerModel.fromDto(x), self.__others), 'gameStatus': self.__game_status})
 

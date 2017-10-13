@@ -6,6 +6,7 @@ import Immutable from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { pokerGameFetchData } from '../../actions/pokerGameActions';
+import { get } from '../../helpers/http';
 
 import _ from 'lodash';
 import Seats from '../../components/seats/seats';
@@ -23,7 +24,8 @@ class PokerGame extends Component {
     }
 
     componentDidMount() {
-        this.props.fetchData('http://localhost:5000/static/mock.js');
+        //this.props.fetchData('http://localhost:5000/static/mock.js');
+	this.props.fetchData('http://127.0.0.1:5001/api/game');
     }
     
     drawCards(numberOfCards) {
@@ -71,19 +73,20 @@ class PokerGame extends Component {
             );
         }
 
-	let players = game.get('players') || Immutable.List();
-	let myCards = game.get('cards') || Immutable.List();
-	let gameStatus = game.get('gameStatus') || Immutable.Map();
-	let playerStatus = game.get('playerStatus') || Immutable.Map();
+	let player = game.get('player') || Immutable.Map();
+	let others = game.get('otherPlayers') || Immutable.List();
+	let gameStatus = game.get('gameStatus') || 0;
+	let hand = player.get('hand') || Immutable.Map();
+	let playerStatus = player.get('status') || Immutable.Map();
 	
         return (
 		<div>
                 <div>
-		<span id="game-id">{gameStatus.get('gameId') || '??????'}</span>
-                <Seats players={players} />
-                <PokerHand cards={myCards} selected={this.getSelectedCards()} toggleSelected={this.toggleCard.bind(this)} />                    
+		<span id="game-id">{'XXXXXC'}</span>
+                <Seats players={others} />
+                <PokerHand cards={hand.get('cards')} selected={this.getSelectedCards()} toggleSelected={this.toggleCard.bind(this)} />                
                 </div>
-                <DrawCards cardsInHand={myCards.size} cardsSelected={this.getSelectedCards().size} canDrawAgain={ _.includes([1,2], playerStatus.get('statusId') || 0)} />
+                <DrawCards cardsInHand={hand.get('numberOfCards')} cardsSelected={this.getSelectedCards().size} canDrawAgain={ _.includes([1,2], playerStatus.get('statusId') || 0)} />
             </div>
         );
     }
@@ -106,7 +109,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchData: (url) => dispatch(pokerGameFetchData(url))
+        fetchData: (url) => dispatch(get(url))
     };
 };
 

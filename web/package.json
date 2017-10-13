@@ -38,6 +38,7 @@
     "jquery": "^3.2.1",
     "less": "^2.7.2",
     "less-loader": "^4.0.5",
+    "react-cookies": "^0.1.0",
     "react-immutable-proptypes": "^2.1.0",
     "redux-thunk": "^2.2.0",
     "style-loader": "^0.18.2",
