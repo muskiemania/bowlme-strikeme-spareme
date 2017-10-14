@@ -11,6 +11,7 @@ import _ from 'lodash';
 import Seats from '../../components/seats/seats';
 import PokerHand from '../../components/pokerHand/pokerHand';
 import DrawCards from '../../components/drawCards/drawCards';
+import Pregame from '../../components/pregame/pregame';
 
 import './pokerGame.less';
 
@@ -50,11 +51,26 @@ class PokerGame extends Component {
 
         this.setState({ selectedCards: selectedCards });
     }
+
+    factory(game, player, numOthers) {
+	let gameStatus = game.get('status') || Immutable.Map();
+	let hostPlayerId = game.get('hostPlayerId') || '';
+	let playerId = player.get('playerId') || '';
+	let playerStatus = player.get('status') || Immutable.Map();
+
+	let hand = player.get('hand') || Immutable.Map();
+	
+	if(gameStatus.get('statusId') === 1) {
+	    return <Pregame isHost={hostPlayerId === playerId} numberOfPlayers={numOthers} playersRequired={1} />
+	}
+
+	return (<DrawCards cardsInHand={hand.get('numberOfCards')} cardsSelected={this.getSelectedCards().size} canDrawAgain={ _.includes([1,2], playerStatus.get('statusId') || 0)} />);
+
+    }
     
     render() {
 
         let {game, isError, isLoading} = this.props;
-	//let game = cards;
 	
         if(isError) {
             return (
@@ -75,9 +91,7 @@ class PokerGame extends Component {
 	let player = game.get('player') || Immutable.Map();
 	let others = game.get('otherPlayers') || Immutable.List();
 	let gameObj = game.get('game') || Immutable.Map();
-	let gameStatus = gameObj.get('status') || Immutable.Map();
 	let hand = player.get('hand') || Immutable.Map();
-	let playerStatus = player.get('status') || Immutable.Map();
 	
         return (
 		<div>
@@ -86,7 +100,9 @@ class PokerGame extends Component {
                 <Seats players={others} />
                 <PokerHand cards={hand.get('cards')} selected={this.getSelectedCards()} toggleSelected={this.toggleCard.bind(this)} />                
                 </div>
-                <DrawCards cardsInHand={hand.get('numberOfCards')} cardsSelected={this.getSelectedCards().size} canDrawAgain={ _.includes([1,2], playerStatus.get('statusId') || 0)} />
+		{
+		    this.factory(gameObj, player, others.size)
+		}
             </div>
         );
     }

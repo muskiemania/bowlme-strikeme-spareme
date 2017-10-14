@@ -34,5 +34,6 @@ class Game(object):
             my_game.setOthers(filter(lambda x: not x.player_id == player_id, player_dto))
             my_game.setPlayer(filter(lambda x: x.player_id == player_id, player_dto)[0])
             my_game.setStatus(game_details_dto.game_status)
+            my_game.setHostPlayerId(game_details_dto.host_player_id)
             
         return my_game
