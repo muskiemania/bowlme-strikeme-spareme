@@ -6,7 +6,6 @@ import Immutable from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { pokerGameFetchData } from '../../actions/pokerGameActions';
-import { get } from '../../helpers/http';
 
 import _ from 'lodash';
 import Seats from '../../components/seats/seats';
@@ -54,8 +53,8 @@ class PokerGame extends Component {
     
     render() {
 
-        let {cards, isError, isLoading} = this.props;
-	let game = cards;
+        let {game, isError, isLoading} = this.props;
+	//let game = cards;
 	
         if(isError) {
             return (
@@ -75,14 +74,15 @@ class PokerGame extends Component {
 
 	let player = game.get('player') || Immutable.Map();
 	let others = game.get('otherPlayers') || Immutable.List();
-	let gameStatus = game.get('gameStatus') || 0;
+	let gameObj = game.get('game') || Immutable.Map();
+	let gameStatus = gameObj.get('status') || Immutable.Map();
 	let hand = player.get('hand') || Immutable.Map();
 	let playerStatus = player.get('status') || Immutable.Map();
 	
         return (
 		<div>
                 <div>
-		<span id="game-id">{'XXXXXC'}</span>
+		<span id="game-id">{(gameObj.get('key') || '').toUpperCase()}</span>
                 <Seats players={others} />
                 <PokerHand cards={hand.get('cards')} selected={this.getSelectedCards()} toggleSelected={this.toggleCard.bind(this)} />                
                 </div>
@@ -94,14 +94,14 @@ class PokerGame extends Component {
 
 PokerGame.propTypes = {
     fetchData: PropTypes.func.isRequired,
-    cards: ImmutablePropTypes.map,
+    game: ImmutablePropTypes.map,
     isError: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = (state) => {
     return {
-        cards: state.cards,
+        game: state.game,
         isError: state.isError,
         isLoading: state.isLoading
     };
@@ -109,7 +109,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchData: (url) => dispatch(get(url))
+        fetchData: (url) => dispatch(pokerGameFetchData(url))
     };
 };
 

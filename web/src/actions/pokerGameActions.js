@@ -1,3 +1,5 @@
+import { get } from '../helpers/http';
+
 export const ITEMS_HAS_ERRORED = 'ITEMS_HAS_ERRORED'
 export const ITEMS_IS_LOADING = 'ITEMS_IS_LOADING'
 export const ITEMS_FETCH_DATA_SUCCESS = 'ITEMS_FETCH_DATA_SUCCESS'
@@ -18,34 +20,24 @@ export function isLoading(bool) {
 
 export function fetchDataSuccess(data) {
 
-    let game = data['game'];
-    let cards = data['cards'];
-
     return {
         type: ITEMS_FETCH_DATA_SUCCESS,
-	game
+	game: data
     };
 }
 
 export function pokerGameFetchData(url) {
     return (dispatch) => {
         dispatch(isLoading(true));
-        
-        fetch(url)
-            .then((response) => {
 
-                if (!response.ok) {
-                    throw Error(response.statusText);
-                }
-                
-                dispatch(isLoading(false));
-
-                return response;
-            })
-            .then((response) => response.json())
-            .then((data) => dispatch(fetchDataSuccess(data)))
-            .catch((e) => {
-                dispatch(isError(true))
-            });
+	get(url)
+	    .then((data) => {
+		dispatch(isLoading(false));
+		return dispatch(fetchDataSuccess(data));
+	    })
+	    .catch((e) => {
+		console.log(e);
+		dispatch(isError(true));
+	    });        
     };
 }

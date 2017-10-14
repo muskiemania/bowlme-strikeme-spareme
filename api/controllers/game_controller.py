@@ -24,5 +24,6 @@ class GameController(object):
         playerVerified = game.Verify.verify_player_in_game(decoded['gameId'], decoded['playerId'])
         
         my_game = game.Game.get(game_id=decoded['gameId'], player_id=decoded['playerId'])
-
+        my_game.setGameKey(decoded['key'])
+        
         return my_game.json()

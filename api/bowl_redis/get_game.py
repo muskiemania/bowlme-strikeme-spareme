@@ -18,11 +18,17 @@ class GetGame(object):
         pipe.hget(key_info.game_last_updated(), key_info.game_last_updated_key())
         pipe.hget(key_info.game_info(), key_info.game_info_status_key())
         pipe.hget(key_info.game_info(), key_info.game_info_host_id_key())
+        pipe.hget(key_info.game_hashes_key(), self.game_id)
         
-        [last_updated, game_status, host_player_id] = pipe.execute()
+        [last_updated, game_status, host_player_id, game_key] = pipe.execute()
+
+        print 'XXX'
+        print game_key
+        print 'YYY'
         
         game.last_updated = parser.parse(last_updated)
         game.game_status = GameStatus.enum(game_status)
         game.host_player_id = host_player_id
+        game.game_key = game_key
         
         return game

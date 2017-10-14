@@ -12,9 +12,12 @@ class Player extends Component {
 	let player = this.props.player || Immutable.Map();
 	let isWaiting = this.props.isWaiting;
 	
-	let cards = player.get('cards') || Immutable.List();
-        let name = player.get('name');
+	let hand = player.get('hand') || Immutable.Map();
+        let name = player.get('playerName');
 	let finished = player.get('finished');
+
+	let numberOfCards = hand.get('numberOfCards') || 0;
+	const cards = Immutable.List([1,2,3,4,5]);
 	
         return (
             <div className='poker-table-player column'>
@@ -22,12 +25,12 @@ class Player extends Component {
                 <div className='player-cards'>
                     {
                         
-                        cards.take(5).map((card, i) => {
+                        cards.take(numberOfCards).map((card, i) => {
                             return <span className='player-card' key={`card-${i}`}></span>;
                         })
                     }
                     {
-                        cards.size > 5 ? <span className='extra-cards'>{`+${cards.size - 5}`}</span> : null
+                        numberOfCards > 5 ? <span className='extra-cards'>{`+${numberOfCards - 5}`}</span> : null
                     }
                 </div>
             </div>

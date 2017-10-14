@@ -18,12 +18,13 @@ class JoinGameController(object):
     def verify(self):
 
         null_game = viewmodels.JoinGameModel(0, 0, None)
-             
-        if Helpers().get_cookie_name() not in cherrypy.request.cookie:
+
+        x_header = cherrypy.serving.request.headers['X-Bowl-Token'] or ''
+        
+        if x_header == '' or x_header == 'undefined': 
             return null_game.json()
 
-        jwt = cherrypy.request.cookie[Helpers().get_cookie_name()]
-        decoded = Helpers().decode_jwt(jwt.value)
+        decoded = Helpers().decode_jwt(x_header)
         gameVerified = game.Verify.verify_game_by_id(decoded['gameId'])
         playerVerified = game.Verify.verify_player_in_game(decoded['gameId'], decoded['playerId'])
         
@@ -41,15 +42,12 @@ class JoinGameController(object):
         player_name = cherrypy.request.json['playerName']
 
         #join game
-        joined_game = game.JoinGame(game_key)
-        reply = joined_game.execute(player_name)
+        join_game = game.JoinGame(game_key)
+        joined_game = join_game.execute(player_name)
 
         #create cookie
-        if not reply.is_game_id_zero():
-            jwt = Helpers().get_jwt(reply.get_jwt_data())
-            cherrypy.response.cookie[Helpers().get_cookie_name()] = jwt
-            #cherrypy.response.cookie[Helpers().get_cookie_name()]['path'] = '/'
-            #cherrypy.response.cookie[Helpers().get_cookie_name()]['domain'] = 'localhost:5001'
-            cherrypy.response.cookie[Helpers().get_cookie_name()]['expires'] = 7200
+        if not joined_game.is_game_id_zero():
+            jwt = Helpers().get_jwt(joined_game.get_jwt_data())
+            joined_game.set_jwt(jwt)
 
-        return reply.json()
+        return joined_game.json()

@@ -44,8 +44,11 @@ class VerifyGame(object):
 
         pipe.hgetall(key_info.game_hashes_key())
         hashes = pipe.execute()[0]
+
+        print hashes.keys()
+        print game_key
         
-        matches = filter(lambda x: x == game_key, hashes.keys())
+        matches = filter(lambda x: x.upper() == game_key.upper(), hashes.keys())
 
         print matches
         
