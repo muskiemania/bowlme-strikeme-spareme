@@ -22,10 +22,6 @@ class GetGame(object):
         
         [last_updated, game_status, host_player_id, game_key] = pipe.execute()
 
-        print 'XXX'
-        print game_key
-        print 'YYY'
-        
         game.last_updated = parser.parse(last_updated)
         game.game_status = GameStatus.enum(game_status)
         game.host_player_id = host_player_id

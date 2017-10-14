@@ -17,8 +17,6 @@ class GetPlayers(object):
 
         [player_ids, player_info] = pipe.execute()
 
-        print player_ids
-        
         players = []
 
         for player_id in player_ids:
@@ -30,7 +28,7 @@ class GetPlayers(object):
             pipe.lrange(key_info.game_player_hand(), 0, 1)
             [cards] = pipe.execute()
             player.player_cards = cards
-            player.player_cards = ['TH','QC']
+            #player.player_cards = ['TH','QC']
             
             players.append(player)
         
