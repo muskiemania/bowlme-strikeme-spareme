@@ -3,7 +3,7 @@ from .create_player import CreatePlayer
 from .create_game import CreateGame
 from .join_game import JoinGame
 #from .end_hand import EndHand
-#from .draw_cards import DrawCards
-#from .discard_cards import DiscardCards
 from .game import Game
 from .start_game import StartGame
+from .draw_cards import DrawCards
+from .discard_cards import DiscardCards

@@ -16,7 +16,7 @@ class Button extends Component {
         
         if(isGrouped) {
             return (
-                <a href='#' className='small button'>
+                    <a href='#' className='small button' onClick={(e) => this.handleTouchClick(e)}>
                     <div className='inner-box'>
                         {text}
                     </div>
@@ -39,7 +39,7 @@ Button.propTypes = {
     disabled: PropTypes.bool,
     isGrouped: PropTypes.bool,
     clickOperation: PropTypes.string,
-    clickPayload: PropTypes.string,
+    clickPayload: PropTypes.object,
     click: PropTypes.func
 };
 

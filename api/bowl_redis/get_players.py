@@ -25,7 +25,7 @@ class GetPlayers(object):
             player = PlayerDto(player_name, self.game_id, player_id)
             player.player_status = PlayerStatus.enum(player_info[key_info.game_players_status_key()])
 
-            pipe.lrange(key_info.game_player_hand(), 0, 1)
+            pipe.lrange(key_info.game_player_hand(), 0, -1)
             [cards] = pipe.execute()
             player.player_cards = cards
             #player.player_cards = ['TH','QC']

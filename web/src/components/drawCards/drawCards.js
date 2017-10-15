@@ -8,18 +8,18 @@ import ButtonGroup from '../shared/buttonGroup/buttonGroup';
 import Button from '../shared/button/button';
 
 export default class DrawCards extends Component {
-
+    
     render() {
         let {cardsInHand, cardsSelected, canDrawAgain, click} = this.props;
 
-        //let mustDiscard = cardsInHand > 5;
-        let mustDiscard = false;
-        
+        let mustDiscard = cardsInHand > 5;
+        //let mustDiscard = false;
+
         if(mustDiscard) {
             return (
                 <div className='draw-cards'>
                     <div className='button-overlay'>
-                    <Button text='Discard' disabled={(cardsInHand-cardsSelected) != 5} clickOperation={'discardCards'} clickPayload={cardsSelected} click={this.props.click} />
+                    <Button text='Discard' disabled={(cardsInHand-cardsSelected) != 5} clickOperation={'discardCards'} clickPayload={{cardsSelected}} click={this.props.click} />
                     </div>
                 </div>
                 
@@ -30,14 +30,14 @@ export default class DrawCards extends Component {
             return (
                 <div className='draw-cards'>
                     <div className='button-overlay'>
-                    <Button text='Spare' clickOperation={'drawCards'} clickPayload={'1'} click={this.props.click} />
-                    <Button text='Strike' clickOperation={'drawCards'} clickPayload={'2'} click={this.props.click} />
-                        <ButtonGroup>
-                            <Button text='+3' isGrouped={true} clickOperation={'drawCards'} clickPayload={'3'} click={this.props.click} />
-                            <Button text='+4' isGrouped={true} clickOperation={'drawCards'} clickPayload={'4'} click={this.props.click} />
-                            <Button text='+6' isGrouped={true} clickOperation={'drawCards'} clickPayload={'6'} click={this.props.click} />
-                            <Button text='Finish' isGrouped={true} clickOperation={'finishGame'} clickPayload={null} click={this.props.click} />
-                        </ButtonGroup>                        
+                    <Button text='Spare' clickOperation={'drawCards'} clickPayload={{'numberOfCards': 1}} click={this.props.click} />
+		    <Button text='Strike' clickOperation={'drawCards'} clickPayload={{'numberOfCards': 2}} click={this.props.click} />
+                    <ButtonGroup>
+                    <Button text='+3' isGrouped={true} clickOperation={'drawCards'} clickPayload={{'numberOfCards': 3}} click={this.props.click} />
+                    <Button text='+4' isGrouped={true} clickOperation={'drawCards'} clickPayload={{'numberOfCards': 4}} click={this.props.click} />
+                    <Button text='+6' isGrouped={true} clickOperation={'drawCards'} clickPayload={{'numberOfCards': 6}} click={this.props.click} />
+                    <Button text='Finish' isGrouped={true} clickOperation={'finishGame'} clickPayload={null} click={this.props.click} />
+                    </ButtonGroup>                        
                     </div>
                 </div>
             );

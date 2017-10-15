@@ -36,11 +36,11 @@ class Verify(object):
         return GameStatus.enum(reply.game.game_status) in game_statuses
 
     @staticmethod
-    def verify_player_in_game(game_id, player_id):
+    def verify_player_in_game(game_id, player_id, player_statuses = [PlayerStatus.JOINED, PlayerStatus.DEALT, PlayerStatus.MUST_DISCARD]):
         verify = bowl_redis.VerifyGame(game_id, player_id)
         reply = verify.execute()
 
-        return PlayerStatus.enum(reply.player.player_status) in [PlayerStatus.JOINED, PlayerStatus.DEALT, PlayerStatus.MUST_DISCARD]
+        return PlayerStatus.enum(reply.player.player_status) in player_statuses
 
     @staticmethod
     def get_player_status_in_game(game_id, player_id):

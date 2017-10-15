@@ -28,6 +28,9 @@ class PokerGame extends Component {
 	//this.props.operations.get('initialLoad')('http://127.0.0.1:5001/api/game');
 	this.gameOpsFactory('initialLoad', null);
     }
+    componentWillReceiveProps() {
+	this.state = { selectedCards: Immutable.List() };
+    }
     
     drawCards(numberOfCards) {
         alert(`will draw ${numberOfCards} cards`);
@@ -43,8 +46,6 @@ class PokerGame extends Component {
 
     gameOpsFactory(operationName, payload) {
 
-	console.log(this.props.operations);
-	
 	switch(operationName) {
 	case 'initialLoad':
 	    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/game');
@@ -53,7 +54,7 @@ class PokerGame extends Component {
 	case 'drawCards':
 	    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/game/draw', payload);
 	case 'discardCards':
-	    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/game/discard', payload);
+	    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/game/discard', {'cards': this.getSelectedCards()});
 	case 'finishGame':
 	    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/game/finish');
 	default:
@@ -62,9 +63,6 @@ class PokerGame extends Component {
     }
     
     handleButtonClick(operation, payload) {
-	console.log(operation);
-	console.log(payload);
-
 	this.gameOpsFactory(operation, payload);
     }
 
@@ -85,13 +83,13 @@ class PokerGame extends Component {
 	let hostPlayerId = game.get('hostPlayerId') || '';
 	let playerId = player.get('playerId') || '';
 	let playerStatus = player.get('status') || Immutable.Map();
-
+	
 	let hand = player.get('hand') || Immutable.Map();
 	
 	if(gameStatus.get('statusId') === 1) {
 	    return <Pregame isHost={hostPlayerId === playerId} numberOfPlayers={numOthers} playersRequired={1} click={this.handleButtonClick.bind(this)} />
 	}
-
+	
 	return (<DrawCards cardsInHand={hand.get('numberOfCards')} cardsSelected={this.getSelectedCards().size} canDrawAgain={ _.includes([1,2], playerStatus.get('statusId') || 0)} click={this.handleButtonClick.bind(this)} />);
     }
     

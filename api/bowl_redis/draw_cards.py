@@ -24,6 +24,7 @@ class DrawCards(object):
             [deck_size] = pipe.execute()
 
             if deck_size == 1:
+                print 'shuffling cards!!!'
                 self.__shuffle(self.discard_key, self.deck_key)
 
             number_of_cards = number_of_cards - 1

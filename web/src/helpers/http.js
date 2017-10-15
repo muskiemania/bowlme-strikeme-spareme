@@ -27,7 +27,6 @@ export function postAnonymous(url, data) {
 }
 
 export function get(url) {
-    console.log('getting...');
     return Promise.resolve(fetch(url, {
 	method: 'GET',
 	headers: {
@@ -43,9 +42,6 @@ export function get(url) {
 
 export function post(url, postData) {
 
-    console.log('posting...data is:');
-    console.log(postData);
-    
     return Promise.resolve(fetch(url, {
 	method: 'POST',
 	headers: {
