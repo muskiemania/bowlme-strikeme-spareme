@@ -10,6 +10,7 @@ class GameDto(object):
         self.game_status = None
         self.players = []
         self.game_key = None
+        self.deck = None
 
     def generate_game_key(self):
         md5 = hashlib.md5()
@@ -35,8 +36,8 @@ class GameStatus(Enum):
     @classmethod
     def enum(cls, status):
         e = {}
-        e['1'] = PlayerStatus.JOINED
-        e['2'] = PlayerStatus.DEALT
-        e['3'] = PlayerStatus.FINISHED
-        e['4'] = PlayerStatus.WINNER
+        e['1'] = GameStatus.CREATED
+        e['2'] = GameStatus.STARTED
+        e['3'] = GameStatus.ENDED
+        e['4'] = GameStatus.ABANDONED
         return e[status]

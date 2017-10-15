@@ -29,9 +29,6 @@ class PlayerStatus(Enum):
 
     @classmethod
     def text(cls, status):
-        print ';;;'
-        print status
-        print ';;;;'
         t = {}
         t[1] = 'joined'
         t[2] = 'dealt'

@@ -21,7 +21,7 @@ export default class Pregame extends Component {
         return (
                 <div className='pregame'>
                 <div className={classname('button-overlay', isHost ? 'start-game' : 'waiting')}>
-                <Button text={isHost ? hostText : 'Waiting For Host To Start Game'} disabled={disabled} />
+                <Button text={isHost ? hostText : 'Waiting For Host To Start Game'} disabled={disabled} clickOperation={'startGame'} click={isHost ? this.props.click : null} />
                 </div>
                 </div>               
         );
@@ -31,7 +31,8 @@ export default class Pregame extends Component {
 Pregame.propTypes = {
     isHost: PropTypes.bool,
     numberOfPlayers: PropTypes.number,
-    playersRequired: PropTypes.number
+    playersRequired: PropTypes.number,
+    click: PropTypes.func
 };
 
 /*

@@ -20,7 +20,7 @@ dispatcher.connect(name='api_get_game', route='/api/game', controller=controller
 dispatcher.mapper.connect('/api/game', controller='api_get_game', action='game', conditions=dict(method=['GET']))
 
 
-dispatcher.connect(name='api_start_game', route='/api/game/start', controller=controllers.StartGameController(), action='index', conditions=dict(method=['GET']))
+dispatcher.connect(name='api_start_game', route='/api/game/start', controller=controllers.StartGameController(), action='index', conditions=dict(method=['OPTIONS']))
 dispatcher.mapper.connect('/api/game/start', controller='api_start_game', action='start', conditions=dict(method=['POST']))
 
 dispatcher.connect(name='api_draw_cards', route='/api/game/draw', controller=controllers.DrawCardsController(), action='index', conditions=dict(method=['GET']))

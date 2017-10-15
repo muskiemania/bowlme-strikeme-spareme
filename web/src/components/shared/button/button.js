@@ -7,7 +7,7 @@ class Button extends Component {
 
     handleTouchClick(e) {
 	e.preventDefault();
-	this.props.click();
+	this.props.click(this.props.clickOperation, this.props.clickPayload);
     }
     
     render() {
@@ -38,6 +38,8 @@ Button.propTypes = {
     text: PropTypes.string,
     disabled: PropTypes.bool,
     isGrouped: PropTypes.bool,
+    clickOperation: PropTypes.string,
+    clickPayload: PropTypes.string,
     click: PropTypes.func
 };
 

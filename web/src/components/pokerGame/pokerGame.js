@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import { pokerGameFetchData } from '../../actions/pokerGameActions';
+import { pokerGameGetData, pokerGamePostData } from '../../actions/pokerGameActions';
 
 import _ from 'lodash';
 import Seats from '../../components/seats/seats';
@@ -25,7 +25,8 @@ class PokerGame extends Component {
 
     componentDidMount() {
         //this.props.fetchData('http://localhost:5000/static/mock.js');
-	this.props.fetchData('http://127.0.0.1:5001/api/game');
+	//this.props.operations.get('initialLoad')('http://127.0.0.1:5001/api/game');
+	this.gameOpsFactory('initialLoad', null);
     }
     
     drawCards(numberOfCards) {
@@ -40,6 +41,33 @@ class PokerGame extends Component {
         return this.state.selectedCards;
     }
 
+    gameOpsFactory(operationName, payload) {
+
+	console.log(this.props.operations);
+	
+	switch(operationName) {
+	case 'initialLoad':
+	    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/game');
+	case 'startGame':
+	    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/game/start');
+	case 'drawCards':
+	    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/game/draw', payload);
+	case 'discardCards':
+	    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/game/discard', payload);
+	case 'finishGame':
+	    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/game/finish');
+	default:
+	    return;
+	}
+    }
+    
+    handleButtonClick(operation, payload) {
+	console.log(operation);
+	console.log(payload);
+
+	this.gameOpsFactory(operation, payload);
+    }
+
     toggleCard(card) {
         let selectedCards = this.state.selectedCards;
         if(selectedCards.contains(card)) {
@@ -52,7 +80,7 @@ class PokerGame extends Component {
         this.setState({ selectedCards: selectedCards });
     }
 
-    factory(game, player, numOthers) {
+    drawButtonFactory(game, player, numOthers) {
 	let gameStatus = game.get('status') || Immutable.Map();
 	let hostPlayerId = game.get('hostPlayerId') || '';
 	let playerId = player.get('playerId') || '';
@@ -61,11 +89,10 @@ class PokerGame extends Component {
 	let hand = player.get('hand') || Immutable.Map();
 	
 	if(gameStatus.get('statusId') === 1) {
-	    return <Pregame isHost={hostPlayerId === playerId} numberOfPlayers={numOthers} playersRequired={1} />
+	    return <Pregame isHost={hostPlayerId === playerId} numberOfPlayers={numOthers} playersRequired={1} click={this.handleButtonClick.bind(this)} />
 	}
 
-	return (<DrawCards cardsInHand={hand.get('numberOfCards')} cardsSelected={this.getSelectedCards().size} canDrawAgain={ _.includes([1,2], playerStatus.get('statusId') || 0)} />);
-
+	return (<DrawCards cardsInHand={hand.get('numberOfCards')} cardsSelected={this.getSelectedCards().size} canDrawAgain={ _.includes([1,2], playerStatus.get('statusId') || 0)} click={this.handleButtonClick.bind(this)} />);
     }
     
     render() {
@@ -101,7 +128,7 @@ class PokerGame extends Component {
                 <PokerHand cards={hand.get('cards')} selected={this.getSelectedCards()} toggleSelected={this.toggleCard.bind(this)} />                
                 </div>
 		{
-		    this.factory(gameObj, player, others.size)
+		    this.drawButtonFactory(gameObj, player, others.size)
 		}
             </div>
         );
@@ -109,7 +136,7 @@ class PokerGame extends Component {
 }
 
 PokerGame.propTypes = {
-    fetchData: PropTypes.func.isRequired,
+    operations: ImmutablePropTypes.map.isRequired,
     game: ImmutablePropTypes.map,
     isError: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired
@@ -124,8 +151,15 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
+    let operations = Immutable.Map();
+    operations = operations.set('initialLoad', (url) => dispatch(pokerGameGetData(url)));
+    operations = operations.set('startGame', (url) => dispatch(pokerGamePostData(url)));
+    operations = operations.set('drawCards', (url, numberOfCards) => dispatch(pokerGamePostData(url, numberOfCards)));
+    operations = operations.set('discardCards', (url, cardsToDiscard) => dispatch(pokerGamePostData(url, cardsToDiscard)));
+    operations = operations.set('finishGame', (url) => dispatch(pokerGamePostData(url)));
+    
     return {
-        fetchData: (url) => dispatch(pokerGameFetchData(url))
+	operations: operations
     };
 };
 

@@ -1,4 +1,4 @@
-import { get } from '../helpers/http';
+import { get, post } from '../helpers/http';
 
 export const ITEMS_HAS_ERRORED = 'ITEMS_HAS_ERRORED'
 export const ITEMS_IS_LOADING = 'ITEMS_IS_LOADING'
@@ -26,7 +26,7 @@ export function fetchDataSuccess(data) {
     };
 }
 
-export function pokerGameFetchData(url) {
+export function pokerGameGetData(url) {
     return (dispatch) => {
         dispatch(isLoading(true));
 
@@ -39,5 +39,17 @@ export function pokerGameFetchData(url) {
 		console.log(e);
 		dispatch(isError(true));
 	    });        
+    };
+}
+
+export function pokerGamePostData(url, payload) {
+    console.log('posting data...');
+    return (dispatch) => {
+	post(url, payload)
+	    .then((data) => dispatch(fetchDataSuccess(data)))
+	    .catch((e) => {
+		console.log(e);
+		dispatch(isError(true));
+	    });
     };
 }
