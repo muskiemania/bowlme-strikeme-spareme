@@ -50,15 +50,15 @@ class RedisKeys(object):
             raise Exception('no player_id')
         return '%s-status' % self.player_id
 
-    def game_players_score(self):
+    def game_players_rating(self):
         if self.player_id is None:
             raise Exception('no player_id')
-        return '%s-score' % self.player_id
+        return 'player-%s-rating' % self.player_id
 
     def game_players_rank(self):
         if self.player_id is None:
             raise Exception('no player_id')
-        return '%s-rank' % self.player_id
+        return 'player-%s-rank' % self.player_id
 
     def game_player_statuses(self):
         if self.game_id is None:

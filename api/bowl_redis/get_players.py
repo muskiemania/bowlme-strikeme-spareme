@@ -1,5 +1,5 @@
 import redis
-from bowl_redis_dto import PlayerDto, PlayerStatus
+from bowl_redis_dto import PlayerDto, PlayerStatus, RatingDto
 from . import RedisKeys
 
 class GetPlayers(object):
@@ -26,9 +26,11 @@ class GetPlayers(object):
             player.player_status = PlayerStatus.enum(player_info[key_info.game_players_status_key()])
 
             pipe.lrange(key_info.game_player_hand(), 0, -1)
-            [cards] = pipe.execute()
+            pipe.hget(key_info.game_players_info(), key_info.game_players_rating())
+            
+            [cards, rating] = pipe.execute()
             player.player_cards = cards
-            #player.player_cards = ['TH','QC']
+            player.player_rating = RatingDto(rating)
             
             players.append(player)
         

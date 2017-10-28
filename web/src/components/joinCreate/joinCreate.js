@@ -48,6 +48,8 @@ class JoinCreate extends Component {
 		    this.setState({ mode: 'join' });
 		}
 		else if(respJson.gameId > 0) {
+		    console.log('why am i redirecting??');
+		    console.log(respJson.gameId);
 		    window.location.replace('http://localhost:5000/game/');
 		}
 		else {

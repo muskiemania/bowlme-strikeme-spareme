@@ -22,4 +22,6 @@ class DiscardCards(object):
                 pipe.rpush(self.discard_key, card)
                 pipe.execute()
 
-        return
+        pipe.lrange(self.hand_key, 0, -1)
+        [hand] = pipe.execute()
+        return hand or []

@@ -4,6 +4,7 @@ class Straight(PokerHand):
 
     def __init__(self, hand):
         self.__rating = 5
+        self.__name = 'Straight'
         PokerHand.__init__(self, hand)
 
     def is_coherent(self):
@@ -37,4 +38,4 @@ class Straight(PokerHand):
         elif self.is_coherent():
             cards = sorted(tally.keys(), reverse=True)
         coalesced = [self.coalesce(cards, x, 0) for x in [0, 1, 2, 3, 4]]
-        return (self.__rating, coalesced[0], coalesced[1], coalesced[2], coalesced[3], coalesced[4])
+        return (self.__rating, coalesced[0], coalesced[1], coalesced[2], coalesced[3], coalesced[4], self.__name)

@@ -5,7 +5,12 @@ class Scorer(object):
 
     def __init__(self, hand):
         self.poker_hand = cards.PokerHand(hand)
+        print self.poker_hand
 
+    @staticmethod
+    def default_rating():
+        return (0, 0, 0, 0, 0, 0, 'Empty Hand')
+        
     def get_rating(self):
         hands = []
         hands.append(cards.StraightFlush(self.poker_hand))

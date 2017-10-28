@@ -4,6 +4,7 @@ class FullHouse(PokerHand):
 
     def __init__(self, hand):
         self.__rating = 7
+        self.__name = 'Full House'
         PokerHand.__init__(self, hand)
 
     def is_match(self):
@@ -17,4 +18,4 @@ class FullHouse(PokerHand):
     def get_rating(self):
         tally = self.card_tally()
         inverted = {str(len(v)): k for (k, v) in tally.items()}
-        return (self.__rating, inverted['3'], inverted['2'], 99, 99, 99)
+        return (self.__rating, inverted['3'], inverted['2'], 99, 99, 99, self.__name)

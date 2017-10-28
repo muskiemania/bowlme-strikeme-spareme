@@ -26,12 +26,12 @@ class Verify(object):
         verify = bowl_redis.VerifyGame(game_id)
         reply = verify.execute()
 
-        print 'ee'
-        print reply.game.game_status
+        #print 'ee'
+        #print reply.game.game_status
         
-        print game_statuses
-        print GameStatus.enum(reply.game.game_status) in game_statuses
-        print 'ff'
+        #print game_statuses
+        #print GameStatus.enum(reply.game.game_status) in game_statuses
+        #print 'ff'
         
         return GameStatus.enum(reply.game.game_status) in game_statuses
 

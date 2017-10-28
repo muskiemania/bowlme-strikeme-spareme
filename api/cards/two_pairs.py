@@ -5,6 +5,7 @@ class TwoPairs(PokerHand):
 
     def __init__(self, hand):
         self.__rating = 3
+        self.__name = 'Two Pairs'
         PokerHand.__init__(self, hand)
 
     def is_match(self):
@@ -15,4 +16,4 @@ class TwoPairs(PokerHand):
         tally = self.card_tally()
         pairs = sorted({k: v for (k, v) in tally.items() if len(v) == 2}.keys(), reverse=True)
         other = {k: v for (k, v) in tally.items() if len(v) == 1}.keys()
-        return (self.__rating, pairs[0], pairs[1], self.coalesce(other, 0, 0), 99, 99)
+        return (self.__rating, pairs[0], pairs[1], self.coalesce(other, 0, 0), 99, 99, self.__name)

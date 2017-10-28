@@ -26,6 +26,12 @@ class DrawCardsController(object):
         gameVerified = game.Verify.verify_game_by_id(decoded['gameId'], [GameStatus.STARTED])
         playerVerified = game.Verify.verify_player_in_game(decoded['gameId'], decoded['playerId'], [PlayerStatus.DEALT])
 
+        print 'yyy'
+        print decoded
+        print gameVerified
+        print playerVerified
+        print 'zzz'
+        
         if gameVerified and playerVerified:
             try:
                 game.DrawCards.draw(decoded['gameId'], decoded['playerId'], number_of_cards)

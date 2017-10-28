@@ -19,7 +19,12 @@ class JoinGameController(object):
 
         null_game = viewmodels.JoinGameModel(0, 0, None)
 
-        x_header = cherrypy.serving.request.headers['X-Bowl-Token'] or ''
+        x_header = ''
+
+        try:
+            x_header = cherrypy.serving.request.headers['X-Bowl-Token'] or ''
+        except:
+            x_header = ''
         
         if x_header == '' or x_header == 'undefined': 
             return null_game.json()

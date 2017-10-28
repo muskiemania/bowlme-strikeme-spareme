@@ -11,7 +11,7 @@ game-[game_id]-players: list [playerids]
 game-[game_id]-players-info : hash
           [player_id]_name: [name of player]
           [player_id]_status: [0, 1, 2]
-          [player_id]_score: (scoring info)
+          [player_id]_rating: (scoring info)
           [player_id]_rank: #
           
 game_[game_id]_hands_[player_id]: list [cards]

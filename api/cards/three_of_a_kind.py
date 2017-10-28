@@ -5,6 +5,7 @@ class ThreeOfAKind(PokerHand):
 
     def __init__(self, hand):
         self.__rating = 4
+        self.__name = 'Three of a Kind'
         PokerHand.__init__(self, hand)
 
     def is_match(self):
@@ -20,4 +21,4 @@ class ThreeOfAKind(PokerHand):
         if len(self.cards) == 5 and len(others) == 1:
             return (self.__rating, trips[0], coalesce(others, 0), 99, 99, 99)
 
-        return (self.__rating, trips[0], coalesce(others, 0, 0), coalesce(others, 1, 0), 99, 99)
+        return (self.__rating, trips[0], coalesce(others, 0, 0), coalesce(others, 1, 0), 99, 99, self.__name)

@@ -29,8 +29,18 @@ class DrawCards(object):
 
             number_of_cards = number_of_cards - 1
 
-        return
+        pipe.lrange(self.hand_key, 0, -1)
+        [hand] = pipe.execute()
+        return hand or []
 
+    def changePlayerStatus(self, new_status):
+
+        key_info = RedisKeys(self.game_id, self.player_id)
+        pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), new_status)
+        pipe.execute()
+        
+        return
+    
     def __shuffle(self, source, destination):
         pipe = self.redis.pipeline()
         pipe.lrange(source, 0, -1)

@@ -39,7 +39,7 @@ dispatcher.mapper.connect('/api/game/discard', controller='api_discard_cards', a
 conf = {}
 conf['/'] = {'request.dispatch': dispatcher}
 
-cherrypy.config.update({'server.socket_port': 5001, 'tools.response_headers.on': True, 'tools.response_headers.headers': [('Content-Type', 'application/json'), ('Access-Control-Allow-Origin', 'http://127.0.0.1:5000'), ('Access-Control-Allow-Headers', 'Accept, Content-Type, X-Bowl-Token'), ('Access-Control-Allow-Origin', 'http://127.0.0.1:5000')]})
+cherrypy.config.update({'server.socket_port': 5001, 'tools.response_headers.on': True, 'tools.response_headers.headers': [('Content-Type', 'application/json'), ('Access-Control-Allow-Origin', 'http://127.0.0.1:5000'), ('Access-Control-Allow-Headers', 'Accept, Content-Type, X-Bowl-Token')]})
 
 cherrypy.tree.mount(root=None, config=conf)
 
