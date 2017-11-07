@@ -29,9 +29,13 @@ class DrawCards(object):
         # - if number of cards in hand is 5 or less, go straight to finished
         # - else go to must discard
         if number_of_cards > 2:
-            if len(hand) > 5:
+            print 'cards > 2'
+            if len(cards) > 5:
+                print 'len > 5: must_discard'
                 draw_cards.changePlayerStatus(PlayerStatus.MUST_DISCARD)
             else:
+                print 'finished'
                 draw_cards.changePlayerStatus(PlayerStatus.FINISHED)
-        
+
+        print 'done'
         return

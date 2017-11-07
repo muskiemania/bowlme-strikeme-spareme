@@ -11,7 +11,7 @@ class Game(object):
 
     @staticmethod
     def get(game_id, player_id=None):
-
+        
         players = bowl_redis.GetPlayers(game_id)
         player_dto = players.execute()
 

@@ -2,6 +2,8 @@ import cherrypy
 import json
 import game
 import viewmodels
+import bowl_redis
+import bowl_redis_dto
 from . import Helpers
 
 class GameController(object):
@@ -22,6 +24,10 @@ class GameController(object):
         decoded = Helpers().decode_jwt(x_header)
         gameVerified = game.Verify.verify_game_by_id(decoded['gameId'])
         playerVerified = game.Verify.verify_player_in_game(decoded['gameId'], decoded['playerId'])
+
+        # hack to change player status
+        #draw_cards = bowl_redis.DrawCards(decoded['gameId'], decoded['playerId'])
+        #draw_cards.changePlayerStatus(bowl_redis_dto.PlayerStatus.FINISHED)
         
         my_game = game.Game.get(game_id=decoded['gameId'], player_id=decoded['playerId'])
         my_game.setGameKey(decoded['key'])

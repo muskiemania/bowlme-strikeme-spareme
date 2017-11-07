@@ -24,7 +24,7 @@ class DiscardCardsController(object):
 
         decoded = Helpers().decode_jwt(x_header)
         gameVerified = game.Verify.verify_game_by_id(decoded['gameId'], [GameStatus.STARTED])
-        playerVerified = game.Verify.verify_player_in_game(decoded['gameId'], decoded['playerId'], [PlayerStatus.DEALT])
+        playerVerified = game.Verify.verify_player_in_game(decoded['gameId'], decoded['playerId'], [PlayerStatus.DEALT, PlayerStatus.MUST_DISCARD])
 
         if gameVerified and playerVerified:
             try:

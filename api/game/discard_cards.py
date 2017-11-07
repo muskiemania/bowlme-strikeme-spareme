@@ -19,5 +19,10 @@ class DiscardCards(object):
         
         save_rating = bowl_redis.SetHandRating(game_id, player_id)
         save_rating.execute(rating_dto)
-        
+
+        #need to check player status...if 'must_discard' then must change to 'finished'
+        if game.Verify.verify_player_in_game(game_id, player_id, [PlayerStatus.MUST_DISCARD]):
+            draw_cards = bowl_redis.DrawCards(game_id, player_id)
+            draw_cards.changePlayerStatus(PlayerStatus.FINISHED)
+
         return game.Game.get(game_id, player_id)
