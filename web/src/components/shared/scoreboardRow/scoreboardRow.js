@@ -13,17 +13,17 @@ import './scoreboardRow.less';
 const ScoreboardRow = ((props) => {
     
     let player = props.player;
-    let rank = player.get('handDetails').get('rank');
-    
+    let rank = player.get('rating') && player.get('rating').get('rank') || 9999;
+    let cards = player.get('hand') && player.get('hand').get('cards') || Immutable.List();
     return (
         <div className={classnames('grid-x', 'row', 'align-center', 'scoreboard-row', rank === 1 ? 'winner' : '')}>
             <div className='column small-3 name'>
-                {player.get('name')}
+                {player.get('playerName')}
             </div>
             <div className='column small-4 cards'>
                 <div className='float-center'>
                     {
-                        player.get('cards').concat(Immutable.List(['','','','',''])).take(5).map((card, i) => {
+                        cards.concat(Immutable.List(['','','','',''])).take(5).map((card, i) => {
 
                             return (<div className={classnames('playing-card', getSuitName(card))} key={`card-${i}`}>
                                 <span className={classnames(card === '' ? 'empty-card' : null)}>
@@ -37,7 +37,7 @@ const ScoreboardRow = ((props) => {
             </div>
             <div className='column small-5 hand-details'>
                 {
-                    player.get('handDetails').get('title')
+                    player.get('rating') && player.get('rating').get('description') || ''
                 }
             </div>
         </div>

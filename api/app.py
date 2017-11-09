@@ -19,6 +19,9 @@ dispatcher.mapper.connect('/api/game/join', controller='api_join_game', action='
 dispatcher.connect(name='api_get_game', route='/api/game', controller=controllers.GameController(), action='index', conditions=dict(method=['OPTIONS']))
 dispatcher.mapper.connect('/api/game', controller='api_get_game', action='game', conditions=dict(method=['GET']))
 
+dispatcher.connect(name='api_get_results', route='/api/results', controller=controllers.ResultsController(), action='index', conditions=dict(method=['OPTIONS']))
+dispatcher.mapper.connect('/api/results', controller='api_get_results', action='results', conditions=dict(method=['GET']))
+
 
 dispatcher.connect(name='api_start_game', route='/api/game/start', controller=controllers.StartGameController(), action='index', conditions=dict(method=['OPTIONS']))
 dispatcher.mapper.connect('/api/game/start', controller='api_start_game', action='start', conditions=dict(method=['POST']))
@@ -28,6 +31,7 @@ dispatcher.mapper.connect('/api/game/draw', controller='api_draw_cards', action=
 
 dispatcher.connect(name='api_discard_cards', route='/api/game/discard', controller=controllers.DiscardCardsController(), action='index', conditions=dict(method=['OPTIONS']))
 dispatcher.mapper.connect('/api/game/discard', controller='api_discard_cards', action='discard', conditions=dict(method=['POST']))
+
 
 #dispatcher.connect(name='api_end_hand', route='/game/hand/end', controller=controllers.EndHandController(), action='index', conditions=dict(method=['GET']))
 #dispatcher.mapper.connect('/game/hand/end', controller='api_end_hand', action='end', conditions=dict(method=['POST']))

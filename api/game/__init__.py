@@ -4,6 +4,7 @@ from .create_game import CreateGame
 from .join_game import JoinGame
 #from .end_hand import EndHand
 from .game import Game
+from .results import Results
 from .start_game import StartGame
 from .draw_cards import DrawCards
 from .discard_cards import DiscardCards
