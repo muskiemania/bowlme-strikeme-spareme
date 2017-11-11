@@ -24,7 +24,6 @@ class DrawCards(object):
             [deck_size] = pipe.execute()
 
             if deck_size == 1:
-                print 'shuffling cards!!!'
                 self.__shuffle(self.discard_key, self.deck_key)
 
             number_of_cards = number_of_cards - 1
@@ -33,15 +32,6 @@ class DrawCards(object):
         [hand] = pipe.execute()
         return hand or []
 
-    def changePlayerStatus(self, new_status):
-
-        pipe = self.redis.pipeline()
-        key_info = RedisKeys(self.game_id, self.player_id)
-        pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), new_status)
-        pipe.execute()
-        
-        return
-    
     def __shuffle(self, source, destination):
         pipe = self.redis.pipeline()
         pipe.lrange(source, 0, -1)

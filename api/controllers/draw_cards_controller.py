@@ -29,15 +29,10 @@ class DrawCardsController(object):
         if gameVerified and playerVerified:
             try:
                 game.DrawCards.draw(decoded['gameId'], decoded['playerId'], number_of_cards)
-                print 'cards drawn ok'
             except Exception as e:
-                print 'something went wrong'
+                print 'whats the matter?'
                 print e
-                print e.args
-        else:
-            'verification failed'
 
-        print 'hello there'
         my_game = game.Game.get(game_id=decoded['gameId'], player_id=decoded['playerId'])
         my_game.setGameKey(decoded['key'])
         

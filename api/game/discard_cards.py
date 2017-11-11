@@ -22,7 +22,7 @@ class DiscardCards(object):
 
         #need to check player status...if 'must_discard' then must change to 'finished'
         if game.Verify.verify_player_in_game(game_id, player_id, [PlayerStatus.MUST_DISCARD]):
-            draw_cards = bowl_redis.DrawCards(game_id, player_id)
-            draw_cards.changePlayerStatus(PlayerStatus.FINISHED)
+            players = bowl_redis.Players(game_id, player_id)
+            players.setPlayerStatus(PlayerStatus.FINISHED)
 
         return game.Game.get(game_id, player_id)

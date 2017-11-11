@@ -32,6 +32,9 @@ dispatcher.mapper.connect('/api/game/draw', controller='api_draw_cards', action=
 dispatcher.connect(name='api_discard_cards', route='/api/game/discard', controller=controllers.DiscardCardsController(), action='index', conditions=dict(method=['OPTIONS']))
 dispatcher.mapper.connect('/api/game/discard', controller='api_discard_cards', action='discard', conditions=dict(method=['POST']))
 
+dispatcher.connect(name='api_finish_game', route='/api/game/finish', controller=controllers.FinishGameController(), action='index', conditions=dict(method=['OPTIONS']))
+dispatcher.mapper.connect('/api/game/finish', controller='api_finish_game', action='finish', conditions=dict(method=['POST']))
+
 
 #dispatcher.connect(name='api_end_hand', route='/game/hand/end', controller=controllers.EndHandController(), action='index', conditions=dict(method=['GET']))
 #dispatcher.mapper.connect('/game/hand/end', controller='api_end_hand', action='end', conditions=dict(method=['POST']))

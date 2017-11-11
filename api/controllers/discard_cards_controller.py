@@ -29,15 +29,11 @@ class DiscardCardsController(object):
         if gameVerified and playerVerified:
             try:
                 game.DiscardCards.discard(decoded['gameId'], decoded['playerId'], discard_cards)
-                print 'cards drawn ok'
             except Exception as e:
-                print 'something went wrong'
-                print e
-                print e.args
+                pass
         else:
             'verification failed'
 
-        print 'hello there'
         my_game = game.Game.get(game_id=decoded['gameId'], player_id=decoded['playerId'])
         my_game.setGameKey(decoded['key'])
         

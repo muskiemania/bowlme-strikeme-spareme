@@ -8,3 +8,4 @@ from .results import Results
 from .start_game import StartGame
 from .draw_cards import DrawCards
 from .discard_cards import DiscardCards
+from .finish import Finish
