@@ -36,7 +36,7 @@ export default class DrawCards extends Component {
                     <Button text='+3' isGrouped={true} clickOperation={'drawCards'} clickPayload={{'numberOfCards': 3}} click={this.props.click} />
                     <Button text='+4' isGrouped={true} clickOperation={'drawCards'} clickPayload={{'numberOfCards': 4}} click={this.props.click} />
                     <Button text='+6' isGrouped={true} clickOperation={'drawCards'} clickPayload={{'numberOfCards': 6}} click={this.props.click} />
-                    <Button text='Finish' isGrouped={true} clickOperation={'finishGame'} clickPayload={null} click={this.props.click} />
+                    <Button text='Finish' isGrouped={true} clickOperation={'finishGame'} clickPayload={{}} click={this.props.click} />
                     </ButtonGroup>                        
                     </div>
                 </div>
