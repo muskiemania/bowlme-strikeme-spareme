@@ -6,6 +6,7 @@ import Immutable from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { pokerGameGetData, pokerGamePostData } from '../../actions/pokerGameActions';
+import { getApiPath, getWebPath } from '../../helpers/env';
 
 import _ from 'lodash';
 import Seats from '../../components/seats/seats';
@@ -48,15 +49,15 @@ class PokerGame extends Component {
 
 	switch(operationName) {
 	case 'initialLoad':
-	    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/game');
+	    return this.props.operations.get(operationName)(getApiPath() + '/api/game');
 	case 'startGame':
-	    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/game/start');
+	    return this.props.operations.get(operationName)(getApiPath() + '/api/game/start');
 	case 'drawCards':
-	    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/game/draw', payload);
+	    return this.props.operations.get(operationName)(getApiPath() + '/api/game/draw', payload);
 	case 'discardCards':
-	    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/game/discard', {'cards': this.getSelectedCards()});
+	    return this.props.operations.get(operationName)(getApiPath() + '/api/game/discard', {'cards': this.getSelectedCards()});
 	case 'finishGame':
-	    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/game/finish');
+	    return this.props.operations.get(operationName)(getApiPath() + '/api/game/finish');
 	default:
 	    return;
 	}

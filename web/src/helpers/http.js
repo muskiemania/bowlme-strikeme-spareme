@@ -1,6 +1,5 @@
 import Promise from 'bluebird';
 import cookie from 'react-cookies';
-
 const bowlCookie = 'X-Bowl-Token';
 
 function getCookie(key) {
@@ -8,7 +7,8 @@ function getCookie(key) {
 }
 
 function setCookie(key, value) {
-    cookie.save(key, value, { path: '/' });
+    const maxAge = 2700;
+    cookie.save(key, value, { path: '/', maxAge });
 }
 
 //uses:
@@ -35,7 +35,6 @@ export function get(url) {
 	    'X-Bowl-Token': getCookie(bowlCookie)
 	}}))
 	.then((resp) => {
-	    console.log('get return...');
 	    return resp.json();
 	});
 }
@@ -53,36 +52,4 @@ export function post(url, postData) {
 	.then((resp) => {
 	    return resp.json();
 	});
-
-    /*
-    return new Promise((resolve, reject) => {
-	console.log('inside of promise');
-	console.log('url is: ' + url);
-	let req = new XmlHttpRequest();
-	req.open('POST', url);
-	console.log('headers');
-	req.setRequestHeader('Content-Type', 'application/json');
-	console.log('open POST');
-	req.onload = function() {
-	    console.log('onload');
-	    if(req.status === 200) {
-		console.log('status 200');
-		console.log(req.response);
-		resolve(JSON.parse(req.response));
-	    }
-	    else {
-		console.log('rejected');
-		console.log(req.status);
-		console.log(req.statusText);
-		reject({
-		    code: req.status,
-		    message: req.statusText
-		});
-	    }
-	    
-	};
-	console.log('ready to send: ' + data);
-	req.send(data);
-    });
-*/
 }

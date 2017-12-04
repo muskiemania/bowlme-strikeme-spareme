@@ -5,6 +5,7 @@ import Immutable from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { pokerGameGetData, pokerGamePostData } from '../../actions/pokerGameActions';
+import { getApiPath, getWebPath } from '../../helpers/env';
 
 import _ from 'lodash';
 import ScoreboardRow from '../shared/scoreboardRow/scoreboardRow';
@@ -27,7 +28,7 @@ class Scoreboard extends Component {
 
 	switch(operationName) {
 	case 'initialLoad':
-	    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/results');
+	    return this.props.operations.get(operationName)(getApiPath() + '/api/results');
 	//case 'startGame':
 	//    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/game/start');
 	//case 'drawCards':

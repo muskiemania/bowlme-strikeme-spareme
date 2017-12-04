@@ -12,6 +12,7 @@ import Create from '../shared/create/create';
 import Welcome from '../shared/welcome/welcome';
 
 import { post, postAnonymous, get } from '../../helpers/http';
+import { getApiPath, getWebPath } from '../../helpers/env';
 
 import './joinCreate.less';
 
@@ -24,13 +25,13 @@ class JoinCreate extends Component {
     }
 
     clickSetModeCreate() {
-	get('http://127.0.0.1:5001/api/game/create')
+	get(getApiPath() + '/api/game/create')
 	    .then((respJson) => {
 		if(respJson.gameId === 0) {
 		    this.setState({ mode: 'create' });
 		}
 		else if (respJson.gameId > 0) {
-		    window.location.replace('http://localhost:5000/game/');
+		    window.location.replace(getWebPath() + '/game/');
 		}
 		else {
 		    throw 'Unable to determine game';
@@ -42,7 +43,7 @@ class JoinCreate extends Component {
     }
 
     clickSetModeJoin() {
-	get('http://127.0.0.1:5001/api/game/join')
+	get(getApiPath() + '/api/game/join')
 	    .then((respJson) => {
 		if(respJson.gameId === 0) {
 		    this.setState({ mode: 'join' });
@@ -50,7 +51,7 @@ class JoinCreate extends Component {
 		else if(respJson.gameId > 0) {
 		    console.log('why am i redirecting??');
 		    console.log(respJson.gameId);
-		    window.location.replace('http://localhost:5000/game/');
+		    window.location.replace(getWebPath() + '/game/');
 		}
 		else {
 		    throw 'Unable to determine game';
@@ -63,14 +64,14 @@ class JoinCreate extends Component {
 
     clickCreateGame(playerName) {
 	console.log('inside joinCreate.js clickCreateGame');
-	postAnonymous('http://127.0.0.1:5001/api/game/create', { 'playerName': playerName})
+	postAnonymous(getApiPath() + '/api/game/create', { 'playerName': playerName})
 	    .then((respJson) => {
 		console.log('inside then');
 		if(respJson.gameId === 0) {
 		    throw 'Could not create game';
 		}
 
-		window.location.replace('http://127.0.0.1:5000/game/');
+		window.location.replace(getWebPath() + '/game/');
 	    })
 	    .catch((err) => {
 		//animation to show error message
@@ -79,13 +80,13 @@ class JoinCreate extends Component {
     }
 
     clickJoinGame(gameKey, playerName) {
-	postAnonymous('http://127.0.0.1:5001/api/game/join', { 'gameKey': gameKey, 'playerName': playerName})
+	postAnonymous(getApiPath() + '/api/game/join', { 'gameKey': gameKey, 'playerName': playerName})
 	    .then((resp) => {
 		if(resp.gameId === 0) {
 		    throw 'Could not create game';
 		}
 
-		window.location.replace('http://127.0.0.1:5000/game/');
+		window.location.replace(getWebPath() + '/game/');
 	    })
 	    .catch((err) => {
 		//animation to show error message
