@@ -20,4 +20,4 @@ class Test_Flush():
     def test_getRating(self):
         hand = Hand([Card('2S'),Card('4H'),Card('5H'),Card('JH'),Card('KH')])
         flush = Flush(hand)
-        assert flush.get_rating() == (6, 13, 11, 5, 4, 2)
+        assert flush.get_rating().get() == (6, 13, 11, 5, 4, 2, 'Flush')

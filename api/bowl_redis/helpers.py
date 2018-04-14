@@ -1,5 +1,5 @@
 from bowl_redis import RedisKeys
-from entities import GameStatus, PlayerStatus
+from bowl_redis_dto import GameStatus, PlayerStatus
 from cards import Deck
 import datetime
 
@@ -20,7 +20,7 @@ class Helpers(object):
     def __value_eq_within_hash(self, hash_key, lookup, value):
         self.pipe.hget(hash_key, lookup)
         [result] = self.pipe.execute()
-
+        
         if type(value) is datetime.datetime:
             return result == str(value)
         if isinstance(value, GameStatus) or isinstance(value, PlayerStatus):
@@ -29,7 +29,19 @@ class Helpers(object):
             return result == value
         if isinstance(value, int):
             return result == str(value)
-            
+        if isinstance(value, tuple):
+            print 'A'
+            print result
+            print id(result)
+            print type(result)
+            print value
+            print id(value)
+            print type(value)
+            #print cmp(result,value)
+            print 'B'
+            return result == value
+
+        
     #game-[game_id]-info: a hash of info specific to a single game
     def verify_game_info_exists(self, game_id):
         key_info = RedisKeys(game_id)
@@ -93,6 +105,14 @@ class Helpers(object):
     def verify_player_status_eq_in_player_info(self, game_id, player_id, player_status):
         key_info = RedisKeys(game_id, player_id)
         return self.__value_eq_within_hash(key_info.game_players_info(), key_info.game_players_status_key(), player_status)
+
+    def verify_player_rating_eq_in_player_info(self, game_id, player_id, player_rating):
+        key_info = RedisKeys(game_id, player_id)
+        return self.__value_eq_within_hash(key_info.game_players_info(), key_info.game_players_rating(), player_rating)
+
+    def verify_player_ranking_eq_in_player_info(self, game_id, player_id, player_ranking):
+        key_info = RedisKeys(game_id, player_id)
+        return self.__value_eq_within_hash(key_info.game_players_info(), key_info.game_players_rank(), player_ranking)
 
     #game_last_updated: a hash of all games, last updated and status
     def verify_game_last_updated_exists(self):

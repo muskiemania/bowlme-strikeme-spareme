@@ -1,6 +1,6 @@
 import redis
 import bowl_redis
-from entities import Game, GameStatus, PlayerStatus
+from bowl_redis_dto import GameDto, GameStatus, PlayerStatus
 from scoring import Scorer
 import datetime
 
@@ -46,7 +46,7 @@ class EndGame(object):
             if player_is_dealt:
                 pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), PlayerStatus.FINISHED)
 
-        game = Game(self.game_id, game_info[key_info.game_info_host_name_key()])
+        game = GameDto()
         game.last_updated = datetime.datetime.now()
 
         if game_status_started:

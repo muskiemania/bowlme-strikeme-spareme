@@ -1,6 +1,6 @@
 import redis
 import bowl_redis
-from entities import GameStatus, PlayerStatus
+from bowl_redis_dto import GameStatus, PlayerStatus
 from scoring import Scorer
 
 class EndHand(object):

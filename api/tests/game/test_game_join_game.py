@@ -17,13 +17,13 @@ class Test_GameJoinGame:
         assert j.player.player_name == 'player two'
         assert j.player.status == 0
 
-    def test_joinGame_join(self):
-        gameDto = JoinGame.join('1', 'player two')
+    #def test_joinGame_join(self):
+    #    gameDto = JoinGame.join('1', 'player two')
 
-        print gameDto.__dict__
+    #    print gameDto.__dict__
         
-        assert gameDto.game_id == '1'
-        assert 'player two' in map(lambda p: p.player_name, gameDto.players)
+    #    assert gameDto.game_id == '1'
+    #    assert 'player two' in map(lambda p: p.player_name, gameDto.players)
         #assert gameDto.player.status == 0
 
         

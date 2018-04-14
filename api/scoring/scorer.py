@@ -1,15 +1,16 @@
 import cards
-from entities import GameStatus
+from bowl_redis_dto import GameStatus, RatingDto
 
 class Scorer(object):
 
     def __init__(self, hand):
         self.poker_hand = cards.PokerHand(hand)
-        print self.poker_hand
+        #print self.poker_hand
 
     @staticmethod
     def default_rating():
-        return (0, 0, 0, 0, 0, 0, 'Empty Hand')
+        rating = (0, 0, 0, 0, 0, 0, 'Empty Hand')
+        return RatingDto(rating)
         
     def get_rating(self):
         hands = []
@@ -31,8 +32,10 @@ class Scorer(object):
     def score_hands(player_hands):
         scored = []
         for (player, hand) in player_hands:
-            rating = Scorer(hand).get_rating()
-            scored.append((player, hand, rating))
+            hand_rating = Scorer(hand).get_rating()
+            rating = RatingDto(hand_rating, player)
+            scored.append(rating)
+            #scored.append((player, hand, rating))
 
         return scored
 

@@ -10,8 +10,11 @@ from .start_game import StartGame
 from .draw_cards import DrawCards
 from .discard_cards import DiscardCards
 from .players import Players
-#from .end_hand import EndHand
-#from .end_game import EndGame
+from .end_hand import EndHand
+from .end_game import EndGame
+from .get_hand_ratings import GetHandRatings
+from .set_hand_rankings import SetHandRankings
+
 
 #from .get_game import GetGame
 #from .get_players import GetPlayers

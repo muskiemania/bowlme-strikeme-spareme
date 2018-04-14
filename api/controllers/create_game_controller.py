@@ -1,5 +1,5 @@
-import cherrypy
 import json
+import cherrypy
 import game
 import viewmodels
 from . import Helpers
@@ -20,22 +20,21 @@ class CreateGameController(object):
     def verify(self):
 
         null_game = viewmodels.JoinGameModel(0, 0, None)
-
         x_header = cherrypy.serving.request.headers['X-Bowl-Token'] or ''
-            
-        if x_header == '' or x_header == 'undefined': 
+
+        if x_header == '' or x_header == 'undefined':
             return null_game.json()
 
         decoded = Helpers().decode_jwt(x_header)
         gameVerified = game.Verify.verify_game_by_id(decoded['gameId'])
         playerVerified = game.Verify.verify_player_in_game(decoded['gameId'], decoded['playerId'])
-        
+
         if not gameVerified or not playerVerified:
             return null_game.json()
-        
+
         created_game = viewmodels.JoinGameModel(decoded['gameId'], decoded['playerId'], decoded['key'])
         return created_game.json()
-    
+
     @cherrypy.expose
     @cherrypy.tools.json_in()
     def create(self):

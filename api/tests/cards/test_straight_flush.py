@@ -25,17 +25,17 @@ class Test_StraightFlush():
     def test_get_rating(self):
         hand = Hand([Card('4S'),Card('5S'),Card('8S'),Card('7S'),Card('6S')])
         straight_flush = StraightFlush(hand)
-        assert straight_flush.get_rating() == (9, 8, 7, 6, 5, 4)
+        assert straight_flush.get_rating().get() == (9, 8, 7, 6, 5, 4, 'Straight Flush')
 
     def test_get_rating_royal_flush(self):
         hand = Hand([Card('AS'),Card('TS'),Card('QS'),Card('JS'),Card('KS')])
         straight_flush = StraightFlush(hand)
-        assert straight_flush.get_rating() == (10, 14, 13, 12, 11, 10)
+        assert straight_flush.get_rating().get() == (10, 14, 13, 12, 11, 10, 'Royal Flush')
 
     def test_get_rating_ace_low(self):
         hand = Hand([Card('2S'),Card('AS'),Card('3S'),Card('5S'),Card('4S')])
         straight_flush = StraightFlush(hand)
-        assert straight_flush.get_rating() == (9, 5, 4, 3, 2, 1)
+        assert straight_flush.get_rating().get() == (9, 5, 4, 3, 2, 1, 'Straight Flush')
 
     def test_is_royal_flush_true(self):
         hand = Hand([Card('AS'),Card('TS'),Card('QS'),Card('JS'),Card('KS')])

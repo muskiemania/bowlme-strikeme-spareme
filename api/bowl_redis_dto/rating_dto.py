@@ -1,21 +1,20 @@
 
 class RatingDto(object):
-    def __init__(self, rating):
+    def __init__(self, rating, player_id=None):
         self.__delimiter = '#'
-        print rating
-        if type(rating) is tuple:
+        #print rating
+        if isinstance(rating, tuple):
             self.__rating = rating
-        if type(rating) is list:
+        if isinstance(rating, list):
             self.__rating = tuple(rating)
-        if type(rating) is str:
+        if isinstance(rating, str):
             string_rating = rating.split('#')
-            for i in range(0, len(string_rating)-2):
-                string_rating[i] = int(string_rating[i])
-                
             self.__rating = tuple(string_rating)
 
-        print str(type(rating))
-        print self.__rating
+        self.player_id = player_id
+        self.rank = None
+        #print str(type(rating))
+        #print self.__rating
             
     def get(self):
         return self.__rating

@@ -46,7 +46,7 @@ dispatcher.mapper.connect('/api/game/finish', controller='api_finish_game', acti
 conf = {}
 conf['/'] = {'request.dispatch': dispatcher}
 
-cherrypy.config.update({'server.socket_port': 5001, 'tools.response_headers.on': True, 'tools.response_headers.headers': [('Content-Type', 'application/json'), ('Access-Control-Allow-Origin', 'http://bowl-www.muskiemania.net'), ('Access-Control-Allow-Headers', 'Accept, Content-Type, X-Bowl-Token')]})
+cherrypy.config.update({'server.socket_port': 5001, 'tools.response_headers.on': True, 'tools.response_headers.headers': [('Content-Type', 'application/json'), ('Access-Control-Allow-Origin', 'http://localhost:5000'), ('Access-Control-Allow-Headers', 'Accept, Content-Type, X-Bowl-Token')]})
 
 cherrypy.tree.mount(root=None, config=conf)
 

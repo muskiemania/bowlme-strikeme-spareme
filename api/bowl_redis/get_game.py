@@ -1,6 +1,6 @@
 import redis
 from dateutil import parser
-from entities import Game, GameStatus
+from bowl_redis_dto import GameDto, GameStatus
 from . import RedisKeys
 
 class GetGame(object):
@@ -9,8 +9,6 @@ class GetGame(object):
         self.game_id = game_id
 
     def execute(self):
-        game = Game(self.game_id, '')
-        
         pipe = self.redis.pipeline()
 
         key_info = RedisKeys(self.game_id)
@@ -22,6 +20,7 @@ class GetGame(object):
         
         [last_updated, game_status, host_player_id, game_key] = pipe.execute()
 
+        game = GameDto()        
         game.last_updated = parser.parse(last_updated)
         game.game_status = GameStatus.enum(game_status)
         game.host_player_id = host_player_id

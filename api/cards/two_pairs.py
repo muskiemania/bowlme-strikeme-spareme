@@ -1,5 +1,5 @@
 from cards import PokerHand
-
+from bowl_redis_dto import RatingDto
 
 class TwoPairs(PokerHand):
 
@@ -16,4 +16,5 @@ class TwoPairs(PokerHand):
         tally = self.card_tally()
         pairs = sorted({k: v for (k, v) in tally.items() if len(v) == 2}.keys(), reverse=True)
         other = {k: v for (k, v) in tally.items() if len(v) == 1}.keys()
-        return (self.__rating, pairs[0], pairs[1], self.coalesce(other, 0, 0), 99, 99, self.__name)
+        rating = (self.__rating, pairs[0], pairs[1], self.coalesce(other, 0, 0), 99, 99, self.__name)
+        return RatingDto(rating)

@@ -10,7 +10,7 @@ class CreatePlayer(object):
         self.redis = redis.StrictRedis()
         player.player_status = PlayerStatus.JOINED
         rating = scoring.Scorer.default_rating()
-        player.player_rating = RatingDto(rating).as_string()
+        player.player_rating = rating.as_string()
         self.player = player
 
     def execute(self, game_id):

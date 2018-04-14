@@ -1,4 +1,5 @@
 from cards import PokerHand
+from bowl_redis_dto import RatingDto
 
 class Straight(PokerHand):
 
@@ -38,4 +39,5 @@ class Straight(PokerHand):
         elif self.is_coherent():
             cards = sorted(tally.keys(), reverse=True)
         coalesced = [self.coalesce(cards, x, 0) for x in [0, 1, 2, 3, 4]]
-        return (self.__rating, coalesced[0], coalesced[1], coalesced[2], coalesced[3], coalesced[4], self.__name)
+        rating = (self.__rating, coalesced[0], coalesced[1], coalesced[2], coalesced[3], coalesced[4], self.__name)
+        return RatingDto(rating)

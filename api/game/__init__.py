@@ -2,7 +2,7 @@ from .verify import Verify
 from .create_player import CreatePlayer
 from .create_game import CreateGame
 from .join_game import JoinGame
-#from .end_hand import EndHand
+from .end_hand import EndHand
 from .game import Game
 from .results import Results
 from .start_game import StartGame

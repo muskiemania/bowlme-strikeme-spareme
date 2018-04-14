@@ -1,4 +1,5 @@
 from cards import PokerHand
+from bowl_redis_dto import RatingDto
 
 class FourOfAKind(PokerHand):
 
@@ -15,4 +16,5 @@ class FourOfAKind(PokerHand):
         tally = self.card_tally()
         quad = {k: v for (k, v) in tally.items() if len(v) == 4}.keys()
         others = sorted({k:v for (k, v) in tally.items() if len(v) < 4}.keys(), reverse=True)
-        return (self.__rating, quad[0], self.coalesce(others, 0, 0), 99, 99, 99, self.__name)
+        rating = (self.__rating, quad[0], self.coalesce(others, 0, 0), 99, 99, 99, self.__name)
+        return RatingDto(rating)

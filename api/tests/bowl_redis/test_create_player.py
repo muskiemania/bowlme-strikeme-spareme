@@ -1,4 +1,4 @@
-from entities import Player, PlayerStatus
+from bowl_redis_dto import PlayerDto, PlayerStatus
 import bowl_redis
 import redis
 
@@ -6,7 +6,7 @@ class Test_RedisCreatePlayer:
 
     def test_create_player_constructor(self):
         game_id = 100
-        player = Player('Justin', game_id)
+        player = PlayerDto('Justin', game_id)
         create_player = bowl_redis.CreatePlayer(player)
         
         assert create_player.player == player
@@ -19,7 +19,7 @@ class Test_RedisCreatePlayer:
         pipe.execute()
 
         game_id = 100
-        player = Player('Justin', game_id)
+        player = PlayerDto('Justin', game_id)
         create_player = bowl_redis.CreatePlayer(player)
         player = create_player.execute(game_id)
 

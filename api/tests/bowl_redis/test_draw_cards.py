@@ -1,4 +1,4 @@
-from entities import GameStatus, PlayerStatus
+from bowl_redis_dto import GameStatus, PlayerStatus
 import bowl_redis
 import redis
 
@@ -18,7 +18,7 @@ class Test_RedisDrawCards:
 
         start_game = bowl_redis.StartGame(game.game_id)
         host_player_id = game.players[0].player_id
-        start_game.execute(host_player_id)
+        start_game.execute()
 
         return (game.game_id, host_player_id)
 

@@ -1,6 +1,7 @@
 import datetime
 import redis
 from cards import Deck
+from scoring import Scorer
 from bowl_redis_dto import GameDto, GameStatus, PlayerStatus
 from .redis_keys import RedisKeys
 from .helpers import Helpers
@@ -10,11 +11,12 @@ class StartGame(object):
     def __init__(self, game_id):
         self.redis = redis.StrictRedis()
         self.game_id = game_id
+        self.__default_rating = Scorer.default_rating().as_string()
+        self.__default_ranking = 1
 
     def execute(self):
         key_info = RedisKeys(self.game_id)
         pipe = self.redis.pipeline()
-        helpers = Helpers(pipe)
 
         # To Start The Game
         # 1 - set game status
@@ -22,14 +24,10 @@ class StartGame(object):
         # 3 - set game_last_updated
         # 4 - update player_statuses
 
-        pipe.hgetall(key_info.game_info())
-        [game_info] = pipe.execute()
-
         game_dto = GameDto()
         game_dto.game_id = self.game_id
         game_dto.game_status = GameStatus.STARTED
         game_dto.last_updated = datetime.datetime.now()
-        
         game_dto.deck = Deck.generate_deck()
         game_dto.deck.shuffle_deck()
 
@@ -50,9 +48,11 @@ class StartGame(object):
         for player_id in players:
             key_info = RedisKeys(self.game_id, player_id)
             player_status = players_info[key_info.game_players_status_key()]
-            
+
             if player_status == str(PlayerStatus.JOINED):
                 pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), PlayerStatus.DEALT)
-        pipe.execute()
-        
+                pipe.hset(key_info.game_players_info(), key_info.game_players_rating(), self.__default_rating)
+                pipe.hset(key_info.game_players_info(), key_info.game_players_rank(), self.__default_ranking)
+                pipe.execute()
+
         return

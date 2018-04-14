@@ -1,5 +1,4 @@
 import bowl_redis
-import entities
 import cards
 import scoring
 import viewmodels

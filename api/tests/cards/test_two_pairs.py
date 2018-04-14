@@ -16,14 +16,14 @@ class Test_TwoPairs():
     def test_get_rating_1(self):
         hand = Hand([Card('2S'),Card('2H'),Card('3D'),Card('JH'),Card('JS')])
         two_pairs = TwoPairs(hand)
-        assert two_pairs.get_rating() == (3, 11, 2, 3, 99, 99)
+        assert two_pairs.get_rating().get() == (3, 11, 2, 3, 99, 99, 'Two Pairs')
 
     def test_get_rating_2(self):
         hand = Hand([Card('2S'),Card('2H'),Card('3D'),Card('3H'),Card('JS')])
         two_pairs = TwoPairs(hand)
-        assert two_pairs.get_rating() == (3, 3, 2, 11, 99, 99)
+        assert two_pairs.get_rating().get() == (3, 3, 2, 11, 99, 99, 'Two Pairs')
 
     def test_get_rating_partial(self):
         hand = Hand([Card('2S'),Card('2H'),Card('3H'),Card('3S')])
         two_pairs = TwoPairs(hand)
-        assert two_pairs.get_rating() == (3, 3, 2, 0, 99, 99)
+        assert two_pairs.get_rating().get() == (3, 3, 2, 0, 99, 99, 'Two Pairs')

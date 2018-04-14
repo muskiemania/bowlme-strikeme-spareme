@@ -81,14 +81,14 @@ class Test_Straight():
     def test_get_rating(self):
         hand = Hand([Card('4S'),Card('5H'),Card('8D'),Card('7H'),Card('6S')])
         straight = Straight(hand)
-        assert straight.get_rating() == (5, 8, 7, 6, 5, 4)
+        assert straight.get_rating().get() == (5, 8, 7, 6, 5, 4, 'Straight')
 
     def test_get_rating_ace_high(self):
         hand = Hand([Card('AS'),Card('TH'),Card('QD'),Card('JH'),Card('KS')])
         straight = Straight(hand)
-        assert straight.get_rating() == (5, 14, 13, 12, 11, 10)
+        assert straight.get_rating().get() == (5, 14, 13, 12, 11, 10, 'Straight')
 
     def test_get_rating_ace_low(self):
         hand = Hand([Card('2S'),Card('AH'),Card('3D'),Card('5H'),Card('4S')])
         straight = Straight(hand)
-        assert straight.get_rating() == (5, 5, 4, 3, 2, 1)
+        assert straight.get_rating().get() == (5, 5, 4, 3, 2, 1, 'Straight')

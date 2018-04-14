@@ -23,6 +23,7 @@ class GameStatus(Enum):
     STARTED = 2
     ENDED = 3
     ABANDONED = 4
+    FINISHED = 5
 
     @classmethod
     def text(cls, status):

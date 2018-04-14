@@ -26,6 +26,12 @@ class DrawCards(object):
                 save_rating = bowl_redis.SetHandRating(game_id, player_id)
                 save_rating.execute(rating_dto)
 
+                get_ratings = bowl_redis.GetHandRatings(game_id)
+                all_ratings = get_ratings.execute()
+                ranked = scoring.Scorer.rank_hands(all_ratings)
+                save_rankings = bowl_redis.SetHandRankings(game_id)
+                save_rankings.execute(ranked)
+
         #if cards is 3, 4 or 6:
         # - player status will change to must discard or finished
         # - if number of cards in hand is 5 or less, go straight to finished
