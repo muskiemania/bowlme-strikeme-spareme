@@ -1,28 +1,63 @@
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path')
+//const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+//const UglifyJsWebpackPlugin = require('uglifyjs-webpack-plugin');
+const webpack = require('webpack');
+
 
 module.exports = {
-    entry: "./src/app.js",
+    entry: {
+	app: "./src/app.js"
+    },
+    //devtool: 'inline-source-map',
+    devServer: {
+	contentBase: './dist',
+	//hot: true
+    },
+    plugins: [
+	new CleanWebpackPlugin(['dist']),
+	new HtmlWebpackPlugin({template: './views/index.pug', filename: './index.html'}),
+	//new UglifyJsWebpackPlugin(),
+	new CopyWebpackPlugin([{from: './src/assets', to: 'static'}]),
+	new webpack.NamedModulesPlugin(),
+	new webpack.HotModuleReplacementPlugin(),
+	new MiniCssExtractPlugin({filename: '[name].css', chunkFilename: '[id].css'}),
+	//new ExtractTextPlugin('style.css', {allChunks: false})
+    ],
     output: {
-        path: __dirname + "/dist",
+        path: path.resolve(__dirname, 'dist'),
         filename: "bundle.js"
     },
     module: {
-        loaders: [
-            {
-                exclude: /(node_modules)/,
-                loader: 'babel-loader',
-                query: {
-                    presets: ['es2015', 'react']
-                }
-            },
+	rules: [
+	    {
+		test: /\.js$/,
+		exclude: /(node_modules)/,
+		use: {
+		    loader: 'babel-loader',
+		    options: {
+			presets: ['es2015', 'react']
+		    }
+		}
+	    },
             {
                 test: /\.less$/,
-                loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader!autoprefixer-loader!less-loader'})
-            }
+                use: ['style-loader',
+		      MiniCssExtractPlugin.loader,
+		      'css-loader',
+		      'less-loader'
+		]
+            },
+	    {
+		test: /\.pug$/,
+		use: {
+		    loader: 'pug-loader'
+		}
+	    }
         ]
     },
-    plugins: [
-        new ExtractTextPlugin('style.css', {allChunks: false})
-    ],
     watch: true
 };
