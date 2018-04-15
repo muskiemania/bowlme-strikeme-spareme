@@ -17,8 +17,11 @@ class EndGame(object):
 
         #first verify that game is started and player status is dealt
         helpers = bowl_redis.Helpers(pipe)
-        game_status_started = helpers.verify_status_eq_in_game_info(self.game_id, GameStatus.STARTED)
-        game_status_created = helpers.verify_status_eq_in_game_info(self.game_id, GameStatus.CREATED)
+
+        verify_game_info = helpers.verify_status_eq_in_game_info
+
+        game_status_started = verify_game_info(self.game_id, GameStatus.STARTED)
+        game_status_created = verify_game_info(self.game_id, GameStatus.CREATED)
         game_status_others = not game_status_started and not game_status_created
 
         if game_status_others:
@@ -36,15 +39,20 @@ class EndGame(object):
 
         [players, game_info, players_info] = pipe.execute()
 
+        verify_player_status = helpers.verify_player_status_eq_in_player_info
+
         for player_id in players:
             key_info = bowl_redis.RedisKeys(self.game_id, player_id)
-            player_is_joined = helpers.verify_player_status_eq_in_player_info(self.game_id, player_id, PlayerStatus.JOINED)
-            player_is_dealt = helpers.verify_player_status_eq_in_player_info(self.game_id, player_id, PlayerStatus.DEALT)
+            player_is_joined = verify_player_status(self.game_id, player_id, PlayerStatus.JOINED)
+            player_is_dealt = verify_player_status(self.game_id, player_id, PlayerStatus.DEALT)
+
+            player_info_key = key_info.game_players_info()
+            player_status_key = key_info.game_players_status_key()
 
             if player_is_joined:
-                pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), PlayerStatus.ABANDONED)
+                pipe.hset(player_info_key, player_status_key, PlayerStatus.ABANDONED)
             if player_is_dealt:
-                pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), PlayerStatus.FINISHED)
+                pipe.hset(player_info_key, player_status_key, PlayerStatus.FINISHED)
 
         game = GameDto()
         game.last_updated = datetime.datetime.now()
@@ -53,7 +61,7 @@ class EndGame(object):
             game.game_status = GameStatus.FINISHED
         if game_status_created:
             game.game_status = GameStatus.ABANDONED
-            
+
         pipe.hset(key_info.game_info(), key_info.game_info_status_key(), game.game_status)
         pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_key(), game.last_updated)
 
