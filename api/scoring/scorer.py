@@ -1,5 +1,5 @@
 import cards
-from bowl_redis_dto import GameStatus, RatingDto
+from bowl_redis_dto import RatingDto
 
 class Scorer(object):
 
@@ -10,8 +10,10 @@ class Scorer(object):
     @staticmethod
     def default_rating():
         rating = (0, 0, 0, 0, 0, 0, 'Empty Hand')
-        return RatingDto(rating)
-        
+        dto = RatingDto(rating)
+        dto.rank = 1
+        return dto
+
     def get_rating(self):
         hands = []
         hands.append(cards.StraightFlush(self.poker_hand))
@@ -28,35 +30,38 @@ class Scorer(object):
             if hand.is_match():
                 return hand.get_rating()
 
-    @staticmethod
-    def score_hands(player_hands):
-        scored = []
-        for (player, hand) in player_hands:
-            hand_rating = Scorer(hand).get_rating()
-            rating = RatingDto(hand_rating, player)
-            scored.append(rating)
-            #scored.append((player, hand, rating))
+#    @staticmethod
+#    def score_hands(player_hands):
+#        scored = []
+#        for (player, hand) in player_hands:
+#            hand_rating = Scorer(hand).get_rating()
+#            rating = RatingDto(hand_rating, player)
+#            scored.append(rating)
+#            #scored.append((player, hand, rating))
 
         return scored
 
     @staticmethod
     def rank_hands(player_hands):
-        for item in range(5, -1, -1):
-            player_hands.sort(key=lambda (p, h, r): r[item], reverse=True)
 
-        ranked = []
-        index = 0
+        rating = lambda x, y: x.get()[y]
+        sort_key = lambda x: tuple(rating(x, i) for i in range(6))
+        sorted_hands = sorted(player_hands, key=lambda dto: sort_key(dto))
+
+        #need to go hand by hand and assign rank...
         current_rank = 1
+        current_index = 1
+        previous_rating = None
 
-        for (player, hand, score) in player_hands:
-            if index == 0:
-                ranked.append((player, hand, score, current_rank))
-                index += 1
-            else:
-                if score != ranked[index - 1][2]:
-                    current_rank += 1
+        for rating in sorted_hands:
+            if current_index == 1:
+                previous_rating = rating.get()
+                rating.rank = current_rank
 
-                ranked.append((player, hand, score, current_rank))
-                index += 1
+            if current_index > 1:
+                rating.rank = current_rank - cmp(previous_rating, rating.get())
+                previous_rating = rating.get()
 
-        return ranked
+            current_index += 1
+
+        return sorted_hands

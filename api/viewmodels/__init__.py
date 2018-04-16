@@ -1,5 +1,6 @@
 from .join_game import JoinGameModel
-from .hand_rating import HandRatingModel
+from .hand import HandModel
+from .rating import RatingModel
 from .player_status import PlayerStatusModel
 from .game_status import GameStatusModel
 from .player import PlayerModel

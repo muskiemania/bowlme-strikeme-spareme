@@ -5,7 +5,7 @@ class FourOfAKind(PokerHand):
 
     def __init__(self, hand):
         self.__rating = 8
-        self.__name = 'Four of a Kind'
+        self.__name = 'Four-Of-A-Kind'
         PokerHand.__init__(self, hand)
 
     def is_match(self):

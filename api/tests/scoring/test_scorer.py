@@ -1,5 +1,6 @@
 import pytest
 from cards import Card, Hand, PokerHand
+from bowl_redis_dto import RatingDto
 from scoring import Scorer
 
 class Test_Scorer:
@@ -8,119 +9,94 @@ class Test_Scorer:
         rating = Scorer(hand).get_rating().get()
         assert rating == (10, 14, 13, 12, 11, 10, 'Royal Flush')
 
-    def _test_get_rating_straight_flush(self):
+    def test_get_rating_straight_flush(self):
         hand = Hand([Card('9H'), Card('KH'), Card('QH'), Card('JH'), Card('TH')])
         rating = Scorer(hand).get_rating().get()
         assert rating == (9, 13, 12, 11, 10, 9, 'Straight Flush')
 
-    def _test_get_rating_four_of_a_kind(self):
+    def test_get_rating_four_of_a_kind(self):
         hand = Hand([Card('KH'), Card('KD'), Card('KC'), Card('KS'), Card('TH')])
         rating = Scorer(hand).get_rating().get()
         assert rating == (8, 13, 10, 99, 99, 99, 'Four-Of-A-Kind')
 
-    def _test_get_rating_full_house(self):
+    def test_get_rating_full_house(self):
         hand = Hand([Card('AH'), Card('AS'), Card('QH'), Card('QD'), Card('QC')])
         rating = Scorer(hand).get_rating().get()
         assert rating == (7, 12, 14, 99, 99, 99, 'Full House')
 
-    def _test_get_rating_flush(self):
+    def test_get_rating_flush(self):
         hand = Hand([Card('AH'), Card('9H'), Card('QH'), Card('JH'), Card('4H')])
         rating = Scorer(hand).get_rating().get()
         assert rating == (6, 14, 12, 11, 9, 4, 'Flush')
 
-    def _test_get_rating_straight(self):
+    def test_get_rating_straight(self):
         hand = Hand([Card('9H'), Card('KS'), Card('QD'), Card('JH'), Card('TC')])
         rating = Scorer(hand).get_rating().get()
         assert rating == (5, 13, 12, 11, 10, 9, 'Straight')
 
-    def _test_get_rating_three_of_a_kind(self):
+    def test_get_rating_three_of_a_kind(self):
         hand = Hand([Card('AH'), Card('KH'), Card('KD'), Card('KC'), Card('TH')])
         rating = Scorer(hand).get_rating().get()
         assert rating == (4, 13, 14, 10, 99, 99, 'Three-Of-A-Kind')
 
-    def _test_get_rating_two_pairs(self):
+    def test_get_rating_two_pairs(self):
         hand = Hand([Card('AH'), Card('AS'), Card('QH'), Card('JH'), Card('JS')])
         rating = Scorer(hand).get_rating().get()
         assert rating == (3, 14, 11, 12, 99, 99, 'Two Pairs')
 
-    def _test_get_rating_one_pair(self):
+    def test_get_rating_one_pair(self):
         hand = Hand([Card('AH'), Card('KH'), Card('QH'), Card('JH'), Card('JS')])
         rating = Scorer(hand).get_rating().get()
         assert rating == (2, 11, 14, 13, 12, 99, 'One Pair')
 
-    def _test_get_rating_high_card(self):
+    def test_get_rating_high_card(self):
         hand = Hand([Card('AH'), Card('QS'), Card('JD'), Card('9H'), Card('4H')])
         rating = Scorer(hand).get_rating().get()
         assert rating == (1, 14, 12, 11, 9, 4, 'High Card')
 
-    def _test_score_hands(self):
-        royal = Hand([Card('AH'), Card('KH'), Card('QH'), Card('JH'), Card('TH')])
-        straight_flush = Hand([Card('9H'), Card('KH'), Card('QH'), Card('JH'), Card('TH')])
-        four_of_kind = Hand([Card('KH'), Card('KD'), Card('KC'), Card('KS'), Card('TH')])
-        full_house = Hand([Card('AH'), Card('AS'), Card('QH'), Card('QD'), Card('QC')])
-        flush = Hand([Card('AH'), Card('9H'), Card('QH'), Card('JH'), Card('4H')])
-        straight = Hand([Card('9H'), Card('KS'), Card('QD'), Card('JH'), Card('TC')])
-        three_of_kind = Hand([Card('AH'), Card('KH'), Card('KD'), Card('KC'), Card('TH')])
-        two_pairs = Hand([Card('AH'), Card('AS'), Card('QH'), Card('JH'), Card('JS')])
-        one_pair = Hand([Card('AH'), Card('KH'), Card('QH'), Card('JH'), Card('JS')])
-        high_card = Hand([Card('AH'), Card('QS'), Card('JD'), Card('9H'), Card('4H')])
+    def test_rank_hands_1(self):
 
-        player_hands = []
-        player_hands.append(('royal', royal))
-        player_hands.append(('straight_flush', straight_flush))
-        player_hands.append(('four_of_kind', four_of_kind))
-        player_hands.append(('full_house', full_house))
-        player_hands.append(('flush', flush))
-        player_hands.append(('straight', straight))
-        player_hands.append(('three_of_kind', three_of_kind))
-        player_hands.append(('two_pairs', two_pairs))
-        player_hands.append(('one_pair', one_pair))
-        player_hands.append(('high_card', high_card))
+        justin = RatingDto((3, 14, 19, 13, 99, 99, ''), 'justin')
+        justin.rank = 12
 
-        scored_hands = Scorer.score_hands(player_hands)
-        for (_, hand, rating) in scored_hands:
-            assert rating == Scorer.get_rating(hand).get()
+        sarah = RatingDto((2, 13, 11, 10, 4, 99, ''), 'sarah')
+        sarah.rank = 13
 
-            
-    def _test_rank_hands_1(self):
-        scored = []
-        scored.append(('justin', None, (3,14,19,13,99,99)))
-        scored.append(('sarah', None, (2,13,11,10,4,99)))
+        ranked = Scorer.rank_hands([justin, sarah])
 
-        ranked = Scorer.rank_hands(scored)
+        assert ranked[0].player_id == 'sarah' and ranked[0].rank == 1
+        assert ranked[1].player_id == 'justin' and ranked[1].rank == 2
 
-        for index in range(0, 2):
-            (player, hand, score, rank) = ranked[index]
-            assert rank == index+1
+    def test_rank_hands_2(self):
 
-    def _test_rank_hands_2(self):
-        scored = []
-        scored.append(('justin', None, (2,13,11,10,4,99)))
-        scored.append(('sarah', None, (2,13,11,10,4,99)))
+        justin = RatingDto((2, 13, 11, 10, 4, 99, ''), 'justin')
+        sarah = RatingDto((2, 13, 11, 10, 4, 99, ''), 'sarah')
 
-        ranked = Scorer.rank_hands(scored)
+        ranked = Scorer.rank_hands([justin, sarah])
 
-        for (player, hand, score, rank) in ranked:
-            assert rank == 1
+        assert ranked[0].rank == 1
+        assert ranked[1].rank == 1
 
-    def _test_rank_hands_3(self):
-        scored = []
-        scored.append(('justin', None, (1,13,11,10,4,2)))
-        scored.append(('sarah', None, (1,13,11,10,4,2)))
-        scored.append(('jenna', None, (1,13,11,10,4,2)))
+    def test_rank_hands_3(self):
 
-        ranked = Scorer.rank_hands(scored)
+        justin = RatingDto((1, 13, 11, 10, 4, 2), 'justin')
+        sarah = RatingDto((1, 13, 11, 10, 4, 2), 'sarah')
+        jenna = RatingDto((1, 13, 11, 10, 4, 2), 'jenna')
 
-        for (player, hand, score, rank) in ranked:
-            assert rank == 1
+        ranked = Scorer.rank_hands([jenna, justin, sarah])
 
-    def _test_rank_hands_4(self):
-        scored = []
-        scored.append(('justin', None, (2,13,11,10,4,99)))
-        scored.append(('sarah', None, (1,13,11,10,4,2)))
-        scored.append(('jenna', None, (1,13,11,10,4,2)))
+        assert ranked[0].rank == 1
+        assert ranked[1].rank == 1
+        assert ranked[2].rank == 1
 
-        ranked = Scorer.rank_hands(scored)[-2:]
+    def test_rank_hands_4(self):
 
-        for (player, hand, score, rank) in ranked:
-            assert rank == 2
+        justin = RatingDto((2, 13, 11, 10, 4, 99, ''), 'justin')
+        sarah = RatingDto((1, 13, 11, 10, 4, 2, ''), 'sarah')
+        jenna = RatingDto((1, 13, 11, 10, 4, 2, ''), 'jenna')
+
+        ranked = Scorer.rank_hands([justin, jenna, sarah])
+
+        assert ranked[0].rank == 1
+        assert ranked[1].rank == 1
+        assert ranked[2].rank == 2 and ranked[2].player_id == 'justin'

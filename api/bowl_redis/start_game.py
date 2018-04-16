@@ -11,8 +11,7 @@ class StartGame(object):
     def __init__(self, game_id):
         self.redis = redis.StrictRedis()
         self.game_id = game_id
-        self.__default_rating = Scorer.default_rating().as_string()
-        self.__default_ranking = 1
+        self.__default_rating = Scorer.default_rating()
 
     def execute(self):
         key_info = RedisKeys(self.game_id)
@@ -36,8 +35,11 @@ class StartGame(object):
         #2
         pipe.rpush(key_info.game_deck(), *Deck.show_cards(game_dto.deck.cards))
         #3
-        pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_key(), game_dto.last_updated)
-        pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_status_key(), game_dto.game_status)
+        last_updated = key_info.game_last_updated()
+        updated_key = key_info.game_last_updated_key()
+        game_status_key = key_info.game_last_updated_status_key()
+        pipe.hset(last_updated, updated_key, game_dto.last_updated)
+        pipe.hset(last_updated, game_status_key, game_dto.game_status)
         pipe.execute()
 
         #4
@@ -49,10 +51,16 @@ class StartGame(object):
             key_info = RedisKeys(self.game_id, player_id)
             player_status = players_info[key_info.game_players_status_key()]
 
+            players_info = key_info.game_players_info()
+            players_status_key = key_info.game_players_status_key()
+            rating_key = key_info.game_players_rating()
+            rank_key = key_info.game_players_rank()
             if player_status == str(PlayerStatus.JOINED):
-                pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), PlayerStatus.DEALT)
-                pipe.hset(key_info.game_players_info(), key_info.game_players_rating(), self.__default_rating)
-                pipe.hset(key_info.game_players_info(), key_info.game_players_rank(), self.__default_ranking)
+                pipe.hset(players_info, players_status_key, PlayerStatus.DEALT)
+                pipe.hset(players_info, rating_key, self.__default_rating.as_string())
+                pipe.hset(players_info, rank_key, self.__default_rating.rank)
+                print 'applied default rating ' + self.__default_rating.as_string()
+                print 'applied default ranking ' + str(self.__default_rating.rank)
                 pipe.execute()
 
         return

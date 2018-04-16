@@ -4,6 +4,7 @@ import game
 import viewmodels
 from bowl_redis_dto import GameStatus, PlayerStatus
 from . import Helpers
+import traceback
 
 class DrawCardsController(object):
 
@@ -23,17 +24,26 @@ class DrawCardsController(object):
         number_of_cards = cherrypy.request.json['numberOfCards'] or 1
 
         decoded = Helpers().decode_jwt(x_header)
-        gameVerified = game.Verify.verify_game_by_id(decoded['gameId'], [GameStatus.STARTED])
-        playerVerified = game.Verify.verify_player_in_game(decoded['gameId'], decoded['playerId'], [PlayerStatus.DEALT])
+        game_id = decoded['gameId']
+        player_id = decoded['playerId']
 
-        if gameVerified and playerVerified:
+        verify_game = game.Verify.verify_game_by_id
+        verify_player = game.Verify.verify_player_in_game
+        
+        game_verified = verify_game(game_id, [GameStatus.STARTED])
+        player_verified = verify_player(game_id, player_id, [PlayerStatus.DEALT])
+
+        if game_verified and player_verified:
             try:
-                game.DrawCards.draw(decoded['gameId'], decoded['playerId'], number_of_cards)
+                game.DrawCards.draw(game_id, player_id, number_of_cards)
             except Exception as e:
                 print 'whats the matter?'
                 print e
+                print traceback.format_exc()
+        else:
+            print 'game or player not verified'
 
-        my_game = game.Game.get(game_id=decoded['gameId'], player_id=decoded['playerId'])
+        my_game = game.Game.get(game_id=game_id, player_id=player_id)
         my_game.setGameKey(decoded['key'])
-        
+
         return my_game.json()
