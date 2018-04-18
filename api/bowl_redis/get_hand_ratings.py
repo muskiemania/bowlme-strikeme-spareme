@@ -21,10 +21,11 @@ class GetHandRatings(object):
         (player_ids, players) = pipe.execute()
 
         ratings = []
+
         for player_id in player_ids:
             self.__keys.player_id = player_id
             rating_key = self.__keys.game_players_rating()
-            ratings.append(RatingDto(players[rating_key], player_id))
+            rating = RatingDto(players[rating_key], player_id)
+            ratings.append(rating)
 
         return ratings
-    

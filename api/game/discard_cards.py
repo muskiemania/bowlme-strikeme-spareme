@@ -1,7 +1,7 @@
 import bowl_redis
-from bowl_redis_dto import RatingDto, PlayerStatus
+from bowl_redis_dto import PlayerStatus
 import scoring
-import game
+from . import Verify
 from cards import Card, Hand
 
 class DiscardCards(object):
@@ -15,21 +15,22 @@ class DiscardCards(object):
         cards = discard_cards.execute(discards)
 
         scorer = scoring.Scorer(Hand(map(lambda x: Card(x), cards)))
-        rating_dto = RatingDto(scorer.get_rating())
+        rating_dto = scorer.get_rating()
 
         save_rating = bowl_redis.SetHandRating(game_id, player_id)
         save_rating.execute(rating_dto)
 
         get_ratings = bowl_redis.GetHandRatings(game_id)
         all_ratings = get_ratings.execute()
+
         ranked = scoring.Scorer.rank_hands(all_ratings)
+
         save_rankings = bowl_redis.SetHandRankings(game_id)
         save_rankings.execute(ranked)
 
-
         #need to check player status...if 'must_discard' then must change to 'finished'
-        if game.Verify.verify_player_in_game(game_id, player_id, [PlayerStatus.MUST_DISCARD]):
+        if Verify.verify_player_in_game(game_id, player_id, [PlayerStatus.MUST_DISCARD]):
             players = bowl_redis.Players(game_id, player_id)
             players.setPlayerStatus(PlayerStatus.FINISHED)
 
-        return game.Game.get(game_id, player_id)
+        return

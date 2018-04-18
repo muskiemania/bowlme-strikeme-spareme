@@ -38,30 +38,35 @@ class Scorer(object):
 #            rating = RatingDto(hand_rating, player)
 #            scored.append(rating)
 #            #scored.append((player, hand, rating))
-
-        return scored
+#
+#        return scored
 
     @staticmethod
     def rank_hands(player_hands):
 
         rating = lambda x, y: x.get()[y]
         sort_key = lambda x: tuple(rating(x, i) for i in range(6))
-        sorted_hands = sorted(player_hands, key=lambda dto: sort_key(dto))
+        sorted_hands = sorted(player_hands, key=lambda dto: sort_key(dto), reverse=True)
 
-        #need to go hand by hand and assign rank...
-        current_rank = 1
-        current_index = 1
-        previous_rating = None
+        rank = 1
 
         for rating in sorted_hands:
-            if current_index == 1:
-                previous_rating = rating.get()
-                rating.rank = current_rank
+            rating.rank = rank
+            rank += 1
 
-            if current_index > 1:
-                rating.rank = current_rank - cmp(previous_rating, rating.get())
-                previous_rating = rating.get()
+        previous_rating = sorted_hands[0].get()
+        previous_rank = sorted_hands[0].rank
+        first = True
+        for rating in sorted_hands:
+            if first:
+                first = False
+                continue
 
-            current_index += 1
+            print str(cmp(previous_rating, rating.get()))
+            if cmp(previous_rating, rating.get()) == 0:
+                rating.rank = previous_rank
+
+            previous_rating = rating.get()
+            previous_rank = rating.rank
 
         return sorted_hands

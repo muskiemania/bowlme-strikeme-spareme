@@ -49,16 +49,18 @@ class StartGame(object):
 
         for player_id in players:
             key_info = RedisKeys(self.game_id, player_id)
-            player_status = players_info[key_info.game_players_status_key()]
 
-            players_info = key_info.game_players_info()
+            players_info_key = key_info.game_players_info()
             players_status_key = key_info.game_players_status_key()
             rating_key = key_info.game_players_rating()
             rank_key = key_info.game_players_rank()
+
+            player_status = players_info[players_status_key]
+
             if player_status == str(PlayerStatus.JOINED):
-                pipe.hset(players_info, players_status_key, PlayerStatus.DEALT)
-                pipe.hset(players_info, rating_key, self.__default_rating.as_string())
-                pipe.hset(players_info, rank_key, self.__default_rating.rank)
+                pipe.hset(players_info_key, players_status_key, PlayerStatus.DEALT)
+                pipe.hset(players_info_key, rating_key, self.__default_rating.as_string())
+                pipe.hset(players_info_key, rank_key, self.__default_rating.rank)
                 print 'applied default rating ' + self.__default_rating.as_string()
                 print 'applied default ranking ' + str(self.__default_rating.rank)
                 pipe.execute()

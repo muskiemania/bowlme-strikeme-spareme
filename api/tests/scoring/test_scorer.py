@@ -64,8 +64,8 @@ class Test_Scorer:
 
         ranked = Scorer.rank_hands([justin, sarah])
 
-        assert ranked[0].player_id == 'sarah' and ranked[0].rank == 1
-        assert ranked[1].player_id == 'justin' and ranked[1].rank == 2
+        assert ranked[0].player_id == 'justin' and ranked[0].rank == 1
+        assert ranked[1].player_id == 'sarah' and ranked[1].rank == 2
 
     def test_rank_hands_2(self):
 
@@ -97,6 +97,20 @@ class Test_Scorer:
 
         ranked = Scorer.rank_hands([justin, jenna, sarah])
 
-        assert ranked[0].rank == 1
-        assert ranked[1].rank == 1
-        assert ranked[2].rank == 2 and ranked[2].player_id == 'justin'
+        assert ranked[0].rank == 1 and ranked[0].player_id == 'justin'
+        assert ranked[1].rank == 2
+        assert ranked[2].rank == 2
+
+    def test_rank_hands_5(self):
+
+        justin = RatingDto((2, 13, 11, 10, 4, 99, ''), 'justin')
+        sarah = RatingDto((1, 13, 11, 10, 4, 2, ''), 'sarah')
+        jenna = RatingDto((1, 13, 11, 10, 4, 2, ''), 'jenna')
+        paige = RatingDto((0, 0, 0, 0, 0, 0, ''), 'paige')
+
+        ranked = Scorer.rank_hands([justin, jenna, sarah, paige])
+
+        assert ranked[0].rank == 1 and ranked[0].player_id == 'justin'
+        assert ranked[1].rank == 2
+        assert ranked[2].rank == 2
+        assert ranked[3].rank == 4 and ranked[3].player_id == 'paige'

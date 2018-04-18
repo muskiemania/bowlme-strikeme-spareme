@@ -1,5 +1,5 @@
 import json
-from viewmodels import PlayerModel, PlayerStatusModel, GameStatusModel
+from viewmodels import PlayerModel, GameStatusModel
 
 class MyGameModel(object):
     def __init__(self):
@@ -20,10 +20,21 @@ class MyGameModel(object):
 
     def setHostPlayerId(self, id):
         self.__host_player_id = id
-        
+
     def setStatus(self, game_status):
         self.__game_status = game_status
 
-    def json(self): 
-        return json.dumps({'player': PlayerModel.fromDto(self.__player, True), 'otherPlayers': map(lambda x: PlayerModel.fromDto(x), self.__others), 'game': { 'key': self.__game_key, 'hostPlayerId': self.__host_player_id, 'status': GameStatusModel(self.__game_status).fromDto()}})
+    def json(self):
+
+        game = {}
+        game['key'] = self.__game_key
+        game['hostPlayerId'] = self.__host_player_id
+        game['status'] = GameStatusModel(self.__game_status).fromDto()
+
+        model = {}
+        model['player'] = PlayerModel.fromDto(self.__player, True)
+        model['otherPlayers'] = map(lambda x: PlayerModel.fromDto(x), self.__others)
+        model['game'] = game
+
+        return json.dumps(model)
 

@@ -13,30 +13,39 @@ class Verify(object):
         verify = bowl_redis.VerifyGame()
         reply = verify.execute(game_key)
 
-        return reply.game_status in [GameStatus.CREATED, GameStatus.STARTED]
+        #return reply.game_status in [GameStatus.CREATED, GameStatus.STARTED]
+        return reply
 
     @staticmethod
     def verify_player_is_host(game_id, player_id):
         game_details = bowl_redis.GetGame(game_id)
         game_details_dto = game_details.execute()
         return player_id == game_details_dto.host_player_id
-    
+
     @staticmethod
-    def verify_game_by_id(game_id, game_statuses = [GameStatus.CREATED, GameStatus.STARTED]):
+    def verify_game_by_id(game_id, game_statuses=None):
+
+        if game_statuses is None:
+            game_statuses = [GameStatus.CREATED, GameStatus.STARTED]
+
         verify = bowl_redis.VerifyGame(game_id)
         reply = verify.execute()
 
         #print 'ee'
         #print reply.game.game_status
-        
+
         #print game_statuses
         #print GameStatus.enum(reply.game.game_status) in game_statuses
         #print 'ff'
-        
+
         return GameStatus.enum(reply.game.game_status) in game_statuses
 
     @staticmethod
-    def verify_player_in_game(game_id, player_id, player_statuses = [PlayerStatus.JOINED, PlayerStatus.DEALT, PlayerStatus.MUST_DISCARD, PlayerStatus.FINISHED]):
+    def verify_player_in_game(game_id, player_id, player_statuses=None):
+
+        if player_statuses is None:
+            player_statuses = [PlayerStatus.JOINED, PlayerStatus.DEALT, PlayerStatus.MUST_DISCARD, PlayerStatus.FINISHED]
+
         verify = bowl_redis.VerifyGame(game_id, player_id)
         reply = verify.execute()
 
