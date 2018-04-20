@@ -30,10 +30,15 @@ class Game(object):
         my_game = viewmodels.MyGameModel()
 
         if player_id is not None:
-            my_game.setOthers(filter(lambda x: not x.player_id == player_id, player_dto))
-            my_game.setPlayer(filter(lambda x: x.player_id == player_id, player_dto)[0])
+            others = [o for o in player_dto if o.player_id != player_id]
+            player = [p for p in player_dto if p.player_id == player_id][0]
+
+            my_game.setOthers(others)
+            my_game.setPlayer(player)
             my_game.setStatus(game_details_dto.game_status)
             my_game.setHostPlayerId(game_details_dto.host_player_id)
-        
+
         return my_game
-    
+
+    def sort_cards(self, unsorted):
+        pass

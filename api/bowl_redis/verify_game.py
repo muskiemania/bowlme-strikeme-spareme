@@ -67,10 +67,8 @@ class VerifyGame(object):
         verify_game = self.__verify_game_only()
 
         if self.player_id is None:
-            #do something
             return verify_game
 
         verify_game.player = self.__verify_player_too()
 
-        #do something
         return verify_game

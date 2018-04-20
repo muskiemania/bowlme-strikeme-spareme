@@ -20,8 +20,8 @@ class Helpers(object):
     def __value_eq_within_hash(self, hash_key, lookup, value):
         self.pipe.hget(hash_key, lookup)
         [result] = self.pipe.execute()
-        
-        if type(value) is datetime.datetime:
+
+        if isinstance(value, datetime.datetime):
             return result == str(value)
         if isinstance(value, GameStatus) or isinstance(value, PlayerStatus):
             return result == value
@@ -30,52 +30,46 @@ class Helpers(object):
         if isinstance(value, int):
             return result == str(value)
         if isinstance(value, tuple):
-            print 'A'
-            print result
-            print id(result)
-            print type(result)
-            print value
-            print id(value)
-            print type(value)
-            #print cmp(result,value)
-            print 'B'
             return result == value
 
-        
+    def __value_exists_within_list(self, list_key, value):
+        self.pipe.lrange(list_key, 0, -1)
+        [items] = self.pipe.execute()
+        return value in items
+
     #game-[game_id]-info: a hash of info specific to a single game
     def verify_game_info_exists(self, game_id):
         key_info = RedisKeys(game_id)
         return self.__key_exists(key_info.game_info())
-        
+
     def verify_host_name_exists_in_game_info(self, game_id):
         key_info = RedisKeys(game_id)
-        return self.__key_exists_within_hash(key_info.game_info(), key_info.game_info_host_name_key())
-    
+        host_name_key = key_info.game_info_host_name_key()
+        return self.__key_exists_within_hash(key_info.game_info(), host_name_key)
+
     def verify_host_id_exists_in_game_info(self, game_id):
         key_info = RedisKeys(game_id)
         return self.__key_exists_within_hash(key_info.game_info(), key_info.game_info_host_id_key())
-    
+
     def verify_status_exists_in_game_info(self, game_id):
         key_info = RedisKeys(game_id)
         return self.__key_exists_within_hash(key_info.game_info(), key_info.game_info_status_key())
 
     def verify_host_name_eq_in_game_info(self, game_id, host_name):
         key_info = RedisKeys(game_id)
-        return self.__value_eq_within_hash(key_info.game_info(), key_info.game_info_host_name_key(), host_name)
-    
+        host_name_key = key_info.game_info_host_name_key()
+        return self.__value_eq_within_hash(key_info.game_info(), host_name_key, host_name)
+
     def verify_host_id_eq_in_game_info(self, game_id, host_id):
         key_info = RedisKeys(game_id)
-        return self.__value_eq_within_hash(key_info.game_info(), key_info.game_info_host_id_key(), host_id)
-    
+        host_id_key = key_info.game_info_host_id_key()
+        return self.__value_eq_within_hash(key_info.game_info(), host_id_key, host_id)
+
     def verify_status_eq_in_game_info(self, game_id, status):
         key_info = RedisKeys(game_id)
-        return self.__value_eq_within_hash(key_info.game_info(), key_info.game_info_status_key(), status)
+        game_status_key = key_info.game_info_status_key()
+        return self.__value_eq_within_hash(key_info.game_info(), game_status_key, status)
 
-    def __value_exists_within_list(self, list_key, value):
-        self.pipe.lrange(list_key, 0, -1)
-        [items] = self.pipe.execute()
-        return value in items
-        
     #game-[game_id]-players: a list of all player_ids in a single game
     def verify_game_players_exists(self, game_id):
         key_info = RedisKeys(game_id)
@@ -88,31 +82,43 @@ class Helpers(object):
     #game-[game_id]-players-info: a hash of specific info for all players in a single game
     def verify_player_info_exists(self, game_id, player_id):
         key_info = RedisKeys(game_id, player_id)
+        print key_info.__dict__
+        print key_info.game_players_info()
         return self.__key_exists(key_info.game_players_info())
-    
+
     def verify_player_name_in_player_info(self, game_id, player_id):
         key_info = RedisKeys(game_id, player_id)
-        return self.__key_exists_within_hash(key_info.game_players_info(), key_info.game_players_name_key())
+        players_name_key = key_info.game_players_name_key()
+        return self.__key_exists_within_hash(key_info.game_players_info(), players_name_key)
 
     def verify_player_status_in_player_info(self, game_id, player_id):
         key_info = RedisKeys(game_id, player_id)
-        return self.__key_exists_within_hash(key_info.game_players_info(), key_info.game_players_status_key())
+        players_status_key = key_info.game_players_status_key()
+        return self.__key_exists_within_hash(key_info.game_players_info(), players_status_key)
 
     def verify_player_name_eq_in_player_info(self, game_id, player_id, player_name):
         key_info = RedisKeys(game_id, player_id)
-        return self.__value_eq_within_hash(key_info.game_players_info(), key_info.game_players_name_key(), player_name)
+        players_info = key_info.game_players_info()
+        players_name_key = key_info.game_players_name_key()
+        return self.__value_eq_within_hash(players_info, players_name_key, player_name)
 
     def verify_player_status_eq_in_player_info(self, game_id, player_id, player_status):
         key_info = RedisKeys(game_id, player_id)
-        return self.__value_eq_within_hash(key_info.game_players_info(), key_info.game_players_status_key(), player_status)
+        players_info = key_info.game_players_info()
+        players_status_key = key_info.game_players_status_key()
+        return self.__value_eq_within_hash(players_info, players_status_key, player_status)
 
     def verify_player_rating_eq_in_player_info(self, game_id, player_id, player_rating):
         key_info = RedisKeys(game_id, player_id)
-        return self.__value_eq_within_hash(key_info.game_players_info(), key_info.game_players_rating(), player_rating)
+        players_info = key_info.game_players_info()
+        players_rating_key = key_info.game_players_rating()
+        return self.__value_eq_within_hash(players_info, players_rating_key, player_rating)
 
     def verify_player_ranking_eq_in_player_info(self, game_id, player_id, player_ranking):
         key_info = RedisKeys(game_id, player_id)
-        return self.__value_eq_within_hash(key_info.game_players_info(), key_info.game_players_rank(), player_ranking)
+        players_info = key_info.game_players_info()
+        players_ranking_key = key_info.game_players_rank()
+        return self.__value_eq_within_hash(players_info, players_ranking_key, player_ranking)
 
     #game_last_updated: a hash of all games, last updated and status
     def verify_game_last_updated_exists(self):
@@ -121,19 +127,25 @@ class Helpers(object):
 
     def verify_game_updated_exists(self, game_id):
         key_info = RedisKeys(game_id)
-        return self.__key_exists_within_hash(key_info.game_last_updated(), key_info.game_last_updated_key())
+        last_updated_key = key_info.game_last_updated_key()
+        return self.__key_exists_within_hash(key_info.game_last_updated(), last_updated_key)
 
     def verify_game_status_exists(self, game_id):
         key_info = RedisKeys(game_id)
-        return self.__key_exists_within_hash(key_info.game_last_updated(), key_info.game_last_updated_status_key())
+        last_updated_status_key = key_info.game_last_updated_status_key()
+        return self.__key_exists_within_hash(key_info.game_last_updated(), last_updated_status_key)
 
     def verify_game_updated_eq_in_game_last_updated(self, game_id, last_updated):
         key_info = RedisKeys(game_id)
-        return self.__value_eq_within_hash(key_info.game_last_updated(), key_info.game_last_updated_key(), last_updated)
+        game_last_updated = key_info.game_last_updated()
+        last_updated_key = key_info.game_last_updated_key()
+        return self.__value_eq_within_hash(game_last_updated, last_updated_key, last_updated)
 
     def verify_game_status_eq_in_game_last_updated(self, game_id, status):
         key_info = RedisKeys(game_id)
-        return self.__value_eq_within_hash(key_info.game_last_updated(), key_info.game_last_updated_status_key(), status)
+        game_last_updated = key_info.game_last_updated()
+        last_updated_status_key = key_info.game_last_updated_status_key()
+        return self.__value_eq_within_hash(game_last_updated, last_updated_status_key, status)
 
     #game-[game_id]-deck: a list of all cards
     def verify_game_deck_exists(self, game_id):
@@ -148,5 +160,3 @@ class Helpers(object):
             if not self.__value_exists_within_list(key_info.game_deck(), card):
                 return False
         return True
-        
-        

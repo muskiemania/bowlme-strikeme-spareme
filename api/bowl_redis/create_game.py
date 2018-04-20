@@ -1,7 +1,7 @@
-import redis
-from bowl_redis_dto import GameDto, GameStatus, PlayerDto
-from . import RedisKeys, CreatePlayer
 import datetime
+import redis
+from bowl_redis_dto import GameDto, GameStatus, PlayerDto, PlayerStatus
+from . import RedisKeys, CreatePlayer
 
 class CreateGame(object):
     def __init__(self, host_player_name):
@@ -15,28 +15,30 @@ class CreateGame(object):
         game_dto.game_status = GameStatus.CREATED
         game_dto.last_updated = str(datetime.datetime.now())
         game_dto.generate_game_key()
-        
-        key_info = RedisKeys(game_dto.game_id)
 
-        last_updated = {}
-        last_updated[key_info.game_last_updated_key()] = game_dto.last_updated
-        last_updated[key_info.game_last_updated_status_key()] = game_dto.game_status
+        key_info = RedisKeys(game_dto.game_id)
 
         pipe = self.redis.pipeline()
 
-        pipe.hset(key_info.game_info(), key_info.game_info_host_name_key(), self.host_player_name)
-        pipe.hset(key_info.game_info(), key_info.game_info_status_key(), game_dto.game_status)
+        host_name_key = key_info.game_info_host_name_key()
+        status_key = key_info.game_info_status_key()
+        pipe.hset(key_info.game_info(), host_name_key, self.host_player_name)
+        pipe.hset(key_info.game_info(), status_key, game_dto.game_status)
 
-        pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_key(), game_dto.last_updated)
-        pipe.hset(key_info.game_last_updated(), key_info.game_last_updated_status_key(), game_dto.game_status)
-
+        last_updated = key_info.game_last_updated()
+        last_updated_key = key_info.game_last_updated_key()
+        last_updated_status_key = key_info.game_last_updated_status_key()
+        pipe.hset(last_updated, last_updated_key, game_dto.last_updated)
+        pipe.hset(last_updated, last_updated_status_key, game_dto.game_status)
         pipe.hset(key_info.game_hashes_key(), game_dto.game_key, game_dto.game_id)
-        
+
         pipe.execute()
 
         player_dto = PlayerDto(self.host_player_name, game_dto.game_id)
+        player_dto.player_status = PlayerStatus.JOINED
 
-        pipe.hset(key_info.game_info(), key_info.game_info_host_id_key(), player_dto.player_id)
+        host_id_key = key_info.game_info_host_id_key()
+        pipe.hset(key_info.game_info(), host_id_key, player_dto.player_id)
         pipe.execute()
 
         CreatePlayer(player_dto).execute(game_dto.game_id)
