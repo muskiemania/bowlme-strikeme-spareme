@@ -29,14 +29,6 @@ class Scoreboard extends Component {
 	switch(operationName) {
 	case 'initialLoad':
 	    return this.props.operations.get(operationName)(getApiPath() + '/api/results');
-	//case 'startGame':
-	//    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/game/start');
-	//case 'drawCards':
-	//    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/game/draw', payload);
-	//case 'discardCards':
-	//    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/game/discard', {'cards': this.getSelectedCards()});
-	//case 'finishGame':
-	//    return this.props.operations.get(operationName)('http://127.0.0.1:5001/api/game/finish');
 	default:
 	    return;
 	}

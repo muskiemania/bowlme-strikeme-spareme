@@ -31,14 +31,14 @@ export function pokerGameGetData(url) {
         dispatch(isLoading(true));
 
 	get(url)
-	    .then((data) => {
-		let playerStatusId = data.player && data.player.status && data.player.status.statusId || 0;
-		console.log(playerStatusId);
-		if(playerStatusId === 4) {
-		    window.location.href = '/results/';
-		}
-		return data;
-	    })
+	    //.then((data) => {
+		//let playerStatusId = data.player && data.player.status && data.player.status.statusId || 0;
+		//console.log(playerStatusId);
+		//if(playerStatusId === 4) {
+		//    window.location.href = '/results/';
+		//}
+		//return data;
+	    //})
 	    .then((data) => {
 		dispatch(isLoading(false));
 		return dispatch(fetchDataSuccess(data));
@@ -53,15 +53,18 @@ export function pokerGameGetData(url) {
 export function pokerGamePostData(url, payload) {
     console.log('posting data...');
     return (dispatch) => {
+	console.log(url);
+	console.log(payload);
+	
 	post(url, payload)
-	    .then((data) => {
-		console.log(data);
-		let playerStatusId = data.player && data.player.status && data.player.status.statusId || 0;
-		if(playerStatusId === 4) {
-		    window.location.href = '/results/';
-		}
-		return data;
-	    })
+	    //.then((data) => {
+		//console.log(data);
+		//let playerStatusId = data.player && data.player.status && data.player.status.statusId || 0;
+		//if(playerStatusId === 4) {
+		//    window.location.href = '/results/';
+		//}
+		//return data;
+	//})
 	    .then((data) => dispatch(fetchDataSuccess(data)))
 	    .catch((e) => {
 		console.log(e);

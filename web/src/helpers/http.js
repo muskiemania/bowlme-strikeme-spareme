@@ -41,6 +41,8 @@ export function get(url) {
 
 export function post(url, postData) {
 
+    console.log(postData);
+    
     return Promise.resolve(fetch(url, {
 	method: 'POST',
 	headers: {

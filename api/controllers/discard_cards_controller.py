@@ -14,8 +14,8 @@ class DiscardCardsController(object):
     @cherrypy.expose
     def index(self):
         cherrypy.response.headers['Access-Control-Allow-Methods'] = 'POST'
-        return json.dumps({ 'ok': True })
-    
+        return json.dumps({'ok': True})
+
     @cherrypy.expose
     @cherrypy.tools.json_in()
     def discard(self):

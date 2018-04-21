@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './pokerTable.less';
 
-
 class PokerTable extends Component {
     render() {
         return (

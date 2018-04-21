@@ -57,7 +57,10 @@ class PokerGame extends Component {
 	case 'discardCards':
 	    return this.props.operations.get(operationName)(getApiPath() + '/api/game/discard', {'cards': this.getSelectedCards()});
 	case 'finishGame':
-	    return this.props.operations.get(operationName)(getApiPath() + '/api/game/finish');
+	    console.log('finish');
+	    let response = this.props.operations.get(operationName)(getApiPath() + '/api/game/finish');
+	    console.log(response);
+	    //window.location.href = '/results/';
 	default:
 	    return;
 	}
@@ -89,6 +92,11 @@ class PokerGame extends Component {
 	
 	if(gameStatus.get('statusId') === 1) {
 	    return <Pregame isHost={hostPlayerId === playerId} numberOfPlayers={numOthers} playersRequired={1} click={this.handleButtonClick.bind(this)} />
+	}
+
+	if(playerStatus.get('statusId') === 4) {
+	    window.location.href = '/results/';
+	    return;
 	}
 	
 	return (<DrawCards cardsInHand={hand.get('numberOfCards')} cardsSelected={this.getSelectedCards().size} canDrawAgain={ _.includes([1,2], playerStatus.get('statusId') || 0)} click={this.handleButtonClick.bind(this)} />);
@@ -155,7 +163,7 @@ const mapDispatchToProps = (dispatch) => {
     operations = operations.set('startGame', (url) => dispatch(pokerGamePostData(url)));
     operations = operations.set('drawCards', (url, numberOfCards) => dispatch(pokerGamePostData(url, numberOfCards)));
     operations = operations.set('discardCards', (url, cardsToDiscard) => dispatch(pokerGamePostData(url, cardsToDiscard)));
-    operations = operations.set('finishGame', (url) => dispatch(pokerGamePostData(url)));
+    operations = operations.set('finishGame', (url) => dispatch(pokerGamePostData(url, {})));
     
     return {
 	operations: operations

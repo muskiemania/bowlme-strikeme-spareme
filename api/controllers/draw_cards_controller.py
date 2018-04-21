@@ -14,8 +14,8 @@ class DrawCardsController(object):
     @cherrypy.expose
     def index(self):
         cherrypy.response.headers['Access-Control-Allow-Methods'] = 'POST'
-        return json.dumps({ 'ok': True })
-    
+        return json.dumps({'ok': True})
+
     @cherrypy.expose
     @cherrypy.tools.json_in()
     def draw(self):
@@ -29,7 +29,7 @@ class DrawCardsController(object):
 
         verify_game = game.Verify.verify_game_by_id
         verify_player = game.Verify.verify_player_in_game
-        
+
         game_verified = verify_game(game_id, [GameStatus.STARTED])
         player_verified = verify_player(game_id, player_id, [PlayerStatus.DEALT])
 
