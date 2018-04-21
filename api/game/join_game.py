@@ -30,6 +30,8 @@ class JoinGame(object):
 
         player_dto = PlayerDto(player_name, verify_dto.game.game_id)
 
+        if verify_dto.game.game_status == GameStatus.CREATED:
+            player_dto.player_status = PlayerStatus.JOINED
         if verify_dto.game.game_status == GameStatus.STARTED:
             player_dto.player_status = PlayerStatus.DEALT
 

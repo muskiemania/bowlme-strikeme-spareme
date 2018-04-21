@@ -1,5 +1,5 @@
 import redis
-from bowl_redis_dto import GameDto, VerifyDto, PlayerDto
+from bowl_redis_dto import GameDto, VerifyDto, PlayerDto, GameStatus
 from . import RedisKeys
 
 class VerifyGame(object):
@@ -17,13 +17,13 @@ class VerifyGame(object):
         pipe.hget(key_info.game_info(), key_info.game_info_host_id_key())
         pipe.hget(key_info.game_info(), key_info.game_info_host_name_key())
 
-        result = pipe.execute()
+        (game_status, host_id, host_name) = pipe.execute()
 
         game_dto = GameDto()
         game_dto.game_id = self.game_id
-        game_dto.game_status = result[0]
-        game_dto.host_player_id = result[1]
-        game_dto.host_player_name = result[2]
+        game_dto.game_status = GameStatus.enum(game_status)
+        game_dto.host_player_id = host_id
+        game_dto.host_player_name = host_name
         game_dto.generate_game_key()
 
         return VerifyDto(game_dto)

@@ -19,7 +19,7 @@ class CreatePlayer(object):
         players_rating_key = key_info.game_players_rating()
 
         pipe = self.redis.pipeline()
-        
+
         pipe.rpush(key_info.game_players(), self.player.player_id)
         pipe.hset(players_info, players_name_key, self.player.player_name)
         pipe.hset(players_info, players_status_key, self.player.player_status)
