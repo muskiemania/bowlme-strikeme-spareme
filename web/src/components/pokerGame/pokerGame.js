@@ -4,11 +4,13 @@ import { connect } from 'react-redux';
 
 import Immutable from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
+import _ from 'lodash';
+
+import io from 'socket.io-client';
 
 import { pokerGameGetData, pokerGamePostData } from '../../actions/pokerGameActions';
 import { getApiPath, getWebPath } from '../../helpers/env';
 
-import _ from 'lodash';
 import Seats from '../../components/seats/seats';
 import PokerHand from '../../components/pokerHand/pokerHand';
 import DrawCards from '../../components/drawCards/drawCards';
@@ -20,13 +22,13 @@ class PokerGame extends Component {
 
     constructor(props) {
         super(props);
-
         this.state = { selectedCards: Immutable.List() };
     }
 
     componentDidMount() {
         //this.props.fetchData('http://localhost:5000/static/mock.js');
 	//this.props.operations.get('initialLoad')('http://127.0.0.1:5001/api/game');
+	this.socket = io('http://localhost:5000');
 	this.gameOpsFactory('initialLoad', null);
     }
     componentWillReceiveProps() {
@@ -49,14 +51,19 @@ class PokerGame extends Component {
 
 	switch(operationName) {
 	case 'initialLoad':
+	    this.socket.emit('join-game', { gameKey: this.props.game });
 	    return this.props.operations.get(operationName)(getApiPath() + '/api/game');
 	case 'startGame':
+	    this.socket.emit('table-activity', { gameKey: this.props.game });	    
 	    return this.props.operations.get(operationName)(getApiPath() + '/api/game/start');
 	case 'drawCards':
+	    this.socket.emit('table-activity', { gameKey: this.props.game });
 	    return this.props.operations.get(operationName)(getApiPath() + '/api/game/draw', payload);
 	case 'discardCards':
+	    this.socket.emit('table-activity', { gameKey: this.props.game });
 	    return this.props.operations.get(operationName)(getApiPath() + '/api/game/discard', {'cards': this.getSelectedCards()});
 	case 'finishGame':
+	    this.socket.emit('table-activity', { gameKey: this.props.game });
 	    console.log('finish');
 	    let response = this.props.operations.get(operationName)(getApiPath() + '/api/game/finish');
 	    console.log(response);
