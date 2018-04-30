@@ -7,27 +7,34 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 //const UglifyJsWebpackPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 
+const plugins = [];
+plugins.push(new CleanWebpackPlugin(['dist']))
+plugins.push(new HtmlWebpackPlugin({template: './views/index.pug', filename: './index.html'}));
+plugins.push(new CopyWebpackPlugin([{from: './src/assets', to: 'static'}]));
+plugins.push(new webpack.NamedModulesPlugin());
+plugins.push(new MiniCssExtractPlugin({filename: '[name].css', chunkFilename: '[id].css'}));
+
+if(process.env.NODE_ENV != 'production') {
+    plugins.push(
+	new webpack.optimize.OccurrenceOrderPlugin(),
+	new webpack.HotModuleReplacementPlugin(),
+	//new webpack.NoErrorsPlugin()
+    );
+}
 
 module.exports = {
-    entry: {
-	app: "./src/app.js"
-    },
-    //devtool: 'inline-source-map',
-    devServer: {
-	contentBase: './dist',
-	historyApiFallback: true
-	//hot: true
-    },
-    plugins: [
-	new CleanWebpackPlugin(['dist']),
-	new HtmlWebpackPlugin({template: './views/index.pug', filename: './index.html'}),
-	//new UglifyJsWebpackPlugin(),
-	new CopyWebpackPlugin([{from: './src/assets', to: 'static'}]),
-	new webpack.NamedModulesPlugin(),
-	new webpack.HotModuleReplacementPlugin(),
-	new MiniCssExtractPlugin({filename: '[name].css', chunkFilename: '[id].css'}),
-	//new ExtractTextPlugin('style.css', {allChunks: false})
+    mode: 'development',
+    entry: [
+	"webpack-hot-middleware/client",
+	"./src/app.js"
     ],
+    //devtool: 'inline-source-map',
+    //devServer: {
+	//contentBase: './dist',
+	//historyApiFallback: true
+	//hot: true
+    //},
+    plugins,
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js',

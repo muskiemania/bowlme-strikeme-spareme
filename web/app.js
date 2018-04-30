@@ -1,21 +1,40 @@
-var express = require('express')
+var http = require('http');
+var express = require('express');
+var history = require('connect-history-api-fallback');
 
-var app = express();
+const app = express();
 
 app.use('/static', express.static(__dirname + '/dist'));
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'pug');
 
-app.get('*', function(req, res) {
+if(process.env.NODE_ENV !== 'production') {
+    const webpack = require('webpack');
+    const webpackConfig = require('./webpack.config.js');
+    const compiler = webpack(webpackConfig);
+
+    app.use(require('webpack-dev-middleware')(compiler, {
+	noInfo: true,
+	publicPath: webpackConfig.output.publicPath
+    }));
+
+    app.use(require('webpack-hot-middleware')(compiler));
+}
+
+app.use(history());
+
+app.get('*', function(req, res, next) {
     res.render('index');
+    next();
 });
 
-app.listen(5000, function() {
-    console.log('listening on 5000...')
-});
+const server = new http.Server(app);
+const io = require('socket.io')(server);
+const port = 5000;
 
-const io = require('socket.io')(app);
+server.listen(port);
+console.log(`listening on port ${port}`);
 
 io.on('connection', (socket) => {
     console.log('user has connected');
