@@ -22,49 +22,64 @@ class PokerGame extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { selectedCards: Immutable.List() };
+        this.state = { selectedCards: Immutable.List(), joined: false };
     }
 
     componentDidMount() {
         //this.props.fetchData('http://localhost:5000/static/mock.js');
 	//this.props.operations.get('initialLoad')('http://127.0.0.1:5001/api/game');
 	this.socket = io('http://localhost:5000');
+		
+	this.socket.on('table-activity', data => {
+	    this.gameOpsFactory('tableActivity', null);
+	    console.log('table activity was broadcasted!');
+	    //console.log(data);
+	});
+
 	this.gameOpsFactory('initialLoad', null);
     }
-    componentWillReceiveProps() {
-	this.state = { selectedCards: Immutable.List() };
+    componentWillReceiveProps(nextProps) {
+	//this.state = { selectedCards: Immutable.List() };
+
+	let key = nextProps && nextProps.game && nextProps.game.get('game') && nextProps.game.get('game').get('key') || '';
+	if(!this.state.joined === true && key) {
+	    this.socket.emit('join-game', { gameKey: key });
+	    this.state.joined = true;
+	    //console.log(`join-game (${key}) emitted`);
+	}
+	console.log('this.state.joined: ' + this.state.joined);
+
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+	return (nextState && nextState.joined === false) || true;
     }
     
-    drawCards(numberOfCards) {
-        alert(`will draw ${numberOfCards} cards`);
-    }
-
-    discardCards(cards) {
-        alert(`will discard ${cards}`);
-    }
-
     getSelectedCards() {
         return this.state.selectedCards;
     }
 
     gameOpsFactory(operationName, payload) {
 
+	let key = this.props.game.get('game').get('key');
+
 	switch(operationName) {
 	case 'initialLoad':
-	    this.socket.emit('join-game', { gameKey: this.props.game });
+	case 'tableActivity':
 	    return this.props.operations.get(operationName)(getApiPath() + '/api/game');
 	case 'startGame':
-	    this.socket.emit('table-activity', { gameKey: this.props.game });	    
-	    return this.props.operations.get(operationName)(getApiPath() + '/api/game/start');
+	    let started = this.props.operations.get(operationName)(getApiPath() + '/api/game/start');
+	    this.socket.on(key).emit('table-activity');
+	    return started;
 	case 'drawCards':
-	    this.socket.emit('table-activity', { gameKey: this.props.game });
-	    return this.props.operations.get(operationName)(getApiPath() + '/api/game/draw', payload);
+	    let drawn = this.props.operations.get(operationName)(getApiPath() + '/api/game/draw', payload);
+	    this.socket.on(key).emit('table-activity');
+	    return drawn;
 	case 'discardCards':
-	    this.socket.emit('table-activity', { gameKey: this.props.game });
-	    return this.props.operations.get(operationName)(getApiPath() + '/api/game/discard', {'cards': this.getSelectedCards()});
+	    let discarded = this.props.operations.get(operationName)(getApiPath() + '/api/game/discard', {'cards': this.getSelectedCards()});
+	    this.socket.on(key).emit('table-activity');
+	    return discarded;
 	case 'finishGame':
-	    this.socket.emit('table-activity', { gameKey: this.props.game });
-	    console.log('finish');
 	    let response = this.props.operations.get(operationName)(getApiPath() + '/api/game/finish');
 	    console.log(response);
 	    //window.location.href = '/results/';
@@ -167,6 +182,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     let operations = Immutable.Map();
     operations = operations.set('initialLoad', (url) => dispatch(pokerGameGetData(url)));
+    operations = operations.set('tableActivity', (url) => dispatch(pokerGameGetData(url)));
     operations = operations.set('startGame', (url) => dispatch(pokerGamePostData(url)));
     operations = operations.set('drawCards', (url, numberOfCards) => dispatch(pokerGamePostData(url, numberOfCards)));
     operations = operations.set('discardCards', (url, cardsToDiscard) => dispatch(pokerGamePostData(url, cardsToDiscard)));

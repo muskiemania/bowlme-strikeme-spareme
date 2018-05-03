@@ -44,15 +44,25 @@ io.on('connection', (socket) => {
     });
 
     socket.on('join-game', (data) => {
-	socket.join(data);
+	if(data && data.gameKey) {
+	    console.log('join-game:' + data.gameKey);
+	    socket.join(data.gameKey);
+	    socket.broadcast.to(data.gameKey).emit('table-activity', {});
+	}
     });
 
     socket.on('leave-game', (data) => {
-	socket.leave(data);
+	if(data && data.gameKey) {
+	    console.log('leaving game: ' + data.gameKey);
+	    socket.leave(data);
+	}
     });
 
     socket.on('table-activity', (data) => {
-	socket.broadcast.to(data).emit('table-activity', data);
+	if(data && data.gameKey) {
+	    console.log('table-activity: ' + data.gameKey);
+	    socket.broadcast.to(data.gameKey).emit('table-activity', data);
+	}
     });
 	      
 });
