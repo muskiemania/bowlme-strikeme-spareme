@@ -19,11 +19,23 @@ if(process.env.NODE_ENV != 'production') {
 	new webpack.optimize.OccurrenceOrderPlugin(),
 	new webpack.HotModuleReplacementPlugin(),
 	//new webpack.NoErrorsPlugin()
+	new webpack.DefinePlugin({
+	    PORT: "5000",
+	    API_HOST: JSON.stringify('http://localhost:5001/')
+	})
+    );
+}
+else {
+    plugins.push(
+	new webpack.DefinePlugin({
+	    PORT: 5000,
+	    API_HOST: JSON.stringify('http://localhost:5001/')
+	})
     );
 }
 
 module.exports = {
-    mode: 'development',
+    mode: process.env.NODE_ENV || 'development',
     entry: [
 	"webpack-hot-middleware/client",
 	"./src/app.js"

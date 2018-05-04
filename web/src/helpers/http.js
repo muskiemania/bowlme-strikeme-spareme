@@ -7,7 +7,7 @@ function getCookie(key) {
 }
 
 function setCookie(key, value) {
-    const maxAge = 2700;
+    const maxAge = 4800;
     cookie.save(key, value, { path: '/', maxAge });
 }
 
@@ -24,6 +24,10 @@ export function postAnonymous(url, data) {
 	    setCookie(bowlCookie, resp.jwt);
 	    return resp;
 	});
+}
+
+export function clearCookie() {
+    cookie.remove(bowlCookie, { path: '/' });
 }
 
 export function get(url) {

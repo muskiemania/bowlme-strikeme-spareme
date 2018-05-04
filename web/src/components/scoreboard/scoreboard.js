@@ -4,11 +4,14 @@ import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
+import io from 'socket.io-client';
+
 import { pokerGameGetData, pokerGamePostData } from '../../actions/pokerGameActions';
 import { getApiPath, getWebPath } from '../../helpers/env';
 
 import _ from 'lodash';
 import ScoreboardRow from '../shared/scoreboardRow/scoreboardRow';
+import Button from '../shared/button/button';
 
 import './scoreboard.less';
 
@@ -16,18 +19,39 @@ class Scoreboard extends Component {
 
     constructor(props) {
         super(props);
-
-        this.state = { selectedCards: Immutable.List() };
+        this.state = { selectedCards: Immutable.List(), joined: false };
     }
 
     componentDidMount() {
+
+    	this.socket = io('http://localhost:5000');
+		
+	this.socket.on('table-activity', data => {
+	    this.gameOpsFactory('tableActivity', null);
+	    console.log('table activity was broadcasted!');
+	});
+
 	this.gameOpsFactory('initialLoad', null);
     }
     
+    componentWillReceiveProps(nextProps) {
+
+	let key = nextProps && nextProps.game && nextProps.game.get('game') && nextProps.game.get('game').get('key') || '';
+	if(!this.state.joined === true && key) {
+	    this.socket.emit('join-game', { gameKey: key });
+	    this.state.joined = true;
+	}
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+	return (nextState && nextState.joined === false) || true;
+    }
+
     gameOpsFactory(operationName, payload) {
 
 	switch(operationName) {
 	case 'initialLoad':
+	case 'tableActivity':
 	    return this.props.operations.get(operationName)(getApiPath() + '/api/results');
 	default:
 	    return;
@@ -54,15 +78,6 @@ class Scoreboard extends Component {
             );
         }
 
-        
-        //let players = Immutable.fromJS([
-        //    { playerName: 'Justin', rating: { rank: 3, description: '' } },
-        //    { playerName: 'Sarah', cards: ['2H','4H','6H','8H','JH'], rating: { rank: 2, description: 'Flush' } },
-        //    { playerName: 'Doofus', rating: { } },
-        //    { playerName: 'Jenna', cards: ['KS','KD','KC','KH','7C'], rating: { rank: 1, description: 'Four-Of-A-Kind' } },
-	//    { playerName: 'Someone', cards: ['2D'], rating: { rank: 4, description: 'High Card' } }
-        //]);
-
 	let players = Immutable.List();
 	if (game.get('players')) {
 	    players = game.get('players').sortBy(player => {
@@ -75,14 +90,33 @@ class Scoreboard extends Component {
 		return player.get('rating').get('rank');
 	    });
 	}
+
+	let isHost = false;
+	let isGameFinished = false;
+	
 	
         return (
+	    <div>
             <div className='scoreboard'>
             {
                 players.map((player, i) => {
                     return <ScoreboardRow player={player} key={`player-${i}`} />
                 })
             }
+	    </div>
+            <div className='buttons'>
+                <div className='button-overlay'>
+		{ (isHost && !isGameFinished) ?
+                  <Button text='End Game' clickOperation={'endGame'} clickPayload={{'numberOfCards': 1}} click={this.props.click} /> : ''
+		}
+	    { isGameFinished ?
+	      <Button text='Game Is Over' clickOperation={'gameOver'} clickPayload={{'numberOfCards': 2}} click={this.props.click} /> : ''
+	    }
+	    { isGameFinished ?
+	      <Button text='Play Again' clickOperation={'playAgain'} clickPayload={{'numberOfCards': 2}} click={this.props.click} /> : ''
+	    }
+                </div>
+		</div>
             </div>
         );        
     }
@@ -106,10 +140,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     let operations = Immutable.Map();
     operations = operations.set('initialLoad', (url) => dispatch(pokerGameGetData(url)));
-    //operations = operations.set('startGame', (url) => dispatch(pokerGamePostData(url)));
-    //operations = operations.set('drawCards', (url, numberOfCards) => dispatch(pokerGamePostData(url, numberOfCards)));
-    //operations = operations.set('discardCards', (url, cardsToDiscard) => dispatch(pokerGamePostData(url, cardsToDiscard)));
-    //operations = operations.set('finishGame', (url) => dispatch(pokerGamePostData(url)));
+    operations = operations.set('tableActivity', (url) => dispatch(pokerGameGetData(url)));
     
     return {
 	operations: operations

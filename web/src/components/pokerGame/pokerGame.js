@@ -26,29 +26,22 @@ class PokerGame extends Component {
     }
 
     componentDidMount() {
-        //this.props.fetchData('http://localhost:5000/static/mock.js');
-	//this.props.operations.get('initialLoad')('http://127.0.0.1:5001/api/game');
 	this.socket = io('http://localhost:5000');
 		
 	this.socket.on('table-activity', data => {
 	    this.gameOpsFactory('tableActivity', null);
 	    console.log('table activity was broadcasted!');
-	    //console.log(data);
 	});
 
 	this.gameOpsFactory('initialLoad', null);
     }
     componentWillReceiveProps(nextProps) {
-	//this.state = { selectedCards: Immutable.List() };
 
 	let key = nextProps && nextProps.game && nextProps.game.get('game') && nextProps.game.get('game').get('key') || '';
 	if(!this.state.joined === true && key) {
 	    this.socket.emit('join-game', { gameKey: key });
 	    this.state.joined = true;
-	    //console.log(`join-game (${key}) emitted`);
 	}
-	console.log('this.state.joined: ' + this.state.joined);
-
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -61,7 +54,7 @@ class PokerGame extends Component {
 
     gameOpsFactory(operationName, payload) {
 
-	let key = this.props.game.get('game').get('key');
+	let key = this.props.game && this.props.game.get('game') && this.props.game.get('game').get('key') || '';
 
 	switch(operationName) {
 	case 'initialLoad':
@@ -69,15 +62,15 @@ class PokerGame extends Component {
 	    return this.props.operations.get(operationName)(getApiPath() + '/api/game');
 	case 'startGame':
 	    let started = this.props.operations.get(operationName)(getApiPath() + '/api/game/start');
-	    this.socket.on(key).emit('table-activity');
+	    key && this.socket.on(key).emit('table-activity');
 	    return started;
 	case 'drawCards':
 	    let drawn = this.props.operations.get(operationName)(getApiPath() + '/api/game/draw', payload);
-	    this.socket.on(key).emit('table-activity');
+	    key && this.socket.on(key).emit('table-activity');
 	    return drawn;
 	case 'discardCards':
 	    let discarded = this.props.operations.get(operationName)(getApiPath() + '/api/game/discard', {'cards': this.getSelectedCards()});
-	    this.socket.on(key).emit('table-activity');
+	    key && this.socket.on(key).emit('table-activity');
 	    return discarded;
 	case 'finishGame':
 	    let response = this.props.operations.get(operationName)(getApiPath() + '/api/game/finish');
@@ -117,8 +110,8 @@ class PokerGame extends Component {
 	}
 
 	if(playerStatus.get('statusId') === 4) {
-	    window.location.href = '/results/';
-	    return;
+	    //window.location.href = '/results/';
+	    //return;
 	}
 	
 	return (<DrawCards cardsInHand={hand.get('numberOfCards')} cardsSelected={this.getSelectedCards().size} canDrawAgain={ _.includes([1,2], playerStatus.get('statusId') || 0)} click={this.handleButtonClick.bind(this)} />);

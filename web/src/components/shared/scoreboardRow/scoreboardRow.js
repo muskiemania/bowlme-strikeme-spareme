@@ -17,7 +17,7 @@ const ScoreboardRow = ((props) => {
     let cards = player.get('hand') && player.get('hand').get('cards') || Immutable.List();
     return (
         <div className={classnames('grid-x', 'row', 'align-center', 'scoreboard-row', rank === 1 ? 'winner' : '')}>
-            <div className='column small-3 name'>
+            <div className='column small-4 name'>
                 {player.get('playerName')}
             </div>
             <div className='column small-4 cards'>
@@ -35,7 +35,7 @@ const ScoreboardRow = ((props) => {
                     }
                 </div>
             </div>
-            <div className='column small-5 hand-details'>
+            <div className='column small-5 hand-details hide'>
                 {
                     player.get('rating') && player.get('rating').get('description') || ''
                 }
