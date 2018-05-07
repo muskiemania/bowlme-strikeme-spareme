@@ -46,23 +46,22 @@ io.on('connection', (socket) => {
     socket.on('join-game', (data) => {
 	if(data && data.gameKey) {
 	    console.log('join-game:' + data.gameKey);
-	    socket.join(data.gameKey);
-	    socket.broadcast.to(data.gameKey).emit('table-activity', {});
+	    socket.join(data.gameKey.toUpperCase());
+	    socket.broadcast.to(data.gameKey.toUpperCase()).emit('table-activity', {});
 	}
     });
 
     socket.on('leave-game', (data) => {
 	if(data && data.gameKey) {
 	    console.log('leaving game: ' + data.gameKey);
-	    socket.leave(data);
+	    socket.leave(data.gameKey.toUpperCase());
 	}
     });
 
     socket.on('table-activity', (data) => {
 	if(data && data.gameKey) {
 	    console.log('table-activity: ' + data.gameKey);
-	    socket.broadcast.to(data.gameKey).emit('table-activity', data);
+	    socket.broadcast.to(data.gameKey.toUpperCase()).emit('table-activity', {});
 	}
     });
-	      
 });
