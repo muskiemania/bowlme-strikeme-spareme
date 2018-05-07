@@ -74,8 +74,8 @@ class PokerGame extends Component {
 	    return discarded;
 	case 'finishGame':
 	    let response = this.props.operations.get(operationName)(getApiPath() + '/api/game/finish');
-	    console.log(response);
-	    //window.location.href = '/results/';
+	    //console.log(response);
+	    window.location.href = '/results/';
 	default:
 	    return;
 	}

@@ -18,8 +18,8 @@ class MyGameModel(object):
     def setGameKey(self, key):
         self.__game_key = key
 
-    def setHostPlayerId(self, id):
-        self.__host_player_id = id
+    def setHostPlayerId(self, host_player_id):
+        self.__host_player_id = host_player_id
 
     def setStatus(self, game_status):
         self.__game_status = game_status

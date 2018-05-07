@@ -50,5 +50,5 @@ class StartGameController(object):
         print 'hello there'
         my_game = game.Game.get(game_id=decoded['gameId'], player_id=decoded['playerId'])
         my_game.setGameKey(decoded['key'])
-        
+
         return my_game.json()

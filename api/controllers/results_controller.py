@@ -25,7 +25,7 @@ class ResultsController(object):
         gameVerified = game.Verify.verify_game_by_id(decoded['gameId'])
         playerVerified = game.Verify.verify_player_in_game(decoded['gameId'], decoded['playerId'])
 
-        results = game.Results.get(game_id=decoded['gameId'])
+        results = game.Results.get(game_id=decoded['gameId'], player_id=decoded['playerId'])
         results.setGameKey(decoded['key'])
-        
+
         return results.json()

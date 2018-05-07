@@ -32,6 +32,7 @@ class GameStatus(Enum):
         t[2] = 'started'
         t[3] = 'ended'
         t[4] = 'abandoned'
+        t[5] = 'finished'
         return t[status]
 
     @classmethod
@@ -42,4 +43,5 @@ class GameStatus(Enum):
         e['2'] = GameStatus.STARTED
         e['3'] = GameStatus.ENDED
         e['4'] = GameStatus.ABANDONED
+        e['5'] = GameStatus.FINISHED
         return e[str(status)]

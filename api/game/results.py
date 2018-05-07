@@ -9,8 +9,8 @@ class Results(object):
         pass
 
     @staticmethod
-    def get(game_id):
-        
+    def get(game_id, player_id):
+
         players = bowl_redis.GetPlayers(game_id)
         player_dto = players.execute()
 
@@ -25,8 +25,9 @@ class Results(object):
 
         results = viewmodels.ResultsModel()
 
+        results.setPlayerId(player_id)
         results.setPlayers(player_dto)
         results.setStatus(game_details_dto.game_status)
         results.setHostPlayerId(game_details_dto.host_player_id)
-            
+
         return results

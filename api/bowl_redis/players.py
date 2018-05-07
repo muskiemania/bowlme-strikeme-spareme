@@ -14,5 +14,5 @@ class Players(object):
         key_info = RedisKeys(self.game_id, self.player_id)
         pipe.hset(key_info.game_players_info(), key_info.game_players_status_key(), new_status)
         pipe.execute()
-        
+
         return

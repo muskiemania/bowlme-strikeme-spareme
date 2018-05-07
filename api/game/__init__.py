@@ -3,10 +3,9 @@ from .verify import Verify
 from .create_player import CreatePlayer
 from .create_game import CreateGame
 from .join_game import JoinGame
-from .end_hand import EndHand
 from .results import Results
 from .start_game import StartGame
 from .draw_cards import DrawCards
 from .discard_cards import DiscardCards
 from .finish import Finish
-from .verify import Verify
+from .end_game import EndGame

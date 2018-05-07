@@ -55,8 +55,6 @@ class StartGame(object):
             rating_key = key_info.game_players_rating()
             rank_key = key_info.game_players_rank()
 
-            print players_info
-
             player_status = players_info[players_status_key]
 
             if player_status == str(PlayerStatus.JOINED):

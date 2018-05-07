@@ -6,7 +6,8 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import io from 'socket.io-client';
 
-import { pokerGameGetData, pokerGamePostData } from '../../actions/pokerGameActions';
+import { pokerGameGetData, pokerGamePostData, resetSession } from '../../actions/pokerGameActions';
+
 import { getApiPath, getWebPath } from '../../helpers/env';
 
 import _ from 'lodash';
@@ -47,12 +48,21 @@ class Scoreboard extends Component {
 	return (nextState && nextState.joined === false) || true;
     }
 
+    handleButtonClick(operation, payload) {
+	this.gameOpsFactory(operation, payload);
+    }
+
     gameOpsFactory(operationName, payload) {
 
 	switch(operationName) {
 	case 'initialLoad':
 	case 'tableActivity':
 	    return this.props.operations.get(operationName)(getApiPath() + '/api/results');
+	case 'endGame':
+	    return this.props.operations.get(operationName)(getApiPath() + '/api/game/end');
+	case 'playAgain':
+	    this.props.operations.get(operationName)();
+	    window.location = '/';
 	default:
 	    return;
 	}
@@ -79,7 +89,7 @@ class Scoreboard extends Component {
         }
 
 	let players = Immutable.List();
-	if (game.get('players')) {
+	if (game && game.get('players')) {
 	    players = game.get('players').sortBy(player => {
 		if(!player.get('rating')) {
 		    return 9999;
@@ -91,9 +101,25 @@ class Scoreboard extends Component {
 	    });
 	}
 
-	let isHost = false;
-	let isGameFinished = false;
+	let me = game && game.get('playerId');
+	let host = game && game.get('game') && game.get('game').get('hostPlayerId');
+	let status = game && game.get('game') && game.get('game').get('status') && game.get('game').get('status').get('statusId');
 	
+	let isHost = (me === host);
+	let isGameFinished = (status === 5);
+
+	let allPlayersFinished = false;
+
+	if(game && game.get('players')) {
+	    console.log('x');
+	    console.log(game.get('players'));
+	    
+	    allPlayersFinished = game.get('players').every(player => {
+		console.log('y');
+		console.log(player);
+		return player.get('status').get('statusId') === 4;
+	    });
+	}
 	
         return (
 	    <div>
@@ -106,14 +132,15 @@ class Scoreboard extends Component {
 	    </div>
             <div className='buttons'>
                 <div className='button-overlay'>
-		{ (isHost && !isGameFinished) ?
-                  <Button text='End Game' clickOperation={'endGame'} clickPayload={{'numberOfCards': 1}} click={this.props.click} /> : ''
+		{ (isHost && !allPlayersFinished) ?
+                  <Button text='End Game' clickOperation={'endGame'} clickPayload={{}} click={this.handleButtonClick.bind(this)} /> : ''
 		}
 	    { isGameFinished ?
-	      <Button text='Game Is Over' clickOperation={'gameOver'} clickPayload={{'numberOfCards': 2}} click={this.props.click} /> : ''
+	      <Button text='Game Is Over' clickOperation={'playAgain'} clickPayload={{}} click={this.handleButtonClick.bind(this)} /> : ''
 	    }
-	    { isGameFinished ?
-	      <Button text='Play Again' clickOperation={'playAgain'} clickPayload={{'numberOfCards': 2}} click={this.props.click} /> : ''
+	    {
+		isGameFinished ?
+		    <Button text='Play Again' clickOperation={'playAgain'} clickPayload={{}} click={this.handleButtonClick.bind(this)} /> : ''
 	    }
                 </div>
 		</div>
@@ -141,6 +168,8 @@ const mapDispatchToProps = (dispatch) => {
     let operations = Immutable.Map();
     operations = operations.set('initialLoad', (url) => dispatch(pokerGameGetData(url)));
     operations = operations.set('tableActivity', (url) => dispatch(pokerGameGetData(url)));
+    operations = operations.set('endGame', (url) => dispatch(pokerGamePostData(url, {})));
+    operations = operations.set('playAgain', () => dispatch(resetSession()));
     
     return {
 	operations: operations
