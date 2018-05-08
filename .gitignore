@@ -26,5 +26,5 @@ Welcome to redis-py’s documentation! — redis-py 2.10.5 documentation_files/u
 web/node_modules
 web/dist
 app.css
-web/.env
-api/.env
+web/.env*
+api/.env*

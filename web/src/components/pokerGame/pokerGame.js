@@ -26,7 +26,7 @@ class PokerGame extends Component {
     }
 
     componentDidMount() {
-	this.socket = io('http://localhost:5000');
+	this.socket = io(getWebPath());
 		
 	this.socket.on('table-activity', data => {
 	    this.gameOpsFactory('tableActivity', null);
@@ -74,7 +74,6 @@ class PokerGame extends Component {
 	    return discarded;
 	case 'finishGame':
 	    let response = this.props.operations.get(operationName)(getApiPath() + '/api/game/finish');
-	    //console.log(response);
 	    window.location.href = '/results/';
 	default:
 	    return;
@@ -107,11 +106,6 @@ class PokerGame extends Component {
 	
 	if(gameStatus.get('statusId') === 1) {
 	    return <Pregame isHost={hostPlayerId === playerId} numberOfPlayers={numOthers} playersRequired={1} click={this.handleButtonClick.bind(this)} />
-	}
-
-	if(playerStatus.get('statusId') === 4) {
-	    //window.location.href = '/results/';
-	    //return;
 	}
 	
 	return (<DrawCards cardsInHand={hand.get('numberOfCards')} cardsSelected={this.getSelectedCards().size} canDrawAgain={ _.includes([1,2], playerStatus.get('statusId') || 0)} click={this.handleButtonClick.bind(this)} />);

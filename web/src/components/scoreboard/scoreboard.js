@@ -25,7 +25,7 @@ class Scoreboard extends Component {
 
     componentDidMount() {
 
-    	this.socket = io('http://localhost:5000');
+    	this.socket = io(getWebPath());
 		
 	this.socket.on('table-activity', data => {
 	    this.gameOpsFactory('tableActivity', null);
@@ -61,7 +61,7 @@ class Scoreboard extends Component {
 	case 'endGame':
 	    return this.props.operations.get(operationName)(getApiPath() + '/api/game/end');
 	case 'playAgain':
-	    this.props.operations.get(operationName)();
+	    let response = this.props.operations.get(operationName)();
 	    window.location = '/';
 	default:
 	    return;
@@ -111,12 +111,7 @@ class Scoreboard extends Component {
 	let allPlayersFinished = false;
 
 	if(game && game.get('players')) {
-	    console.log('x');
-	    console.log(game.get('players'));
-	    
 	    allPlayersFinished = game.get('players').every(player => {
-		console.log('y');
-		console.log(player);
 		return player.get('status').get('statusId') === 4;
 	    });
 	}

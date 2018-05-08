@@ -29,9 +29,11 @@ app.get('*', function(req, res, next) {
     next();
 });
 
+require('dotenv').config()
+
 const server = new http.Server(app);
 const io = require('socket.io')(server);
-const port = 5000;
+const port = process.env.WEB_PORT;
 
 server.listen(port);
 console.log(`listening on port ${port}`);

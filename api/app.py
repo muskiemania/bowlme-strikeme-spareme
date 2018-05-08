@@ -39,18 +39,21 @@ dispatcher.connect(name='api_end_game', route='/api/game/end', controller=contro
 dispatcher.mapper.connect('/api/game/end', controller='api_end_game', action='end', conditions=dict(method=['POST']))
 
 
-#dispatcher.connect(name='api_end_hand', route='/game/hand/end', controller=controllers.EndHandController(), action='index', conditions=dict(method=['GET']))
-#dispatcher.mapper.connect('/game/hand/end', controller='api_end_hand', action='end', conditions=dict(method=['POST']))
-
-#dispatcher.connect(name='api_end_game', route='/game/end', controller=controllers.EndGameController(), action='index', conditions=dict(method=['GET']))
-#dispatcher.mapper.connect('/game/end', controller='api_end_game', action='end', conditions=dict(method=['POST']))
-
-
 conf = {}
 conf['/'] = {'request.dispatch': dispatcher}
-origin = 'http://localhost:5000'
 
-cherrypy.config.update({'server.socket_port': 5001, 'tools.response_headers.on': True, 'tools.response_headers.headers': [('Content-Type', 'application/json'), ('Access-Control-Allow-Origin', origin), ('Access-Control-Allow-Headers', 'Accept, Content-Type, X-Bowl-Token')]})
+#grab environment vars from .env
+env = {}
+env_file = open('.env', 'r')
+for line in env_file.read().splitlines():
+    row = line.split('=')
+    if len(row) == 2:
+        env[row[0]] = row[1]
+
+WEB_ORIGIN = env['WEB_ORIGIN']
+API_PORT = int(env['API_PORT'])
+
+cherrypy.config.update({'server.socket_port': API_PORT, 'tools.response_headers.on': True, 'tools.response_headers.headers': [('Content-Type', 'application/json'), ('Access-Control-Allow-Origin', WEB_ORIGIN), ('Access-Control-Allow-Headers', 'Accept, Content-Type, X-Bowl-Token')]})
 
 cherrypy.tree.mount(root=None, config=conf)
 
