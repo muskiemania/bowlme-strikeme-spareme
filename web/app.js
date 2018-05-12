@@ -29,10 +29,10 @@ app.get('*', function(req, res, next) {
     next();
 });
 
-require('dotenv').config()
 
 const server = new http.Server(app);
 const io = require('socket.io')(server);
+require('dotenv').config()
 const port = process.env.WEB_PORT;
 
 server.listen(port);

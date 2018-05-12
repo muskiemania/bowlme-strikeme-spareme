@@ -33,14 +33,35 @@ class PokerGame extends Component {
 	    console.log('table activity was broadcasted!');
 	});
 
-	this.gameOpsFactory('initialLoad', null);
+	let response = this.gameOpsFactory('initialLoad', null);
     }
     componentWillReceiveProps(nextProps) {
 
-	let key = nextProps && nextProps.game && nextProps.game.get('game') && nextProps.game.get('game').get('key') || '';
+	let key = nextProps
+	    && nextProps.game
+	    && nextProps.game.get('game')
+	    && nextProps.game.get('game').get('key') || '';
+
 	if(!this.state.joined === true && key) {
 	    this.socket.emit('join-game', { gameKey: key });
 	    this.state.joined = true;
+	}
+
+	let gameStatus = nextProps
+	    && nextProps.game
+	    && nextProps.game.get('game')
+	    && nextProps.game.get('game').get('status')
+	    && nextProps.game.get('game').get('status')
+	    && nextProps.game.get('game').get('status').get('statusId') || '';
+
+	let playerStatus = nextProps
+	    && nextProps.game
+	    && nextProps.game.get('player')
+	    && nextProps.game.get('player').get('status')
+	    && nextProps.game.get('player').get('status').get('statusId') || ''
+	
+	if(gameStatus === 5 || playerStatus === 4) {
+	    window.location = '/results/';
 	}
     }
 
@@ -67,21 +88,25 @@ class PokerGame extends Component {
 	case 'drawCards':
 	    let drawn = this.props.operations.get(operationName)(getApiPath() + '/api/game/draw', payload);
 	    key && this.socket.on(key).emit('table-activity');
+	    this.state.selectedCards = Immutable.List();
 	    return drawn;
 	case 'discardCards':
 	    let discarded = this.props.operations.get(operationName)(getApiPath() + '/api/game/discard', {'cards': this.getSelectedCards()});
 	    key && this.socket.on(key).emit('table-activity');
+	    this.state.selectedCards = Immutable.List();
 	    return discarded;
 	case 'finishGame':
 	    let response = this.props.operations.get(operationName)(getApiPath() + '/api/game/finish');
-	    window.location.href = '/results/';
+	    //window.location.href = '/results/';
 	default:
 	    return;
 	}
     }
     
     handleButtonClick(operation, payload) {
-	this.gameOpsFactory(operation, payload);
+	let response = this.gameOpsFactory(operation, payload);
+	console.log('buttonClick');
+	console.log(response);
     }
 
     toggleCard(card) {

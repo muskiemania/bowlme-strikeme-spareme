@@ -5,7 +5,10 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 //const UglifyJsWebpackPlugin = require('uglifyjs-webpack-plugin');
+//const Dotenv = require('dotenv-webpack');
 const webpack = require('webpack');
+
+require('dotenv').config();
 
 const plugins = [];
 plugins.push(new CleanWebpackPlugin(['dist']))
@@ -13,24 +16,18 @@ plugins.push(new HtmlWebpackPlugin({template: './views/index.pug', filename: './
 plugins.push(new CopyWebpackPlugin([{from: './src/assets', to: 'static'}]));
 plugins.push(new webpack.NamedModulesPlugin());
 plugins.push(new MiniCssExtractPlugin({filename: '[name].css', chunkFilename: '[id].css'}));
+//plugins.push(new Dotenv());
+plugins.push(new webpack.DefinePlugin({
+    'process.env.WEB_PORT': JSON.stringify(`${process.env.WEB_PORT}`),
+    'process.env.API_PATH': JSON.stringify(`${process.env.API_PATH}`),
+    'process.env.WEB_PATH': JSON.stringify(`${process.env.WEB_PATH}`)
+}));
 
 if(process.env.NODE_ENV != 'production') {
     plugins.push(
 	new webpack.optimize.OccurrenceOrderPlugin(),
 	new webpack.HotModuleReplacementPlugin(),
 	//new webpack.NoErrorsPlugin()
-	new webpack.DefinePlugin({
-	    PORT: "5000",
-	    API_HOST: JSON.stringify('http://localhost:5001/')
-	})
-    );
-}
-else {
-    plugins.push(
-	new webpack.DefinePlugin({
-	    PORT: 5000,
-	    API_HOST: JSON.stringify('http://localhost:5001/')
-	})
     );
 }
 

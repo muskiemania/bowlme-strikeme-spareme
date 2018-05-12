@@ -13,7 +13,6 @@ export default class DrawCards extends Component {
         let {cardsInHand, cardsSelected, canDrawAgain, click} = this.props;
 
         let mustDiscard = cardsInHand > 5;
-        //let mustDiscard = false;
 
         if(mustDiscard) {
             return (
