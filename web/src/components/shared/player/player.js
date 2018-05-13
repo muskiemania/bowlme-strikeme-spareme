@@ -10,7 +10,11 @@ class Player extends Component {
 
     render() {
 	let player = this.props.player || Immutable.Map();
-	let isWaiting = this.props.isWaiting;
+	let isWaiting = this.props.isWaiting || false;
+
+	if(isWaiting){
+	    return null;
+	}
 	
 	let hand = player.get('hand') || Immutable.Map();
         let name = player.get('playerName');
