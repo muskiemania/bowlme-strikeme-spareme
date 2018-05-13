@@ -1,11 +1,8 @@
 const path = require('path')
-//const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-//const UglifyJsWebpackPlugin = require('uglifyjs-webpack-plugin');
-//const Dotenv = require('dotenv-webpack');
 const webpack = require('webpack');
 
 require('dotenv').config();
@@ -16,7 +13,6 @@ plugins.push(new HtmlWebpackPlugin({template: './views/index.pug', filename: './
 plugins.push(new CopyWebpackPlugin([{from: './src/assets', to: 'static'}]));
 plugins.push(new webpack.NamedModulesPlugin());
 plugins.push(new MiniCssExtractPlugin({filename: '[name].css', chunkFilename: '[id].css'}));
-//plugins.push(new Dotenv());
 plugins.push(new webpack.DefinePlugin({
     'process.env.WEB_PORT': JSON.stringify(`${process.env.WEB_PORT}`),
     'process.env.API_PATH': JSON.stringify(`${process.env.API_PATH}`),
@@ -26,8 +22,7 @@ plugins.push(new webpack.DefinePlugin({
 if(process.env.NODE_ENV != 'production') {
     plugins.push(
 	new webpack.optimize.OccurrenceOrderPlugin(),
-	new webpack.HotModuleReplacementPlugin(),
-	//new webpack.NoErrorsPlugin()
+	new webpack.HotModuleReplacementPlugin()
     );
 }
 
@@ -37,12 +32,6 @@ module.exports = {
 	"webpack-hot-middleware/client",
 	"./src/app.js"
     ],
-    //devtool: 'inline-source-map',
-    //devServer: {
-	//contentBase: './dist',
-	//historyApiFallback: true
-	//hot: true
-    //},
     plugins,
     output: {
         path: path.resolve(__dirname, 'dist'),
