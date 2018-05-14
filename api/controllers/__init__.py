@@ -1,4 +1,5 @@
 from .helpers import Helpers
+from .health_controller import HealthController
 from .game_controller import GameController
 from .create_game_controller import CreateGameController
 from .join_game_controller import JoinGameController

@@ -3,6 +3,9 @@ import controllers
 
 dispatcher = cherrypy.dispatch.RoutesDispatcher()
 
+dispatcher.connect(name='api_health', route='/api/health', controller=controllers.HealthController(), action='index', conditions=dict(method=['OPTIONS']))
+dispatcher.mapper.connect('/api/health', controller='api_health', action='health', conditions=dict(method=['GET']))
+
 dispatcher.connect(name='api_auth', route='/api/auth', controller=controllers.AuthorizeController(), action='index', conditions=dict(method=['GET']))
 dispatcher.mapper.connect('/api/auth/game', controller='api_auth', action='verify_game', conditions=dict(method=['GET']))
 dispatcher.mapper.connect('/api/auth/player', controller='api_auth', action='verify_player', conditions=dict(method=['GET']))
@@ -14,7 +17,6 @@ dispatcher.mapper.connect('/api/game/create', controller='api_create_game', acti
 dispatcher.connect(name='api_join_game', route='/api/game/join', controller=controllers.JoinGameController(), action='index', conditions=dict(method=['OPTIONS']))
 dispatcher.mapper.connect('/api/game/join', controller='api_join_game', action='join', conditions=dict(method=['POST']))
 dispatcher.mapper.connect('/api/game/join', controller='api_join_game', action='verify', conditions=dict(method=['GET']))
-
 
 dispatcher.connect(name='api_get_game', route='/api/game', controller=controllers.GameController(), action='index', conditions=dict(method=['OPTIONS']))
 dispatcher.mapper.connect('/api/game', controller='api_get_game', action='game', conditions=dict(method=['GET']))
