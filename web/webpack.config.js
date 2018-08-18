@@ -3,12 +3,15 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const GitRevisionWebpackPlugin = require('git-revision-webpack-plugin');
 const webpack = require('webpack');
 
 require('dotenv').config();
 
+const revisionPlugin = new GitRevisionWebpackPlugin();
+
 const plugins = [];
-plugins.push(new CleanWebpackPlugin(['dist']))
+plugins.push(new CleanWebpackPlugin(['dist']));
 plugins.push(new HtmlWebpackPlugin({template: './views/index.pug', filename: './index.html'}));
 plugins.push(new CopyWebpackPlugin([{from: './src/assets', to: 'static'}]));
 plugins.push(new webpack.NamedModulesPlugin());
@@ -19,10 +22,12 @@ plugins.push(new webpack.DefinePlugin({
     'process.env.WEB_PATH': JSON.stringify(`${process.env.WEB_PATH}`)
 }));
 
-if(process.env.NODE_ENV != 'production') {
+const production = (process.env.NODE_ENV === 'production');
+
+if(!production) {
     plugins.push(
 	new webpack.optimize.OccurrenceOrderPlugin(),
-	new webpack.HotModuleReplacementPlugin()
+	new webpack.HotModuleReplacementPlugin(),
     );
 }
 
@@ -35,7 +40,7 @@ module.exports = {
     plugins,
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle.js',
+        filename: 'bundle_' + revisionPlugin.version() + '.js',
 	publicPath: '/'
     },
     module: {
@@ -66,5 +71,5 @@ module.exports = {
 	    }
         ]
     },
-    watch: true
+    watch: !production
 };
