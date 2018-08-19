@@ -1,0 +1,12 @@
+create_game: GameStatus.CREATED
+        --> create player(s) : PlayerStatus.JOINED
+        --> end_hand : PlayerStatus.ABANDONED
+        --> start_game : GameStatus.STARTED
+        --> end_game : GameStatus.ABANDONED
+
+start_game
+        --> players : PlayerStatus.DEALT
+        --> end_hand : PlayerStatus.FINISHED
+        --> draw_cards :
+        --> discard_cards :
+        --> end_game : GameStatus.FINISHED
