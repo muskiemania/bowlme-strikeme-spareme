@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --progress",
+    "build": "webpack --progress --config webpack.dev.js",
     "dev": "NODE_ENV=development npm run build & npm run start",
-    "prod": "NODE_ENV=production npm run build",
-    "deploy": "sudo /home/muskiemania/.local/bin/aws --profile webpack-upload-s3 s3 sync ./dist s3://bowl.muskiemania.net --delete",
+    "prod": "NODE_ENV=production webpack --progress --config webpack.prod.js",
+    "deploy": "sudo /home/muskiemania/.local/bin/aws --profile webpack-upload-s3 s3 sync ./dist s3://bowl.muskiemania.net --delete --acl public-read",
     "start": "node app.js"
   },
   "author": "Justin C. Muskivitch",

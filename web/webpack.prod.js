@@ -8,10 +8,9 @@ const webpack = require('webpack');
 
 require('dotenv').config();
 
-const revisionPlugin = new GitRevisionWebpackPlugin();
-
 const plugins = [];
 plugins.push(new CleanWebpackPlugin(['dist']));
+plugins.push(new GitRevisionWebpackPlugin({versionCommand: 'describe --long'}));
 plugins.push(new HtmlWebpackPlugin({template: './views/index.pug', filename: './index.html'}));
 plugins.push(new CopyWebpackPlugin([{from: './src/assets', to: 'static'}]));
 plugins.push(new webpack.NamedModulesPlugin());
@@ -22,25 +21,15 @@ plugins.push(new webpack.DefinePlugin({
     'process.env.WEB_PATH': JSON.stringify(`${process.env.WEB_PATH}`)
 }));
 
-const production = (process.env.NODE_ENV === 'production');
-
-if(!production) {
-    plugins.push(
-	new webpack.optimize.OccurrenceOrderPlugin(),
-	new webpack.HotModuleReplacementPlugin(),
-    );
-}
-
 module.exports = {
-    mode: process.env.NODE_ENV || 'development',
+    mode: 'production',
     entry: [
-	"webpack-hot-middleware/client",
 	"./src/app.js"
     ],
     plugins,
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle_' + revisionPlugin.version() + '.js',
+        filename: 'bundle_[git-revision-version].js',
 	publicPath: '/'
     },
     module: {
@@ -71,5 +60,5 @@ module.exports = {
 	    }
         ]
     },
-    watch: !production
+    watch: false
 };
