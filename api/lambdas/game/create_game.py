@@ -7,7 +7,7 @@ class CreateGame(object):
         pass
 
     @staticmethod
-    def create(host_player_name):
+    def create(host_player_name, number_of_decks):
         create_game = bowl_redis.CreateGame(host_player_name)
         game_dto = create_game.execute()
 

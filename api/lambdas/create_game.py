@@ -1,6 +1,6 @@
 import json
-import lambdas.game
-import lambdas.viewmodels
+from lambdas import game
+from lambdas import viewmodels
 from . import Helpers
 
 def handler(event, context):
