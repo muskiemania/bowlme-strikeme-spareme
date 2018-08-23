@@ -1,5 +1,6 @@
 from .game import Game
 from .verify import Verify
+from .create_deck import CreateDeck
 from .create_player import CreatePlayer
 from .create_game import CreateGame
 from .join_game import JoinGame

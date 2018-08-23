@@ -2,6 +2,7 @@ from .redis_keys import RedisKeys
 from .helpers import Helpers
 from .verify_game import VerifyGame
 from .set_hand_rating import SetHandRating
+from .create_deck import CreateDeck
 from .create_player import CreatePlayer
 from .create_game import CreateGame
 from .get_players import GetPlayers
