@@ -1,4 +1,5 @@
-from lambdas import bowl_game, viewmodels
+import bowl_game
+#import viewmodels
 from . import Helpers
 
 def lambda_handler(event, context):

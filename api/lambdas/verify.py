@@ -1,5 +1,5 @@
-from lambdas import bowl_game
-from lambdas.bowl_redis_dto import GameStatus
+import bowl_game
+from bowl_redis_dto import GameStatus
 
 def lambda_handler(event, context):
     game_id = None #cherrypy.request.cookie['game_auth']

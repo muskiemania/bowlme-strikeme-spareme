@@ -1,5 +1,5 @@
-from lambdas import bowl_game
-from lambdas import viewmodels
+import bowl_game
+#import viewmodels
 
 def handler(event, context):
 

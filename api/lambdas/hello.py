@@ -1,4 +1,4 @@
-from lambdas.bowl_game import Health
+import bowl_game
 
 def lambda_handler(event, context):
 

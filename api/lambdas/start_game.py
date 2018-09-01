@@ -1,5 +1,5 @@
 import traceback
-from lambdas import bowl_game
+import bowl_game
 
 def lambda_handler(event, context):
 

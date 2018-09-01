@@ -2,11 +2,15 @@
 
 rm -rf dist
 mkdir dist
-cp -rf bowl_redis bowl_redis_dto cards game scoring viewmodels *.py dist
+cp -rf bowl_game bowl_redis bowl_redis_dto cards scoring viewmodels *.py dist
 cp -rf env/lib/python2.7/site-packages/* dist
 cd dist
 file=$(git describe)
 zip -r $file.zip .
 
-/home/muskiemania/.local/bin/aws --profile webpack-upload-s3 s3 cp *.zip s3://bowl-api
-rm -- !$file.zip
+#/home/muskiemania/.local/bin/aws --profile webpack-upload-s3 s3 cp *.zip s3://bowl-api
+#setopt extended_glob
+#rm -rf -- !$file.zip
+
+find . -type f ! -name $file.zip -delete
+find . -type d ! -name $file.zip -delete
