@@ -1,5 +1,5 @@
 import traceback
-from lambdas import game
+from lambdas import bowl_game
 
 def lambda_handler(event, context):
 
@@ -22,7 +22,7 @@ def lambda_handler(event, context):
         print e
         print traceback.format_exc()
 
-    my_game = game.Game.get(game_id=game_id, player_id=player_id)
+    my_game = bowl_game.Game.get(game_id=game_id, player_id=player_id)
     my_game.setGameKey(key)
 
     return my_game.json()

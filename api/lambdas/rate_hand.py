@@ -1,5 +1,5 @@
 import traceback
-from lambdas import game
+from lambdas import bowl_game
 
 def lambda_handler(event, context):
 
@@ -7,7 +7,7 @@ def lambda_handler(event, context):
     player_id = 1
 
     try:
-        game.RateHand.rate(game_id, player_id)
+        bowl_game.RateHand.rate(game_id, player_id)
     except Exception as e:
         print 'whats the matter?'
         print e

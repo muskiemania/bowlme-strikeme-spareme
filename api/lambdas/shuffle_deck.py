@@ -1,4 +1,4 @@
-from lambdas import game
+from lambdas import bowl_game
 
 def lambda_handler(event, context):
 
@@ -6,6 +6,6 @@ def lambda_handler(event, context):
     game_id = event['gameId']
 
     #create game
-    shuffled_deck = game.ShuffleDeck.shuffle(game_id)
+    shuffled_deck = bowl_game.ShuffleDeck.shuffle(game_id)
 
     return shuffled_deck.json()

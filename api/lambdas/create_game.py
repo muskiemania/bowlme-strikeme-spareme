@@ -1,7 +1,5 @@
-import json
-from lambdas import game
+from lambdas import bowl_game
 from lambdas import viewmodels
-from . import Helpers
 
 def handler(event, context):
 
@@ -10,7 +8,7 @@ def handler(event, context):
     number_of_decks = event['numberOfDecks'] or 1
 
     #create game
-    created_game = game.CreateGame.create(host_player_name, number_of_decks)
+    created_game = bowl_game.CreateGame.create(host_player_name, number_of_decks)
 
     #create jwt
     if not created_game.is_game_id_zero():

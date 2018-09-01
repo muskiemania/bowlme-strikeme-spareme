@@ -1,4 +1,5 @@
+from lambdas.bowl_game import Health
 
+def lambda_handler(event, context):
 
-def my_handler(event, context):
-    return {'message': 'hi there'}
+    return bowl_game.Health.check()

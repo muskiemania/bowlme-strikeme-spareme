@@ -1,4 +1,4 @@
-from lambdas import game, viewmodels
+from lambdas import bowl_game, viewmodels
 from . import Helpers
 
 def lambda_handler(event, context):
@@ -7,7 +7,7 @@ def lambda_handler(event, context):
     player_name = ''
 
     #join game
-    join_game = game.JoinGame(game_key)
+    join_game = bowl_game.JoinGame(game_key)
     joined_game = join_game.execute(player_name)
 
     #create cookie

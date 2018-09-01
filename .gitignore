@@ -31,4 +31,7 @@ web/dist
 app.css
 web/.env*
 api/.env*
+api/lambdas/dist
+api/lambdas/env
+api/lambdas/deploy
 web/package-lock.json
