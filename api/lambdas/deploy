@@ -1,0 +1,26 @@
+#!/bin/sh
+
+#empty dist directory
+rm -rf dist
+
+#create dist directory
+mkdir dist
+
+#copy local packages
+cp -rf bowl_game bowl_redis bowl_redis_dto cards scoring viewmodels *.py dist
+
+#copy global packages
+cp -rf env/lib/python2.7/site-packages/* dist
+
+#go to dist directory and zip everything up
+cd dist
+file=$(git describe)
+zip -r $file.zip .
+
+#remove everything except the zip
+find . -type f ! -name $file.zip -delete
+find . -type d ! -name $file.zip -delete
+
+#upload to s3
+/home/muskiemania/.local/bin/aws --profile webpack-upload-s3 s3 cp *.zip s3://bowl-api
+
