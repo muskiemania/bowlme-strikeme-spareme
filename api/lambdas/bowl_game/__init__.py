@@ -1,15 +1,15 @@
-import game
-import create_deck
-import create_player
-import discard_cards
-import draw_cards
-import end_game
-import finish
-import health
-import join_game
-import results
-import start_game
-import verify
+from .game import Game
+from .create_deck import CreateDeck
+from .create_player import CreatePlayer
+from .discard_cards import DiscardCards
+from .draw_cards import DrawCards
+from .end_game import EndGame
+from .finish import Finish
+from .health import Health
+from .join_game import JoinGame
+from .results import Results
+from .start_game import StartGame
+from .verify import Verify
 
 #from game.game import Game
 #from game.verify import Verify
