@@ -8,9 +8,8 @@ class Health(object):
     @staticmethod
     def check():
 
-        test_env = os.environ or {'nothing': 'there'}
+        test_env = os.environ.__dict__ or {'nothing': 'there'}
 
-        
         return {
             'hello': 'There',
             'env': test_env
