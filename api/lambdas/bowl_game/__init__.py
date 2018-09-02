@@ -1,5 +1,6 @@
 from .game import Game
 from .create_deck import CreateDeck
+from .create_game import CreateGame
 from .create_player import CreatePlayer
 from .discard_cards import DiscardCards
 from .draw_cards import DrawCards

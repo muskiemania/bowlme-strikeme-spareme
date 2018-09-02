@@ -1,10 +1,11 @@
 import bowl_game
+from .helpers import Helpers
 #import viewmodels
 
 def handler(event, context):
 
     #fetch input...
-    host_player_name = event['playerName']
+    host_player_name = event['hostPlayerName']
     number_of_decks = event['numberOfDecks'] or 1
 
     #create game
