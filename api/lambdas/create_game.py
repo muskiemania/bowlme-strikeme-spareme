@@ -17,4 +17,8 @@ def handler(event, context):
         jwt = Helpers().get_jwt(created_game.get_jwt_data())
         created_game.set_jwt(jwt)
 
-    return created_game.json()
+    to_return = created_game.json()
+    to_return['playerName'] = host_player_name
+    to_return['numberOfDecks'] = number_of_decks
+
+    return to_return

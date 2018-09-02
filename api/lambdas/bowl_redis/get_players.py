@@ -1,10 +1,13 @@
+import os
 import redis
 from bowl_redis_dto import PlayerDto, PlayerStatus, RatingDto
 from . import RedisKeys
 
 class GetPlayers(object):
     def __init__(self, game_id):
-        self.redis = redis.StrictRedis()
+        redis_ip = os.environ['REDIS_SERVER']
+        redis_pass = os.environ['REDIS_PASSWORD']
+        self.redis = redis.StrictRedis(host=redis_ip, password=redis_pass)
         self.game_id = game_id
 
     def execute(self):

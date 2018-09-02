@@ -11,6 +11,7 @@ class GameDto(object):
         self.players = []
         self.game_key = None
         self.deck = None
+        self.number_of_decks = None
 
     def generate_game_key(self):
         md5 = hashlib.md5()

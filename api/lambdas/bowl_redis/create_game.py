@@ -18,6 +18,7 @@ class CreateGame(object):
         game_dto.host_player_name = self.host_player_name
         game_dto.game_status = GameStatus.CREATED
         game_dto.last_updated = str(datetime.datetime.now())
+        game_dto.number_of_decks = self.number_of_decks
         game_dto.generate_game_key()
 
         key_info = RedisKeys(game_dto.game_id)
@@ -50,7 +51,7 @@ class CreateGame(object):
         #game_dto.host_player_id = player_dto.player_id
         #game_dto.players.append(player_dto)
 
-        return game_dto.json()
+        return game_dto
 
     def __get_new_game_id(self):
         key_info = RedisKeys()

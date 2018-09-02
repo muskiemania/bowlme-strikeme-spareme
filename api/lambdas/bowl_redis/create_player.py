@@ -29,4 +29,4 @@ class CreatePlayer(object):
         pipe.hset(players_info, players_rating_key, self.player.player_rating)
         pipe.execute()
 
-        return {'gameId': game_id}
+        return {'key': game_id, 'playerId': self.player.player_id}
