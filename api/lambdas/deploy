@@ -24,3 +24,4 @@ find . -type d ! -name $file.zip -delete
 #upload to s3
 /home/muskiemania/.local/bin/aws --profile webpack-upload-s3 s3 cp *.zip s3://bowl-api
 
+echo $file.zip
