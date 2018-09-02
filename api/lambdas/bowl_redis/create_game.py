@@ -1,11 +1,13 @@
 import datetime
+import os
 import redis
 from bowl_redis_dto import GameDto, GameStatus, PlayerDto, PlayerStatus
 from . import RedisKeys, CreatePlayer
 
 class CreateGame(object):
     def __init__(self, host_player_name, number_of_decks):
-        self.redis = redis.StrictRedis()
+        redis_ip = os.environ['REDIS_SERVER']
+        self.redis = redis.StrictRedis(redis_ip)
         self.host_player_name = host_player_name
         self.number_of_decks = number_of_decks
 
