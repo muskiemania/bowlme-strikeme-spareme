@@ -1,4 +1,3 @@
-
 from . import PlayerStatusModel, RatingModel, HandModel
 
 class PlayerModel(object):
@@ -6,16 +5,20 @@ class PlayerModel(object):
         pass
 
     @staticmethod
-    def fromDto(player, show_cards = False):
+    def from_dto(player_dto, show_cards=False):
 
-        rating = RatingModel(player.player_rating)
-        status = PlayerStatusModel(player.player_status)
-        hand = HandModel(player.player_cards)
+        rating = RatingModel(player_dto.player_rating)
+        status = PlayerStatusModel(player_dto.player_status)
+        hand = HandModel(player_dto.player_cards)
 
-        p = {'playerId': player.player_id, 'rating': rating.fromDto(), 'hand': hand.fromDto(), 'playerName': player.player_name, 'status': status.fromDto() }
+        player = {'playerId': player_dto.player_id,
+                  'rating': rating.fromDto(),
+                  'hand': hand.fromDto(),
+                  'playerName': player_dto.player_name,
+                  'status': status.from_dto()}
 
         if not show_cards:
-            p.pop('rating', None)
-            p['hand'].pop('cards', None)
+            player.pop('rating', None)
+            player['hand'].pop('cards', None)
 
-        return p
+        return player

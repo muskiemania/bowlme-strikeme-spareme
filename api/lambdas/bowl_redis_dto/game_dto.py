@@ -1,5 +1,5 @@
-from enum import Enum
 import hashlib
+from enum import Enum
 
 class GameDto(object):
     def __init__(self):
@@ -17,6 +17,9 @@ class GameDto(object):
         md5.update(self.host_player_name)
         md5.update(str(self.game_id))
         self.game_key = md5.hexdigest()[-6:]
+
+    def json(self):
+        return self.__dict__
 
 class GameStatus(Enum):
     CREATED = 1

@@ -1,3 +1,4 @@
+import os
 import redis
 from cards import Deck
 from .redis_keys import RedisKeys
@@ -5,7 +6,9 @@ from .redis_keys import RedisKeys
 class CreateDeck(object):
 
     def __init__(self, game_id, number_of_decks=1):
-        self.redis = redis.StrictRedis()
+        redis_ip = os.environ['REDIS_SERVER']
+        redis_pass = os.environ['REDIS_PASSWORD']
+        self.redis = redis.StrictRedis(host=redis_ip, password=redis_pass)
         self.game_id = game_id
         self.number_of_decks = number_of_decks
 
@@ -18,4 +21,4 @@ class CreateDeck(object):
             pipe.rpush(key_info.game_discard(), *Deck.show_cards(deck.cards))
 
         pipe.execute()
-        return None
+        return {'gameId': self.game_id}

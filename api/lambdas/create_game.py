@@ -1,5 +1,5 @@
 import bowl_game
-from .helpers import Helpers
+from helpers import Helpers
 #import viewmodels
 
 def handler(event, context):

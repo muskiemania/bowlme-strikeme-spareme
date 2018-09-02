@@ -3,7 +3,7 @@ class HandModel(object):
     def __init__(self, cards):
         self.cards = self.sorted_cards(cards)
 
-    def fromDto(self):
+    def from_dto(self):
         return {'cards': self.cards, 'numberOfCards': len(self.cards)}
 
     def __get_card_order(self, card):

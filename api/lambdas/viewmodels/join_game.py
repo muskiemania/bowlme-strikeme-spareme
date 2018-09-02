@@ -1,5 +1,3 @@
-import json
-
 class JoinGameModel(object):
     def __init__(self, game_id, player_id, game_key):
         self.__game_id = game_id
@@ -12,12 +10,12 @@ class JoinGameModel(object):
 
     def set_jwt(self, jwt):
         self.__jwt = jwt
-    
+
     def get_jwt_data(self):
-        return {'gameId': self.__game_id, 
-        'playerId': self.__player_id, 
-        'key': self.__game_key, 
-        'jwt': self.__jwt }
-    
+        return {'gameId': self.__game_id,
+                'playerId': self.__player_id,
+                'key': self.__game_key,
+                'jwt': self.__jwt}
+
     def json(self):
-        return json.dumps(self.get_jwt_data())
+        return self.get_jwt_data()

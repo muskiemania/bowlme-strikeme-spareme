@@ -1,7 +1,7 @@
 import hashlib
-from enum import Enum
 import calendar
 import time
+from enum import Enum
 
 class PlayerDto(object):
     def __init__(self, player_name, game_id, player_id=None):

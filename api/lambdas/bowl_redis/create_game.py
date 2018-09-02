@@ -1,13 +1,14 @@
 import datetime
 import os
 import redis
-from bowl_redis_dto import GameDto, GameStatus, PlayerDto, PlayerStatus
-from . import RedisKeys, CreatePlayer
+from bowl_redis_dto import GameDto, GameStatus
+from . import RedisKeys
 
 class CreateGame(object):
     def __init__(self, host_player_name, number_of_decks):
         redis_ip = os.environ['REDIS_SERVER']
-        self.redis = redis.StrictRedis(redis_ip)
+        redis_pass = os.environ['REDIS_PASSWORD']
+        self.redis = redis.StrictRedis(host=redis_ip, password=redis_pass)
         self.host_player_name = host_player_name
         self.number_of_decks = number_of_decks
 
@@ -37,19 +38,19 @@ class CreateGame(object):
 
         pipe.execute()
 
-        player_dto = PlayerDto(self.host_player_name, game_dto.game_id)
-        player_dto.player_status = PlayerStatus.JOINED
+        #player_dto = PlayerDto(self.host_player_name, game_dto.game_id)
+        #player_dto.player_status = PlayerStatus.JOINED
 
-        host_id_key = key_info.game_info_host_id_key()
-        pipe.hset(key_info.game_info(), host_id_key, player_dto.player_id)
-        pipe.execute()
+        #host_id_key = key_info.game_info_host_id_key()
+        #pipe.hset(key_info.game_info(), host_id_key, player_dto.player_id)
+        #pipe.execute()
 
-        CreatePlayer(player_dto).execute(game_dto.game_id)
+        #CreatePlayer(player_dto).execute(game_dto.game_id)
 
-        game_dto.host_player_id = player_dto.player_id
-        game_dto.players.append(player_dto)
+        #game_dto.host_player_id = player_dto.player_id
+        #game_dto.players.append(player_dto)
 
-        return game_dto
+        return game_dto.json()
 
     def __get_new_game_id(self):
         key_info = RedisKeys()

@@ -1,11 +1,10 @@
 import bowl_game
-#import viewmodels
-from . import Helpers
+from .helpers import Helpers
 
-def lambda_handler(event, context):
+def handler(event, context):
 
-    game_key = ''
-    player_name = ''
+    game_key = event['gameKey']
+    player_name = event['playerName']
 
     #join game
     join_game = bowl_game.JoinGame(game_key)

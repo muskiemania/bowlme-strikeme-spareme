@@ -1,3 +1,4 @@
+import os
 import redis
 import scoring
 from . import RedisKeys
@@ -6,7 +7,9 @@ from . import RedisKeys
 class CreatePlayer(object):
 
     def __init__(self, player):
-        self.redis = redis.StrictRedis()
+        redis_ip = os.environ['REDIS_SERVER']
+        redis_pass = os.environ['REDIS_PASSWORD']
+        self.redis = redis.StrictRedis(host=redis_ip, password=redis_pass)
         default_rating = scoring.Scorer.default_rating()
         player.player_rating = default_rating.as_string()
         self.player = player
@@ -26,4 +29,4 @@ class CreatePlayer(object):
         pipe.hset(players_info, players_rating_key, self.player.player_rating)
         pipe.execute()
 
-        return self.player
+        return {'gameId': game_id}

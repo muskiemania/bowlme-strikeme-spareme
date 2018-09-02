@@ -1,6 +1,4 @@
 import bowl_redis
-import cards
-import scoring
 import viewmodels
 
 class Game(object):
@@ -33,10 +31,10 @@ class Game(object):
             others = [o for o in player_dto if o.player_id != player_id]
             player = [p for p in player_dto if p.player_id == player_id][0]
 
-            my_game.setOthers(others)
-            my_game.setPlayer(player)
-            my_game.setStatus(game_details_dto.game_status)
-            my_game.setHostPlayerId(game_details_dto.host_player_id)
+            my_game.set_others(others)
+            my_game.set_player(player)
+            my_game.set_status(game_details_dto.game_status)
+            my_game.set_host_player_id(game_details_dto.host_player_id)
 
         return my_game
 
