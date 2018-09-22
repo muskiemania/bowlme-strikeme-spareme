@@ -1,7 +1,7 @@
 import os
 import redis
 import scoring
-from . import RedisKeys
+from .redis_keys import RedisKeys
 
 
 class CreatePlayer(object):

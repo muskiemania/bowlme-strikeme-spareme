@@ -2,7 +2,7 @@ import os
 import redis
 from dateutil import parser
 from bowl_redis_dto import GameDto, GameStatus
-from . import RedisKeys
+from .redis_keys import RedisKeys
 
 class GetGame(object):
     def __init__(self, game_id):

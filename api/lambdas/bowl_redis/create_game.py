@@ -2,7 +2,7 @@ import datetime
 import os
 import redis
 from bowl_redis_dto import GameDto, GameStatus
-from . import RedisKeys
+from .redis_keys import RedisKeys
 
 class CreateGame(object):
     def __init__(self, host_player_name, number_of_decks):
@@ -38,6 +38,14 @@ class CreateGame(object):
         pipe.hset(key_info.game_hashes_key(), game_dto.game_key, game_dto.game_id)
 
         pipe.execute()
+
+        game_dto.redout = {}
+        game_dto.redout[host_name_key] = self.host_player_name
+        game_dto.redout[status_key] = game_dto.game_status
+        game_dto.redout[last_updated_key] = game_dto.last_updated
+        game_dto.redout[last_updated_status_key] = game_dto.game_status
+        game_dto.redout[game_dto.game_key] = game_dto.game_id
+
 
         #player_dto = PlayerDto(self.host_player_name, game_dto.game_id)
         #player_dto.player_status = PlayerStatus.JOINED

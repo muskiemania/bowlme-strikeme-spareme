@@ -13,6 +13,8 @@ class GameDto(object):
         self.deck = None
         self.number_of_decks = None
 
+        self.redout = None
+
     def generate_game_key(self):
         md5 = hashlib.md5()
         md5.update(self.host_player_name)

@@ -4,6 +4,7 @@ class JoinGameModel(object):
         self.__player_id = player_id
         self.__jwt = ''
         self.__game_key = game_key
+        self.other_info = None
 
     def is_game_id_zero(self):
         return self.__game_id == 0
@@ -15,7 +16,8 @@ class JoinGameModel(object):
         return {'gameId': self.__game_id,
                 'playerId': self.__player_id,
                 'key': self.__game_key,
-                'jwt': self.__jwt}
+                'jwt': self.__jwt,
+                'otherInfo': self.other_info}
 
     def json(self):
         return self.get_jwt_data()

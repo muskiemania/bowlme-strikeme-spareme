@@ -1,8 +1,8 @@
 import bowl_game
 from helpers import Helpers
-#import viewmodels
+import viewmodels
 
-def handler(event, context):
+def post_handler(event, context):
 
     #fetch input...
     host_player_name = event['hostPlayerName']
@@ -22,3 +22,19 @@ def handler(event, context):
     to_return['numberOfDecks'] = number_of_decks
 
     return to_return
+
+def get_handler(event, context):
+
+    game_is_verified = context['gameIsVerified']
+    player_is_verified = context['playerIsVerified']
+
+    if not game_is_verified or not player_is_verified:
+        null_game = viewmodels.JoinGameModel(0, 0, None)
+        return null_game.json()
+
+    game_id = context['gameId']
+    player_id = context['playerId']
+    key = context['key']
+
+    created_game = viewmodels.JoinGameModel(game_id, player_id, key)
+    return created_game.json()

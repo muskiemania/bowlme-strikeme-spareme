@@ -1,7 +1,7 @@
 import os
 import redis
 from bowl_redis_dto import PlayerDto, PlayerStatus, RatingDto
-from . import RedisKeys
+from .redis_keys import RedisKeys
 
 class GetPlayers(object):
     def __init__(self, game_id):
