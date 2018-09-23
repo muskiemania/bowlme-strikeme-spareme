@@ -27,10 +27,10 @@ class JoinCreate extends Component {
   clickSetModeCreate() {
     get(getApiPath() + '/game/create')
       .then((respJson) => {
-        if (respJson.gameId === 0) {
+        if (respJson.body.gameId === 0) {
           this.setState({ mode: 'create' });
         }
-        else if (respJson.gameId > 0) {
+        else if (respJson.body.gameId > 0) {
           window.location.replace(getWebPath() + '/game/');
         }
         else {
@@ -45,10 +45,10 @@ class JoinCreate extends Component {
   clickSetModeJoin() {
     get(getApiPath() + '/game/join')
       .then((respJson) => {
-        if (respJson.gameId === 0) {
+        if (respJson.body.gameId === 0) {
           this.setState({ mode: 'join' });
         }
-        else if (respJson.gameId > 0) {
+        else if (respJson.body.gameId > 0) {
           console.log('why am i redirecting??');
           console.log(respJson.gameId);
           window.location.replace(getWebPath() + '/game/');
@@ -67,7 +67,7 @@ class JoinCreate extends Component {
     postAnonymous(getApiPath() + '/game/create', { 'playerName': playerName })
       .then((respJson) => {
         console.log('inside then');
-        if (respJson.gameId === 0) {
+        if (respJson.body.gameId === 0) {
           throw 'Could not create game';
         }
 
@@ -81,8 +81,8 @@ class JoinCreate extends Component {
 
   clickJoinGame(gameKey, playerName) {
     postAnonymous(getApiPath() + '/game/join', { 'gameKey': gameKey, 'playerName': playerName })
-      .then((resp) => {
-        if (resp.gameId === 0) {
+      .then((respJson) => {
+        if (respJson.body.gameId === 0) {
           throw 'Could not create game';
         }
 
