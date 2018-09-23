@@ -25,7 +25,7 @@ class JoinCreate extends Component {
   }
 
   clickSetModeCreate() {
-    get(getApiPath() + '/api/game/create')
+    get(getApiPath() + '/game/create')
       .then((respJson) => {
         if (respJson.gameId === 0) {
           this.setState({ mode: 'create' });
@@ -43,7 +43,7 @@ class JoinCreate extends Component {
   }
 
   clickSetModeJoin() {
-    get(getApiPath() + '/api/game/join')
+    get(getApiPath() + '/game/join')
       .then((respJson) => {
         if (respJson.gameId === 0) {
           this.setState({ mode: 'join' });
@@ -64,7 +64,7 @@ class JoinCreate extends Component {
 
   clickCreateGame(playerName) {
     console.log('inside joinCreate.js clickCreateGame');
-    postAnonymous(getApiPath() + '/api/game/create', { 'playerName': playerName })
+    postAnonymous(getApiPath() + '/game/create', { 'playerName': playerName })
       .then((respJson) => {
         console.log('inside then');
         if (respJson.gameId === 0) {
@@ -80,7 +80,7 @@ class JoinCreate extends Component {
   }
 
   clickJoinGame(gameKey, playerName) {
-    postAnonymous(getApiPath() + '/api/game/join', { 'gameKey': gameKey, 'playerName': playerName })
+    postAnonymous(getApiPath() + '/game/join', { 'gameKey': gameKey, 'playerName': playerName })
       .then((resp) => {
         if (resp.gameId === 0) {
           throw 'Could not create game';

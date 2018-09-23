@@ -57,9 +57,9 @@ class Scoreboard extends Component {
 	switch(operationName) {
 	case 'initialLoad':
 	case 'tableActivity':
-	    return this.props.operations.get(operationName)(getApiPath() + '/api/results');
+	    return this.props.operations.get(operationName)(getApiPath() + '/results');
 	case 'endGame':
-	    return this.props.operations.get(operationName)(getApiPath() + '/api/game/end');
+	    return this.props.operations.get(operationName)(getApiPath() + '/game/end');
 	case 'playAgain':
 	    let response = this.props.operations.get(operationName)();
 	    window.location = '/';

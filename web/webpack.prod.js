@@ -16,7 +16,6 @@ plugins.push(new CopyWebpackPlugin([{from: './src/assets', to: 'static'}]));
 plugins.push(new webpack.NamedModulesPlugin());
 plugins.push(new MiniCssExtractPlugin({filename: '[name].css', chunkFilename: '[id].css'}));
 plugins.push(new webpack.DefinePlugin({
-    'process.env.WEB_PORT': JSON.stringify(`${process.env.WEB_PORT}`),
     'process.env.API_PATH': JSON.stringify(`${process.env.API_PATH}`),
     'process.env.WEB_PATH': JSON.stringify(`${process.env.WEB_PATH}`)
 }));

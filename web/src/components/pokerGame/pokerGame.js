@@ -80,23 +80,23 @@ class PokerGame extends Component {
 	switch(operationName) {
 	case 'initialLoad':
 	case 'tableActivity':
-	    return this.props.operations.get(operationName)(getApiPath() + '/api/game');
+	    return this.props.operations.get(operationName)(getApiPath() + '/game');
 	case 'startGame':
-	    let started = this.props.operations.get(operationName)(getApiPath() + '/api/game/start');
+	    let started = this.props.operations.get(operationName)(getApiPath() + '/game/start');
 	    key && this.socket.on(key).emit('table-activity');
 	    return started;
 	case 'drawCards':
-	    let drawn = this.props.operations.get(operationName)(getApiPath() + '/api/game/draw', payload);
+	    let drawn = this.props.operations.get(operationName)(getApiPath() + '/game/draw', payload);
 	    key && this.socket.on(key).emit('table-activity');
 	    this.state.selectedCards = Immutable.List();
 	    return drawn;
 	case 'discardCards':
-	    let discarded = this.props.operations.get(operationName)(getApiPath() + '/api/game/discard', {'cards': this.getSelectedCards()});
+	    let discarded = this.props.operations.get(operationName)(getApiPath() + '/game/discard', {'cards': this.getSelectedCards()});
 	    key && this.socket.on(key).emit('table-activity');
 	    this.state.selectedCards = Immutable.List();
 	    return discarded;
 	case 'finishGame':
-	    let response = this.props.operations.get(operationName)(getApiPath() + '/api/game/finish');
+	    let response = this.props.operations.get(operationName)(getApiPath() + '/game/finish');
 	    //window.location.href = '/results/';
 	default:
 	    return;
