@@ -25,16 +25,30 @@ def post_handler(event, context):
 
 def get_handler(event, context):
 
-    game_is_verified = context['gameIsVerified']
-    player_is_verified = context['playerIsVerified']
+    #print 'xxxxx1'
+    #print context
+    #print 'yyyyy1'
 
-    if not game_is_verified or not player_is_verified:
-        null_game = viewmodels.JoinGameModel(0, 0, None)
-        return null_game.json()
+    #authorizer = context['authorizer']
+    #game_is_verified = 'gameIsVerified' in authorizer.keys() and authorizer['gameIsVerified'] or False
+    #player_is_verified = 'playerIsVerified' in authorizer.keys() and authorizer['playerIsVerified'] or False
 
-    game_id = context['gameId']
-    player_id = context['playerId']
-    key = context['key']
+    #if not game_is_verified or not player_is_verified:
+    #    null_game = viewmodels.JoinGameModel(0, 0, None)
+    #    return null_game.json()
 
-    created_game = viewmodels.JoinGameModel(game_id, player_id, key)
-    return created_game.json()
+    #game_id = 'gameId' in authorizer.keys() and authorizer['gameId'] or 0
+    #player_id = 'playerId' in authorizer.keys() and authorizer['playerId'] or 0
+    #key = 'key' in authorizer.keys() and authorizer['key'] or None
+
+    #created_game = viewmodels.JoinGameModel(game_id, player_id, key)
+    #return created_game.json()
+
+    return {
+        'statusCode': 200,
+        'headers': {'Content-Type': 'application/json'},
+        'body': {
+            'hello': 'there',
+            #'context': context
+        }
+    }
