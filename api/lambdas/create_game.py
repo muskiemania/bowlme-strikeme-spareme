@@ -1,5 +1,6 @@
 import bowl_game
 from helpers import Helpers
+from bowl_redis_dto import GameStatus
 import viewmodels
 
 def post_handler(event, context):
@@ -25,30 +26,39 @@ def post_handler(event, context):
 
 def get_handler(event, context):
 
-    #print 'xxxxx1'
-    #print context
-    #print 'yyyyy1'
-
-    #authorizer = context['authorizer']
-    #game_is_verified = 'gameIsVerified' in authorizer.keys() and authorizer['gameIsVerified'] or False
-    #player_is_verified = 'playerIsVerified' in authorizer.keys() and authorizer['playerIsVerified'] or False
-
-    #if not game_is_verified or not player_is_verified:
-    #    null_game = viewmodels.JoinGameModel(0, 0, None)
-    #    return null_game.json()
-
-    #game_id = 'gameId' in authorizer.keys() and authorizer['gameId'] or 0
-    #player_id = 'playerId' in authorizer.keys() and authorizer['playerId'] or 0
-    #key = 'key' in authorizer.keys() and authorizer['key'] or None
-
-    #created_game = viewmodels.JoinGameModel(game_id, player_id, key)
-    #return created_game.json()
-
-    return {
+    to_return = {
         'statusCode': 200,
         'headers': {'Content-Type': 'application/json'},
-        'body': {
-            'hello': 'there',
-            #'context': context
-        }
+        'body': {}
     }
+
+    jwt = 'headers' in event.keys() and 'X-Bowl-Token' in event['headers'] and event['headers']['X-Bowl-Token'] or None
+
+    if jwt is None:
+        null_game = viewmodels.JoinGameModel(0, 0, None)
+        to_return['body'] = null_game.json()
+        return to_return
+
+    decoded = Helpers().decode_jwt(jwt)
+
+    game_id = 'gameId' in decoded.keys() and decoded['gameId'] or None
+    player_id = 'playerId' in decoded.keys() and decoded['playerId'] or None
+    key = 'key' in decoded.keys() and decoded['key'] or None
+
+    game_statuses = [GameStatus.CREATED, GameStatus.STARTED]
+
+    game_is_verified = bowl_game.Verify.verify_game_by_id(game_id, game_statuses)
+    player_is_verified = bowl_game.Verify.verify_player_in_game(game_id, player_id)
+
+    if not game_is_verified or not player_is_verified:
+        null_game = viewmodels.JoinGameModel(0, 0, None)
+        to_return['body'] = null_game.json()
+        return to_return
+
+    game_id = 'gameId' in context.keys() and context['gameId'] or 0
+    player_id = 'playerId' in context.keys() and context['playerId'] or 0
+    key = 'key' in context.keys() and context['key'] or None
+
+    created_game = viewmodels.JoinGameModel(game_id, player_id, key)
+    to_return['body'] = created_game.json()
+    return to_return
