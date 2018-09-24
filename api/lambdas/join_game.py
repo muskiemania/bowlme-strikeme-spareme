@@ -1,10 +1,10 @@
 import bowl_game
-from .helpers import Helpers
+from helpers import Helpers
 
 def handler(event, context):
 
-    game_key = event['gameKey']
-    player_name = event['playerName']
+    game_key = 'key' in event.keys() and event['key'] or None
+    player_name = 'playerName' in event.keys() and event['playerName'] or None
 
     #join game
     join_game = bowl_game.JoinGame(game_key)

@@ -9,20 +9,34 @@ def lambda_handler(event, context):
     player_id = 1
     key = ''
 
-    #verify_game = game.Verify.verify_game_by_id
-    #verify_player = game.Verify.verify_player_in_game
-    #game_verified = verify_game(game_id, [GameStatus.STARTED])
-    #player_verified = verify_player(game_id, player_id, [PlayerStatus.DEALT])
+    #1: draw cards
+    #2: should shuffle? yes: goto 3; no: goto 4
+    #3: shuffle cards
+    #4: should change player status? yes: goto 5; no: goto 6
+    #5: change player status
+    #6: should score and rank? yes: goto 7; no: goto 12
+    #7: score hand
+    #8: rank players
+    #9: should change game status? yes: goto 10; no: goto 11
+    #10: change game status
+    #11: fetch game data and return
 
-    #if game_verified and player_verified:
-    try:
-        game.DrawCards.draw(game_id, player_id, number_of_cards)
-    except Exception as e:
-        print 'whats the matter?'
-        print e
-        print traceback.format_exc()
+    bowl_game.DrawCards.draw(game_id, player_id, number_of_cards) #1
 
-    my_game = bowl_game.Game.get(game_id=game_id, player_id=player_id)
+    if bowl_game.ShuffleCards.check(game_id): #2
+        bowl_game.ShuffleCards.shuffle(game_id) #3
+
+    if number_of_cards > 2: #4
+        bowl_game.PlayerStatus.change(game_id, player_id, PlayerStatus.FINISHED) #5
+
+    if bowl_game.Scoring.check(game_id, player_id): #6
+        bowl_game.Scoring.score(game_id, player_id) #7
+        bowl_game.Ranking.rank(game_id) #8
+
+        if bowl_game.GameStatus.check(game_id): #9
+            bowl_game.GameStatus.change(game_id, GameStatus.FINISHED) #10
+
+    my_game = bowl_game.Game.get(game_id=game_id, player_id=player_id) #11
     my_game.setGameKey(key)
 
     return my_game.json()

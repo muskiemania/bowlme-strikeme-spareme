@@ -6,11 +6,17 @@ import viewmodels
 def post_handler(event, context):
 
     #fetch input...
-    host_player_name = event['hostPlayerName']
-    number_of_decks = event['numberOfDecks'] or 1
+    host_player_name = 'hostPlayerName' in event.keys() and event['hostPlayerName'] or 'Anonymous'
+    number_of_decks = 'numberOfDecks' in event.keys() and event['numberOfDecks'] or 1
 
     #create game
     created_game = bowl_game.CreateGame.create(host_player_name, number_of_decks)
+
+    #create player
+    bowl_game.CreatePlayer.create(host_player_name, created_game.json()['key'])
+
+    #create deck
+    bowl_game.CreateDeck.create(created_game.json()['gameId'], number_of_decks)
 
     #create jwt
     if not created_game.is_game_id_zero():
@@ -18,11 +24,7 @@ def post_handler(event, context):
         jwt = Helpers().get_jwt(created_game.get_jwt_data())
         created_game.set_jwt(jwt)
 
-    to_return = created_game.json()
-    to_return['playerName'] = host_player_name
-    to_return['numberOfDecks'] = number_of_decks
-
-    return to_return
+    return created_game.json()
 
 def get_handler(event, context):
 

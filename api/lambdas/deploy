@@ -29,7 +29,7 @@ echo $file.zip
 #update lambdas:
 /home/muskiemania/.local/bin/aws --profile webpack-upload-s3 lambda update-function-code --function-name bowl-create-game-get --s3-bucket bowl-api --s3-key $file.zip
 /home/muskiemania/.local/bin/aws --profile webpack-upload-s3 lambda update-function-code --function-name bowl-create-game-post --s3-bucket bowl-api --s3-key $file.zip
-/home/muskiemania/.local/bin/aws --profile webpack-upload-s3 lambda update-function-code --function-name bowl-create-game-auth --s3-bucket bowl-api --s3-key $file.zip
 /home/muskiemania/.local/bin/aws --profile webpack-upload-s3 lambda update-function-code --function-name bowl-create-player --s3-bucket bowl-api --s3-key $file.zip
 /home/muskiemania/.local/bin/aws --profile webpack-upload-s3 lambda update-function-code --function-name bowl-create-deck --s3-bucket bowl-api --s3-key $file.zip
 /home/muskiemania/.local/bin/aws --profile webpack-upload-s3 lambda update-function-code --function-name bowl-get-game --s3-bucket bowl-api --s3-key $file.zip
+/home/muskiemania/.local/bin/aws --profile webpack-upload-s3 lambda update-function-code --function-name bowl-get-game-auth --s3-bucket bowl-api --s3-key $file.zip
