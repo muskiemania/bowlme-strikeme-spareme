@@ -20,9 +20,9 @@ function setCookie(key, value) {
 
 export function postAnonymous(url, data) {
     return Promise.resolve(post(url, data))
-	.then((respJson) => {
-	    setCookie(bowlCookie, respJson.body.jwt);
-	    return resp;
+	.then(response => {
+	    setCookie(bowlCookie, response.jwt);
+	    return response;
 	});
 }
 
@@ -31,31 +31,49 @@ export function clearCookie() {
 }
 
 export function get(url) {
-    return Promise.resolve(fetch(url, {
+    let request = {
 	method: 'GET',
 	headers: {
 	    'Accept': 'application/json',
 	    'Content-Type': 'application/json',
 	    'X-Bowl-Token': getCookie(bowlCookie)
-	}}))
-	.then((respJson) => {
-	    return respJson.body.json();
-	});
+	}
+    };
+    
+    return fetch(url, request)
+	.then(response => {
+	    if(response.ok) {
+		return response.json()
+		    .then(json => {
+			console.log(json);
+			return json.body;
+		    });
+	    }
+	    return response.json().then(error => ({error}));
+	});			       
 }
 
 export function post(url, postData) {
 
-    console.log(postData);
-    
-    return Promise.resolve(fetch(url, {
+    let request = {
 	method: 'POST',
 	headers: {
 	    'Accept': 'application/json',
 	    'Content-Type': 'application/json',
 	    'X-Bowl-Token': getCookie(bowlCookie)
 	},
-	body: JSON.stringify(postData) }))
-	.then((respJson) => {
-	    return respJson.body.json();
+	body: JSON.stringify(postData)
+    };
+    
+    return fetch(url, request)
+	.then(response => {
+	    if(response.ok) {
+		return response.json()
+		    .then(json => {
+			console.log(json);
+			return json.body;
+		    });
+	    }
+	    return response.json().then(error => ({error}));
 	});
 }

@@ -17,102 +17,103 @@ import { getApiPath, getWebPath } from '../../helpers/env';
 import './joinCreate.less';
 
 class JoinCreate extends Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = { mode: 'welcome' };
-  }
-
-  clickSetModeCreate() {
-    get(getApiPath() + '/game/create')
-      .then((respJson) => {
-        if (respJson.body.gameId === 0) {
-          this.setState({ mode: 'create' });
-        }
-        else if (respJson.body.gameId > 0) {
-          window.location.replace(getWebPath() + '/game/');
-        }
-        else {
-          throw 'Unable to determine game';
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  clickSetModeJoin() {
-    get(getApiPath() + '/game/join')
-      .then((respJson) => {
-        if (respJson.body.gameId === 0) {
-          this.setState({ mode: 'join' });
-        }
-        else if (respJson.body.gameId > 0) {
-          console.log('why am i redirecting??');
-          console.log(respJson.gameId);
-          window.location.replace(getWebPath() + '/game/');
-        }
-        else {
-          throw 'Unable to determine game';
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  clickCreateGame(hostPlayerName) {
-    console.log('inside joinCreate.js clickCreateGame');
-    postAnonymous(getApiPath() + '/game/create', { 'hostPlayerName': hostPlayerName })
-      .then((respJson) => {
-        console.log('inside then');
-        if (respJson.body.gameId === 0) {
-          throw 'Could not create game';
-        }
-
-        window.location.replace(getWebPath() + '/game/');
-      })
-      .catch((err) => {
-        //animation to show error message
-        console.log(err);
-      });
-  }
-
-  clickJoinGame(gameKey, playerName) {
-    postAnonymous(getApiPath() + '/game/join', { 'gameKey': gameKey, 'playerName': playerName })
-      .then((respJson) => {
-        if (respJson.body.gameId === 0) {
-          throw 'Could not create game';
-        }
-
-        window.location.replace(getWebPath() + '/game/');
-      })
-      .catch((err) => {
-        //animation to show error message
-      });
-  }
-
-  factory() {
-    switch (this.state.mode) {
-      case 'create':
-        return (<Create clickCreate={this.clickCreateGame.bind(this)} />);
-      case 'join':
-        return (<Join clickJoin={this.clickJoinGame.bind(this)} />);
-      default:
-        return (<Welcome clickCreate={this.clickSetModeCreate.bind(this)} clickJoin={this.clickSetModeJoin.bind(this)} />);
+    
+    constructor(props) {
+	super(props);
+	
+	this.state = { mode: 'welcome' };
     }
-  }
-
-  render() {
-    return (
-      <div className='join-create'>
-        {
-          this.factory()
-        }
-      </div>
-    );
-  }
+    
+    clickSetModeCreate() {
+	get(getApiPath() + '/game/create')
+	    .then((body) => {
+		console.log('gameId is ',body);
+		if (body.gameId === 0) {
+		    this.setState({ mode: 'create' });
+		}
+		else if (body.gameId > 0) {
+		    window.location.replace(getWebPath() + '/game/');
+		}
+		else {
+		    throw 'Unable to determine game';
+		}
+	    })
+	    .catch((err) => {
+		console.log(err);
+	    });
+    }
+    
+    clickSetModeJoin() {
+	get(getApiPath() + '/game/join')
+	    .then((body) => {
+		if (body.gameId === 0) {
+		    this.setState({ mode: 'join' });
+		}
+		else if (body.gameId > 0) {
+		    console.log('why am i redirecting??');
+		    console.log(body.gameId);
+		    window.location.replace(getWebPath() + '/game/');
+		}
+		else {
+		    throw 'Unable to determine game';
+		}
+	    })
+	    .catch((err) => {
+		console.log(err);
+	    });
+    }
+    
+    clickCreateGame(hostPlayerName) {
+	console.log('inside joinCreate.js clickCreateGame');
+	postAnonymous(getApiPath() + '/game/create', { 'hostPlayerName': hostPlayerName })
+	    .then((body) => {
+		console.log('inside then');
+		if (body.gameId === 0) {
+		    throw 'Could not create game';
+		}
+		
+		window.location.replace(getWebPath() + '/game/');
+	    })
+	    .catch((err) => {
+		//animation to show error message
+		console.log(err);
+	    });
+    }
+    
+    clickJoinGame(gameKey, playerName) {
+	postAnonymous(getApiPath() + '/game/join', { 'gameKey': gameKey, 'playerName': playerName })
+	    .then((body) => {
+		if (body.gameId === 0) {
+		    throw 'Could not create game';
+		}
+		
+		window.location.replace(getWebPath() + '/game/');
+	    })
+	    .catch((err) => {
+		//animation to show error message
+	    });
+    }
+    
+    factory() {
+	switch (this.state.mode) {
+	case 'create':
+            return (<Create clickCreate={this.clickCreateGame.bind(this)} />);
+	case 'join':
+            return (<Join clickJoin={this.clickJoinGame.bind(this)} />);
+	default:
+            return (<Welcome clickCreate={this.clickSetModeCreate.bind(this)} clickJoin={this.clickSetModeJoin.bind(this)} />);
+	}
+    }
+    
+    render() {
+	return (
+		<div className='join-create'>
+		{
+		    this.factory()
+		}
+	    </div>
+	);
+    }
 }
 
 export default JoinCreate;
