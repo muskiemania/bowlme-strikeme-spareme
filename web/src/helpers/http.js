@@ -20,8 +20,8 @@ function setCookie(key, value) {
 
 export function postAnonymous(url, data) {
     return Promise.resolve(post(url, data))
-	.then((resp) => {
-	    setCookie(bowlCookie, resp.jwt);
+	.then((respJson) => {
+	    setCookie(bowlCookie, respJson.body.jwt);
 	    return resp;
 	});
 }
@@ -38,8 +38,8 @@ export function get(url) {
 	    'Content-Type': 'application/json',
 	    'X-Bowl-Token': getCookie(bowlCookie)
 	}}))
-	.then((resp) => {
-	    return resp.json();
+	.then((respJson) => {
+	    return respJson.body.json();
 	});
 }
 
@@ -55,7 +55,7 @@ export function post(url, postData) {
 	    'X-Bowl-Token': getCookie(bowlCookie)
 	},
 	body: JSON.stringify(postData) }))
-	.then((resp) => {
-	    return resp.json();
+	.then((respJson) => {
+	    return respJson.body.json();
 	});
 }

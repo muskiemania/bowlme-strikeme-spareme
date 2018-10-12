@@ -62,9 +62,9 @@ class JoinCreate extends Component {
       });
   }
 
-  clickCreateGame(playerName) {
+  clickCreateGame(hostPlayerName) {
     console.log('inside joinCreate.js clickCreateGame');
-    postAnonymous(getApiPath() + '/game/create', { 'playerName': playerName })
+    postAnonymous(getApiPath() + '/game/create', { 'hostPlayerName': hostPlayerName })
       .then((respJson) => {
         console.log('inside then');
         if (respJson.body.gameId === 0) {
