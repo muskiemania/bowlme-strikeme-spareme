@@ -1,12 +1,22 @@
 import traceback
 import bowl_game
+from bowl_redis_dto import GameStatus, PlayerStatus
 
-def lambda_handler(event, context):
+def handler(event, context):
 
-    game_id = 0
-    player_id = 1
-    key = ''
+    game_id = 'gameId' in event.keys() and event['gameId'] or 0
+    player_id = 'playerId' in event.keys() and event['playerId'] or 1
+    key = 'key' in event.keys() and event['key'] or 'key'
 
+    #shuffle
+    bowl_game.ShuffleDeck.shuffle(game_id)
+
+    #change game status
+    bowl_game.GameStatus.set(game_id, GameStatus.STARTED)
+
+    #change player statuses
+    bowl_game.PlayerStatus.set(game_id, PlayerStatus.DEALT)
+    
     try:
         bowl_game.StartGame.start(game_id)
         print 'started ok'

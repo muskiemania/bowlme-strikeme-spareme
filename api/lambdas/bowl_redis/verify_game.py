@@ -1,3 +1,4 @@
+import os
 import redis
 from bowl_redis_dto import GameDto, VerifyDto, PlayerDto, GameStatus
 from . import RedisKeys
@@ -5,7 +6,9 @@ from . import RedisKeys
 class VerifyGame(object):
 
     def __init__(self, game_id=None, player_id=None):
-        self.redis = redis.StrictRedis()
+        redis_ip = os.environ['REDIS_SERVER']
+        redis_pass = os.environ['REDIS_PASSWORD']
+        self.redis = redis.StrictRedis(host=redis_ip, password=redis_pass)
         self.game_id = game_id
         self.player_id = player_id
 
@@ -26,7 +29,7 @@ class VerifyGame(object):
         game_dto.host_player_name = host_name
         game_dto.generate_game_key()
 
-        return VerifyDto(game_dto)
+        return game_dto
 
     def __verify_player_too(self):
         key_info = RedisKeys(self.game_id, self.player_id)
