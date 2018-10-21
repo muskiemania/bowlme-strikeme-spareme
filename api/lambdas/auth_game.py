@@ -11,14 +11,14 @@ def handler(event, context):
             'playerIsHost': 9
         })
 
-    if 'X-Bowl-Token' not in event['headers'].keys():
+    if 'x-bowl-token' not in event['headers'].keys():
         return create_policy(event, False, {
             'gameIsVerified': 8,
             'playerIsVerified': 8,
             'playerIsHost': 8
         })
 
-    jwt = event['headers']['X-Bowl-Token']
+    jwt = event['headers']['x-bowl-token']
 
     decoded = Helpers().decode_jwt(jwt)
 
@@ -54,7 +54,7 @@ def create_policy(event, effect, context):
         'Statement': [{
             'Effect': 'Allow' if effect else 'Deny',
             'Action': ['execute-api:Invoke'],
-            'Resource': 'arn:aws:execute-api:us-east-1:*:ms9dw34ww0/*/GET/game'
+            'Resource': 'arn:aws:execute-api:us-east-1:359299993558:ms9dw34ww0/*/GET/game'
         }]
     }
 

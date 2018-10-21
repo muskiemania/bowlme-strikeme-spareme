@@ -12,8 +12,8 @@ class PlayerModel(object):
         hand = HandModel(player_dto.player_cards)
 
         player = {'playerId': player_dto.player_id,
-                  'rating': rating.fromDto(),
-                  'hand': hand.fromDto(),
+                  'rating': rating.from_dto(),
+                  'hand': hand.from_dto(),
                   'playerName': player_dto.player_name,
                   'status': status.from_dto()}
 

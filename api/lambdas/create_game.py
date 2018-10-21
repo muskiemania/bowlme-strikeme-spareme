@@ -37,7 +37,7 @@ def get_handler(event, context):
         'body': {}
     }
 
-    jwt = 'headers' in event.keys() and 'X-Bowl-Token' in event['headers'] and event['headers']['X-Bowl-Token'] or None
+    jwt = 'headers' in event.keys() and 'x-bowl-token' in event['headers'] and event['headers']['x-bowl-token'] or None
 
     if jwt is None:
         null_game = viewmodels.JoinGameModel(0, 0, None)
