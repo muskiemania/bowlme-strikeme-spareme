@@ -62,7 +62,7 @@ class Scorer(object):
                 first = False
                 continue
 
-            print str(cmp(previous_rating, rating.get()))
+            print(str(cmp(previous_rating, rating.get())))
             if cmp(previous_rating, rating.get()) == 0:
                 rating.rank = previous_rank
 

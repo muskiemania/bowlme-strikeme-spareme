@@ -1,7 +1,9 @@
+import pytest
 from bowl_redis_dto import GameStatus, PlayerStatus
 import bowl_redis
 import redis
 
+@pytest.mark.skip(reason='hardening') 
 class Test_RedisDiscardCards:
 
     def test_draw_cards_constructor(self):

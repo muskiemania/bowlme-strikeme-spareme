@@ -17,6 +17,6 @@ class SetHandRating(object):
     def execute(self, rating_dto):
         pipe = self.redis.pipeline()
         pipe.hset(self.info_key, self.rating_key, rating_dto.as_string())
-        print rating_dto.as_string()
+        print(rating_dto.as_string())
         pipe.execute()
         

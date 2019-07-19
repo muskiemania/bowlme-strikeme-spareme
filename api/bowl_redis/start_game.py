@@ -61,8 +61,8 @@ class StartGame(object):
                 pipe.hset(players_info_key, players_status_key, PlayerStatus.DEALT)
                 pipe.hset(players_info_key, rating_key, self.__default_rating.as_string())
                 pipe.hset(players_info_key, rank_key, self.__default_rating.rank)
-                print 'applied default rating ' + self.__default_rating.as_string()
-                print 'applied default ranking ' + str(self.__default_rating.rank)
+                print('applied default rating ' + self.__default_rating.as_string())
+                print('applied default ranking ' + str(self.__default_rating.rank))
                 pipe.execute()
 
         return

@@ -1,7 +1,9 @@
+import pytest
 from bowl_redis_dto import GameDto, GameStatus, PlayerDto, PlayerStatus
 import bowl_redis
 import redis
 
+@pytest.mark.skip(reason='hardening')
 class Test_RedisCreateGame:
 
     def test_create_game_constructor(self):
@@ -76,8 +78,8 @@ class Test_RedisCreateGame:
         helpers = bowl_redis.Helpers(pipe)
         player_id = game.players[0].player_id
 
-        print game.game_id
-        print player_id
+        print(game.game_id)
+        print(player_id)
 
         assert helpers.verify_player_info_exists(game.game_id, player_id)
         assert helpers.verify_player_name_in_player_info(game.game_id, player_id)

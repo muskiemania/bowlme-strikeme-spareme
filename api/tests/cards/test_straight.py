@@ -1,6 +1,7 @@
-
+import pytest
 from cards import Card, Hand, Straight
 
+@pytest.mark.skip(reason='hardening') 
 class Test_Straight():
  
     def test_is_match_1(self):

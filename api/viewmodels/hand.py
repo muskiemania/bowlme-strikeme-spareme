@@ -42,7 +42,7 @@ class HandModel(object):
         suit_order = self.__get_suit_order
         with_order = [(card, card_order(card), suit_order(card)) for card in cards]
 
-        sort_key = lambda (x, y, z): (y, z)
+        sort_key = lambda x, y, z: (y, z)
         sorted_hand = sorted(with_order, key=lambda x: sort_key(x))
 
         return [card for (card, _, _) in sorted_hand]

@@ -1,7 +1,10 @@
+import pytest
 from bowl_redis_dto import PlayerDto, PlayerStatus
 import bowl_redis
 import redis
 
+
+@pytest.mark.skip(reason='hardening') 
 class Test_RedisCreatePlayer:
 
     def test_create_player_constructor(self):

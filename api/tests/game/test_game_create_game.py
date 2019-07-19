@@ -1,8 +1,10 @@
+import pytest
 from game import CreateGame
 from bowl_redis_dto import GameStatus
 import viewmodels
 import cards
 
+@pytest.mark.skip(reason='hardening') 
 class Test_GameCreateGame:
 
     def _test_createGameConstructor_noArgs(self):

@@ -7,7 +7,7 @@ class StartGame(object):
 
     @staticmethod
     def start(game_id):
-        print 'inside start'
+        print('inside start')
         start_game = bowl_redis.StartGame(game_id)
         start_game.execute()
         return

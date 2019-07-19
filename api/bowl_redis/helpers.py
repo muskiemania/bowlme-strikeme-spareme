@@ -82,8 +82,8 @@ class Helpers(object):
     #game-[game_id]-players-info: a hash of specific info for all players in a single game
     def verify_player_info_exists(self, game_id, player_id):
         key_info = RedisKeys(game_id, player_id)
-        print key_info.__dict__
-        print key_info.game_players_info()
+        print(key_info.__dict__)
+        print(key_info.game_players_info())
         return self.__key_exists(key_info.game_players_info())
 
     def verify_player_name_in_player_info(self, game_id, player_id):

@@ -3,6 +3,7 @@ import bowl_redis
 import redis
 import pytest
 
+@pytest.mark.skip(reason='hardening') 
 class Test_RedisEndGame:
 
     def test_end_game_constructor(self):

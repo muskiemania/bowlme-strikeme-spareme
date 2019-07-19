@@ -1,7 +1,9 @@
+import pytest
 from game import CreatePlayer
 from bowl_redis_dto import PlayerStatus
 import scoring
 
+@pytest.mark.skip(reason='hardening') 
 class Test_GameCreatePlayer:
 
     def test_createPlayer_create(self):
