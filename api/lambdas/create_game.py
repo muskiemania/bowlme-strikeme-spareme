@@ -3,6 +3,28 @@ from helpers import Helpers
 from bowl_redis_dto import GameStatus
 import viewmodels
 
+def handler(event, context):
+    # fetch input
+    host_player_name = event.get('hostPlayerName', 'Anonymous')
+    number_of_decks = event.get('numberOfDecks', '1')
+    try:
+        number_of_decks = int(number_of_decks)
+    except:
+        number_of_decks = 1
+        
+    # create game
+    game_hash = dynamos.CreateGame(host_player_name, number_of_decks)
+    
+    # return game info to next step
+    return {
+        'statusCode': 200,
+        'body': {
+            'game_id': game_hash,
+            'host_player_name': host_player_name
+        }
+    }
+
+'''
 def post_handler(event, context):
 
     #fetch input...
@@ -67,3 +89,4 @@ def get_handler(event, context):
     created_game = viewmodels.JoinGameModel(game_id, player_id, key)
     to_return['body'] = created_game.json()
     return to_return
+'''
