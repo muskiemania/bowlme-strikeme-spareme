@@ -1,10 +1,19 @@
 import traceback
 import bowl_game
 
-def lambda_handler(event, context):
+def handler(event, context):
 
-    game_id = 0
+    # fetch metadata
+    game_id = ''
+    
+    dynamos.ScoreGame.score(game_id)
+    
+    return {
+        'statusCode': 200,
+        'body': 'OK'
+    }
 
+    '''
     try:
         bowl_game.RankHands.rank(game_id)
     except Exception as e:
@@ -13,3 +22,4 @@ def lambda_handler(event, context):
         print traceback.format_exc()
 
     return None
+    '''
