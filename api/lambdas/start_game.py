@@ -4,7 +4,23 @@ from bowl_redis_dto import GameStatus, PlayerStatus
 
 def handler(event, context):
 
-    game_id = 'gameId' in event.keys() and event['gameId'] or 0
+    game_id = event.get('gameId')
+    
+    if game_id is None:
+        raise Exception('gameId is required')
+    
+    dynamos.GameStatus.start_game(game_id)
+    
+    # shuffle cards
+    # SEND SNS TO SHUFFLE
+    
+    return {
+        'statusCode': 200,
+        'body': 'OK'
+    }
+
+'''
+    in event.keys() and event['gameId'] or 0
     player_id = 'playerId' in event.keys() and event['playerId'] or 1
     key = 'key' in event.keys() and event['key'] or 'key'
 
@@ -31,3 +47,4 @@ def handler(event, context):
     my_game.setGameKey(key)
 
     return my_game.json()
+'''
