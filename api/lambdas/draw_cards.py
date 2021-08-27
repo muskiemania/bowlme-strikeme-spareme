@@ -1,8 +1,26 @@
 import traceback
 import bowl_game
 
-def lambda_handler(event, context):
+def handler(event, context):
 
+    # must get data from event
+    game_id = ''
+    player_id = ''
+    number_of_cards = 0 or 1
+    
+    # must execute
+    drawn = dynamos.DrawCards(game_id, player_id, number_of_cards)
+    
+    # must try and shuffle cards
+    # SNS
+    
+    return {
+        'statusCode': 200,
+        'body': 'OK'
+    }
+
+    '''
+    
     number_of_cards = 0 or 1
 
     game_id = 0
@@ -40,3 +58,4 @@ def lambda_handler(event, context):
     my_game.setGameKey(key)
 
     return my_game.json()
+    '''
