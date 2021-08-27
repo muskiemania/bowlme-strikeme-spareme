@@ -5,11 +5,21 @@ from bowl_redis_dto import GameStatus, PlayerStatus
 def handler(event, context):
 
     game_id = event.get('gameId')
+    status = event.get('status')
+    
+    status_factory = {
+        'start': dynamos.GameStatus.start_game,
+        'finish': dynamos.GameStatus.finish_game
+    }
     
     if game_id is None:
         raise Exception('gameId is required')
     
-    dynamos.GameStatus.start_game(game_id)
+    if status not in operations:
+        raise Exception('unknown status')
+    
+    operation = status_factory.get(status)
+    operation(game_id)
     
     # shuffle cards
     # SEND SNS TO SHUFFLE
