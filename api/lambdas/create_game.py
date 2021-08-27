@@ -1,7 +1,4 @@
 import bowl_game
-from helpers import Helpers
-from bowl_redis_dto import GameStatus
-import viewmodels
 
 def handler(event, context):
     # fetch input
@@ -13,7 +10,7 @@ def handler(event, context):
         number_of_decks = 1
         
     # create game
-    game_hash = dynamos.CreateGame(host_player_name, number_of_decks)
+    game_id = bowl_game.CreateGame.create(number_of_decks)
     
     # return game info to next step
     return {

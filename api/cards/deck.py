@@ -2,7 +2,7 @@ import itertools
 from random import randint
 from cards import Card
 
-class Deck(object):
+class Deck:
 
     def __init__(self, cards=None):
         if cards is None:
@@ -10,16 +10,20 @@ class Deck(object):
         else:
             self.cards = cards
 
-    @staticmethod
-    def generate_deck():
-        cards = [str(x) for x in range(2, 10)]
-        cards += ['T', 'J', 'Q', 'K', 'A']
+    def cards(self):
+        return [f'{c.card}{c.suit}' for c in self.cards]
 
+    @staticmethod
+    def generate(number_of_decks=1):
+        cards = [str(x) for x in range(2, 10)]
+        
+        cards += ['T', 'J', 'Q', 'K', 'A']
         suits = ['C', 'S', 'H', 'D']
 
         pairs = itertools.product(cards, suits)
         deck = Deck(cards=[Card(card, suit) for (card, suit) in pairs])
-        return deck
+        
+        return deck * number_of_decks
 
     @staticmethod
     def shuffle_cards(cards):
