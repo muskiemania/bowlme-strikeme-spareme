@@ -4,6 +4,18 @@ from bowl_redis_dto import GameStatus, PlayerStatus
 
 def handler(event, context):
 
+    # extract game id from SNS event
+    game_id = ''
+    
+    # shuffle
+    dynamos.ShuffleDeck.shuffle(game_id)
+    
+    return {
+        'statusCode': 200,
+        'body': 'OK'
+    }
+    
+    '''
     game_id = 'gameId' in event.keys() and event['gameId'] or 0
     player_id = 'playerId' in event.keys() and event['playerId'] or 1
     key = 'key' in event.keys() and event['key'] or 'key'
@@ -31,3 +43,4 @@ def handler(event, context):
     my_game.setGameKey(key)
 
     return my_game.json()
+    '''
