@@ -7,4 +7,5 @@ install terraform
 created new git ssh key
 cloned repo
 
+validated build artifact + deploy to s3 via CLI
 

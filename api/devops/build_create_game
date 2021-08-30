@@ -1,5 +1,7 @@
 #!/bin/sh
 
+module=create_game
+
 #empty dist directory
 rm -rf dist
 
@@ -19,18 +21,18 @@ cp ../lambdas/create_game.py dist
 
 #go to dist directory and zip everything up
 cd dist
-file=create_game_$(git describe)
+file=$module_$(git describe)
 zip -r $file.zip .
 
 #remove everything except the zip
 find . -type f ! -name $file.zip -delete
 find . -type d ! -name $file.zip -delete
 
-cp $file.zip create_game.zip
+cp $file.zip $module.zip
 
 #upload to s3
-/usr/local/bin/aws --profile bowl-s3 s3 cp $file.zip s3://bowlme-cicd/artifacts/$file.zip
-/usr/local/bin/aws --profile bowl-s3 s3 cp create_game.zip s3://bowlme-cicd/v2/create_game.zip
+aws --profile s3-user s3 cp $file.zip s3://bowlme-cicd/artifacts/$file.zip
+aws --profile s3-user s3 cp $module.zip s3://bowlme-cicd/v2/$module.zip
 
 #echo $file.zip
 
