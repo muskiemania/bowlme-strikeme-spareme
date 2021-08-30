@@ -21,7 +21,7 @@ cp ../lambdas/create_game.py dist
 
 #go to dist directory and zip everything up
 cd dist
-file=$module_$(git describe)
+file=${module}_$(git describe)
 zip -r $file.zip .
 
 #remove everything except the zip
