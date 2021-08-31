@@ -9,3 +9,12 @@ cloned repo
 
 validated build artifact + deploy to s3 via CLI
 
+# 08302021
+
+created lambda role
+deployed lambda role via TF
+created + deployed lambda via TF
+created + deployed create_game API Gateway2 endpoint via TF
+
+next: test create_game
+
