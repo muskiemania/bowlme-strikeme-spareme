@@ -8,6 +8,6 @@
 			"dynamodb:GetItem"
 		],
 		"Effect": "Allow",
-		"Resource": "arn:aws:dynamodb:us-east-1:00000:table/myTable"
+		"Resource": "arn:aws:dynamodb:us-west-2:359299993558:table/bowlme-dev"
 	}]
 }
