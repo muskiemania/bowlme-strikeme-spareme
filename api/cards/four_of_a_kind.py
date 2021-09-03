@@ -1,5 +1,4 @@
 from cards import PokerHand
-from bowl_redis_dto import RatingDto
 
 class FourOfAKind(PokerHand):
 

@@ -18,3 +18,12 @@ created + deployed create_game API Gateway2 endpoint via TF
 
 next: test create_game
 
+# 09022021
+
+fixed lambda iam roles
+created cli user to validate changes
+created dynamo table via terraform
+fixed create game - working via lambda, still something fishy with api gateway
+
+next: api_gateway + TTL
+

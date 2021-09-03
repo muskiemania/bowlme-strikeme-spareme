@@ -1,4 +1,4 @@
-import bowl_game
+from bowl_game.create_game import CreateGame
 
 def handler(event, context):
     # fetch input
@@ -10,13 +10,13 @@ def handler(event, context):
         number_of_decks = 1
         
     # create game
-    game_id = bowl_game.CreateGame.create(number_of_decks)
+    game_id = CreateGame.create(number_of_decks)
     
     # return game info to next step
     return {
         'statusCode': 200,
         'body': {
-            'game_id': game_hash,
+            'game_id': game_id,
             'host_player_name': host_player_name
         }
     }

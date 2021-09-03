@@ -1,4 +1,4 @@
-class Hand(object):
+class Hand:
 
     def __init__(self, cards=None):
         self.cards = cards or []

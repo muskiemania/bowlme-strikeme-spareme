@@ -28,7 +28,11 @@ zip -r $file.zip .
 find . -type f ! -name $file.zip -delete
 find . -type d ! -name $file.zip -delete
 
-cp $file.zip $module.zip
+cp $file.zip ../s3/$file.zip
+cp $file.zip ../s3/$module.zip
+
+cd ..
+cd s3
 
 #upload to s3
 aws --profile s3-user s3 cp $file.zip s3://bowlme-cicd/artifacts/$file.zip

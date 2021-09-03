@@ -1,4 +1,4 @@
-class Card(object):
+class Card:
 
     def __init__(self, card=None, suit=None):
 
@@ -48,7 +48,7 @@ class Card(object):
         return 0
 
     def __get_card_display(self):
-        return str(self.card) if self.card is not 'T' else '10'
+        return str(self.card) if self.card != 'T' else '10'
         
     def __get_suit_display(self):
         suits = {}

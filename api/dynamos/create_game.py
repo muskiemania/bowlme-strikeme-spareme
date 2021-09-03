@@ -1,5 +1,5 @@
 import boto3
-from configs.dynamo import DynamoConfig
+from configs.dynamo import DynamoConfigs
 
 class CreateGame:
 
@@ -7,7 +7,7 @@ class CreateGame:
     def create(game_id, cards):
         
         db = boto3.resource('dynamodb')
-        table = db.Table(DynamoConfig.TABLE_NAME)
+        table = db.Table(DynamoConfigs.TABLE_NAME.value)
 
         table.put_item(
             Item={
@@ -19,5 +19,6 @@ class CreateGame:
                 'discard': cards,
                 'leaderboard': []
             }
+        )
 
         return True

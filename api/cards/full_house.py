@@ -1,5 +1,4 @@
 from cards import Hand, PokerHand, FourOfAKind, ThreeOfAKind, TwoPairs
-from bowl_redis_dto import RatingDto
 
 class FullHouse(PokerHand):
 

@@ -1,5 +1,4 @@
 from cards import Hand, PokerHand, Straight, Flush
-from bowl_redis_dto import RatingDto
 
 class StraightFlush(PokerHand):
 
