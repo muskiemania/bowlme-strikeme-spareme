@@ -27,3 +27,12 @@ fixed create game - working via lambda, still something fishy with api gateway
 
 next: api_gateway + TTL
 
+# 09032021
+
+fixed api gateway permissions (+ cloud watch logging)
+fixed api gateway integrations (application/json)
+added ttl to dynamo table
+adjusted create game to ttl +4800
+fixed create game lambda integration with api gateway
+
+next: create_player + integrate with SNS
