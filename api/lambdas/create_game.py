@@ -1,24 +1,30 @@
+import traceback
+import json
 from bowl_game.create_game import CreateGame
 
 def handler(event, context):
     # fetch input
-    host_player_name = event.get('hostPlayerName', 'Anonymous')
-    number_of_decks = event.get('numberOfDecks', '1')
+    _body = event.get('body')
+    _body = json.loads(_body)
+
+    _host_player_name = _body.get('hostPlayerName', 'Anonymous')
+    _number_of_decks = _body.get('numberOfDecks', '1')
+    
     try:
-        number_of_decks = int(number_of_decks)
+        _number_of_decks = int(_number_of_decks)
     except:
-        number_of_decks = 1
+        _number_of_decks = 1
         
     # create game
-    game_id = CreateGame.create(number_of_decks)
+    _game_id = CreateGame.create(_number_of_decks)
     
     # return game info to next step
     return {
         'statusCode': 200,
-        'body': {
-            'game_id': game_id,
-            'host_player_name': host_player_name
-        }
+        'body': json.dumps({
+            'game_id': _game_id,
+            'host_player_name': _host_player_name
+        })
     }
 
 '''
