@@ -6,4 +6,9 @@ resource "aws_dynamodb_table" "bowlme-dev" {
     		name = "game_id"
     		type = "S"
   	}
+
+	ttl {
+		attribute_name = "expires_at"
+		enabled        = "true"
+	}
 }
