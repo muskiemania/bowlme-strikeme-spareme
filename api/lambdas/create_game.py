@@ -7,7 +7,7 @@ def handler(event, context):
     _body = event.get('body')
     _body = json.loads(_body)
 
-    _host_player_name = _body.get('hostPlayerName', 'Anonymous')
+    _player_name = _body.get('playerName', 'Anonymous')
     _number_of_decks = _body.get('numberOfDecks', '1')
     
     try:
@@ -22,8 +22,8 @@ def handler(event, context):
     return {
         'statusCode': 200,
         'body': json.dumps({
-            'game_id': _game_id,
-            'host_player_name': _host_player_name
+            'gameId': _game_id,
+            'playerName': _player_name
         })
     }
 

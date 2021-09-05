@@ -4,12 +4,14 @@ from bowl_game.create_player import CreatePlayer
 
 def handler(event, context):
     # fetch input
+
+    _is_host = event.get('isHostPlayer', False)
+
     _body = event.get('body')
     _body = json.loads(_body)
 
-    _game_id = body.get('gameId')
-    _player_name = body.get('playerName')
-    _is_host = False
+    _game_id = _body.get('gameId')
+    _player_name = _body.get('playerName')
 
     if _game_id is None or _player_name is None:
         return {
