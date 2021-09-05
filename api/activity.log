@@ -36,3 +36,10 @@ adjusted create game to ttl +4800
 fixed create game lambda integration with api gateway
 
 next: create_player + integrate with SNS
+
+# 09042021
+
+got create_game workflow working with a step function
+
+next: change api gateway integration to invoke step function...
+	terraform to create step function
