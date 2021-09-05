@@ -2,7 +2,7 @@ import boto3
 from configs.dynamo import DynamoConfigs
 import time
 
-class JoinGame:
+class CreatePlayer:
 
     @staticmethod
     def join(game_id, player_id, player_name, player_status, is_host=False):
