@@ -3,10 +3,11 @@
     	"Statement": [{
 		"Effect": "Allow",
             	"Action": [
-                	"states:StartExecution"
+                	"lambda:InvokeFunction"
             	],
             	"Resource": [
-                	"arn:aws:states:us-west-2:359299993558:stateMachine:bowlme-v2-create-game"
+                	"arn:aws:lambda:us-west-2:359299993558:function:bowlme-v2-us-west-2-create-game:$LATEST",
+			"arn:aws:lambda:us-west-2:359299993558:function:bowlme-v2-us-west-2-create-player:$LATEST"
             	]
         }]
 }

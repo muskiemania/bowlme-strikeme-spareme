@@ -1,15 +1,3 @@
-#resource "aws_iam_role_policy" "bowlme_sfn_execute_policy" {
-#	name = "bowlme_sfn_execute_policy"
-#  	role = aws_iam_role.bowlme_sfn_role.id
-#	policy = file("./sfn_execute_policy.json")
-#}
-
-#resource "aws_iam_role_policy" "bowlme_sfn_logs_policy" {
-#	name = "bowlme_sfn_logs_policy"
-#  	role = aws_iam_role.bowlme_sfn_role.id
-#	policy = file("./sfn_logs_policy.json")
-#}
-
 data "aws_iam_policy" "AWSStepFunctionsFullAccess" {
 	arn = "arn:aws:iam::aws:policy/AWSStepFunctionsFullAccess"
 }
@@ -31,5 +19,11 @@ resource "aws_iam_role_policy_attachment" "bowlme-attach-sfn-full-access" {
 resource "aws_iam_role_policy_attachment" "bowlme-attach-cloudwatchlogs-full-access" {
 	role       = aws_iam_role.bowlme_sfn_role.name
 	policy_arn = data.aws_iam_policy.CloudWatchLogsFullAccess.arn
+}
+
+resource "aws_iam_role_policy" "bowlme_sfn_execute_lambda_policy" {
+	name   = "bowlme_sfn_execute_policy"
+  	role   = aws_iam_role.bowlme_sfn_role.id
+	policy = file("./sfn_execute_policy.json")
 }
 

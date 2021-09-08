@@ -13,3 +13,4 @@ resource "aws_lambda_function" "bowlme-create-game" {
 		}
 	}
 }
+
