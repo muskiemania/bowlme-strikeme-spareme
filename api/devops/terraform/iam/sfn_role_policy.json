@@ -6,11 +6,5 @@
 			"Service": "states.amazonaws.com"
 		},
 		"Action": "sts:AssumeRole"
-        },{
-		"Effect": "Allow",
-		"Principal": {
-			"Service": "logs.us-west-2.amazonaws.com"
-		},
-		"Action": "sts:AssumeRole"
 	}]
 }
