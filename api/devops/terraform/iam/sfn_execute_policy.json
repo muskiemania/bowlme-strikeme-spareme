@@ -1,0 +1,12 @@
+{
+	"Version": "2012-10-17",
+    	"Statement": [{
+		"Effect": "Allow",
+            	"Action": [
+                	"states:StartExecution"
+            	],
+            	"Resource": [
+                	"arn:aws:states:us-west-2:359299993558:stateMachine:bowlme-v2-create-game"
+            	]
+        }]
+}

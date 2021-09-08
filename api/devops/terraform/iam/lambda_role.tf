@@ -6,7 +6,7 @@ resource "aws_iam_role_policy" "bowlme_lambda_dynamo_policy" {
 
 resource "aws_iam_role" "bowlme_lambda_role" {
  	name = "bowlme_lambda_role"
-	assume_role_policy = file("./assume_role_policy.json")
+	assume_role_policy = file("./lambda_role_policy.json")
 }
 
 data "aws_iam_policy" "AWSLambdaBasicExecutionRole" {

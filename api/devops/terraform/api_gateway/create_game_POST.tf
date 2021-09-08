@@ -13,13 +13,13 @@ resource "aws_apigatewayv2_integration" "bowlme-v2-lambda-create-game-integratio
         }
 }
 
-resource "aws_apigatewayv2_route" "lambda-route" {
+resource "aws_apigatewayv2_route" "create-game-lambda-route" {
 	api_id             = aws_apigatewayv2_api.bowlme-v2-lambda-api.id
 	route_key          = "POST /game/create"
 	target             = "integrations/${aws_apigatewayv2_integration.bowlme-v2-lambda-create-game-integration.id}"
 }
 
-resource "aws_lambda_permission" "allow_api_gateway" {
+resource "aws_lambda_permission" "create-game-allow_api_gateway" {
 	statement_id  = "AllowExecutionFromAPIGateway"
 	action        = "lambda:InvokeFunction"
       	function_name = var.bowlme_v2_create_game_lambda_arn
