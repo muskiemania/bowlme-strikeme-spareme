@@ -43,3 +43,7 @@ got create_game workflow working with a step function
 
 next: change api gateway integration to invoke step function...
 	terraform to create step function
+
+# 09072021
+
+working on step functionc creation via TF...some issues still
