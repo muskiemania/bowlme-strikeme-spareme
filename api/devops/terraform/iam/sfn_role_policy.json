@@ -6,5 +6,11 @@
 			"Service": "states.amazonaws.com"
 		},
 		"Action": "sts:AssumeRole"
+	},{
+		"Effect": "Allow",
+		"Principal": {
+			"Service": "apigateway.amazonaws.com"
+		},
+		"Action": "sts:AssumeRole"
 	}]
 }
