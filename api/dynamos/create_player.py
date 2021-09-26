@@ -20,7 +20,7 @@ class CreatePlayer:
                 'player_name': player_name,
                 'player_status': player_status,
                 'hand': [],
-                'score': ''
+                'score': '',
                 'expires_at': _ttl
             }
         )
