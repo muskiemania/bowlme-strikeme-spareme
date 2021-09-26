@@ -1,7 +1,14 @@
 {
   "Comment": "A Hello World example of the Amazon States Language using a Pass state",
-  "StartAt": "Create Game",
+  "StartAt": "Setup From API Gateway",
   "States": {
+    "Setup From API Gateway": {
+      "Type": "Pass",
+      "Next": "Create Game",
+      "Parameters": {
+        "body.$": "States.JsonToString($)"
+      }
+    },
     "Create Game": {
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke",
@@ -21,16 +28,10 @@
           "BackoffRate": 2
         }
       ],
-      "Next": "Set Create Game Mode",
+      "Next": "Create Player",
       "ResultSelector": {
         "body.$": "$.Payload.body"
       }
-    },
-    "Set Create Game Mode": {
-      "Type": "Pass",
-      "Next": "Create Player",
-      "Result": true,
-      "ResultPath": "$.isHostPlayer"
     },
     "Create Player": {
       "Type": "Task",
@@ -56,3 +57,4 @@
     }
   }
 }
+

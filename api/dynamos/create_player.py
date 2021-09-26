@@ -5,7 +5,7 @@ import time
 class CreatePlayer:
 
     @staticmethod
-    def create(game_id, player_id, player_name, player_status, is_host=False):
+    def create(game_id, player_id, player_name, player_status):
         
         db = boto3.resource('dynamodb')
         table = db.Table(DynamoConfigs.PLAYER_TABLE_NAME.value)
