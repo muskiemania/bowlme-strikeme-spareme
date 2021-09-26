@@ -1,13 +1,31 @@
 {
 	"Version": "2012-10-17",
 	"Statement": [{
-		"Sid": "Stmt1604733000129",
+		"Sid": "BowlmeGameDev",
 		"Action": [
 			"dynamodb:PutItem",
 			"dynamodb:UpdateItem",
 			"dynamodb:GetItem"
 		],
 		"Effect": "Allow",
-		"Resource": "arn:aws:dynamodb:us-west-2:359299993558:table/bowlme-dev"
+		"Resource": "arn:aws:dynamodb:us-west-2:359299993558:table/bowlme-game-dev"
+	}, {
+		"Sid": "BowlmePlayerDev",
+		"Action": [
+			"dynamodb:PutItem",
+			"dynamodb:UpdateItem",
+			"dynamodb:GetItem"
+		],
+		"Effect": "Allow",
+		"Resource": "arn:aws:dynamodb:us-west-2:359299993558:table/bowlme-player-dev"
+	}, {
+		"Sid": "BowlmeLeaderboardDev",
+		"Action": [
+			"dynamodb:PutItem",
+			"dynamodb:UpdateItem",
+			"dynamodb:GetItem"
+		],
+		"Effect": "Allow",
+		"Resource": "arn:aws:dynamodb:us-west-2:359299993558:table/bowlme-leaderboard-dev"
 	}]
 }
