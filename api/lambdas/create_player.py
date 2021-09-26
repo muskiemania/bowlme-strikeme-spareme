@@ -5,8 +5,6 @@ from bowl_game.create_player import CreatePlayer
 def handler(event, context):
     # fetch input
 
-    _is_host = event.get('isHostPlayer', False)
-
     _body = event.get('body')
     _body = json.loads(_body)
 
@@ -19,7 +17,7 @@ def handler(event, context):
             'body': 'gameId and playerName are required'
         }
     
-    _player_id = CreatePlayer.create(_game_id, _player_name, _is_host)
+    _player_id = CreatePlayer.create(_game_id, _player_name)
     
     # return player info
     return {
