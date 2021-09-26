@@ -8,7 +8,7 @@ class CreateGame:
     def create(game_id, cards):
         
         db = boto3.resource('dynamodb')
-        table = db.Table(DynamoConfigs.TABLE_NAME.value)
+        table = db.Table(DynamoConfigs.GAME_TABLE_NAME.value)
 
         # ttl ==> now + 4800
         _ttl = int(time.time()) + 4800
@@ -16,12 +16,19 @@ class CreateGame:
         table.put_item(
             Item={
                 'game_id': game_id,
-                'players': {},
-                'game_status': 'created',
-                'host_player_id': '',
-                'deck': [],
-                'discard': cards,
-                'leaderboard': [],
+                'pile': DynamoConfigs.DECK.value,
+                'cards': [],
+                'version': 1,
+                'expires_at': _ttl
+            }
+        )
+
+        table.put_item(
+            Item={
+                'game_id': game_id,
+                'pile': DynamoConfigs.DISCARD.value,
+                'cards': cards,
+                'version': 1,
                 'expires_at': _ttl
             }
         )

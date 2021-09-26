@@ -2,4 +2,8 @@ import os
 from enum import Enum
 
 class DynamoConfigs(Enum):
-    TABLE_NAME = f'bowlme-{os.environ["environ"]}'
+    GAME_TABLE_NAME = f'bowlme-game-{os.environ["environ"]}'
+    PLAYERS_TABLE_NAME = f'bowlme-players-{os.environ["environ"]}'
+    LEADERBOARD_TABLE_NAME = f'bowlme-leaderboard-{os.environ["environ"]}'
+    DECK = 'deck',
+    DISCARD = 'discard'
