@@ -16,7 +16,7 @@ class CreateGame:
         table.put_item(
             Item={
                 'game_id': game_id,
-                'pile_name': DynamoConfigs.DECK.value,
+                'pile_name': str(DynamoConfigs.DECK.value),
                 'cards': [],
                 'version': 1,
                 'expires_at': _ttl
@@ -26,7 +26,7 @@ class CreateGame:
         table.put_item(
             Item={
                 'game_id': game_id,
-                'pile': DynamoConfigs.DISCARD.value,
+                'pile': str(DynamoConfigs.DISCARD.value),
                 'cards': cards,
                 'version': 1,
                 'expires_at': _ttl

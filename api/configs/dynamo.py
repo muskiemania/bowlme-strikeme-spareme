@@ -7,3 +7,6 @@ class DynamoConfigs(Enum):
     LEADERBOARD_TABLE_NAME = f'bowlme-leaderboard-{os.environ["environ"]}'
     DECK = 'deck',
     DISCARD = 'discard'
+
+    def __str__(self):
+        return '%s' % self.value
