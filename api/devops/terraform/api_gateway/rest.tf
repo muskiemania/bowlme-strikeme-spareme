@@ -21,23 +21,39 @@ resource "aws_api_gateway_method" "create" {
   	rest_api_id   = aws_api_gateway_rest_api.bowlme-create-game.id
 }
 
-resource "aws_api_gateway_method_response" "response_200" {
+resource "aws_api_gateway_method_response" "method_response_200" {
 	rest_api_id = aws_api_gateway_rest_api.bowlme-create-game.id
   	resource_id = aws_api_gateway_resource.create.id
   	http_method = aws_api_gateway_method.create.http_method
   	status_code = "200"
 }
 
-#resource "aws_api_gateway_integration_response" "response_200" {
-#	rest_api_id = aws_api_gateway_rest_api.bowlme-create-game.id
-#	resource_id = aws_api_gateway_resource.create.id
-#	http_method = aws_api_gateway_method.create.http_method
-#	status_code = aws_api_gateway_method_response.response_200.status_code
-#
-#	response_templates = {
-#		"application/json" = ""
-#	}
-#}
+resource "aws_api_gateway_integration_response" "integration_response_200" {
+	rest_api_id = aws_api_gateway_rest_api.bowlme-create-game.id
+	resource_id = aws_api_gateway_resource.create.id
+	http_method = aws_api_gateway_method.create.http_method
+	status_code = aws_api_gateway_method_response.method_response_200.status_code
+
+	response_templates = {
+		"application/json" = <<EOF
+			#set ($bodyObj = $util.parseJson($input.body))
+        		#if ($bodyObj.status == "SUCCEEDED")
+    				#set ($body = $util.parseJson($bodyObj.output))
+    				$body.body
+			#elseif ($bodyObj.status == "FAILED")
+    				#set($context.responseOverride.status = 500)
+    				{
+        				"cause": "$bodyObj.cause",
+        				"error": "$bodyObj.error"
+    				}
+			#else
+    				#set($context.responseOverride.status = 500)
+    				$input.body
+			#end
+		EOF
+	}
+}
+
 
 resource "aws_api_gateway_integration" "proxy-to-sfn" {
   	http_method             = aws_api_gateway_method.create.http_method
@@ -51,14 +67,11 @@ resource "aws_api_gateway_integration" "proxy-to-sfn" {
 
 	request_templates       = {
 		"application/json" = <<EOF
-			#set($data = $util.escapeJavaScript($input.json('$')))
 			{
-				"input": {
-					"body": "$data"
-				},
+				"input": "$util.escapeJavaScript($input.body)",
 				"stateMachineArn": "arn:aws:states:us-west-2:359299993558:stateMachine:bowlme-v2-us-west-2-create-game"
 			}
-			EOF
+		EOF
 	}
 }
 
@@ -77,8 +90,8 @@ resource "aws_api_gateway_deployment" "bowlme-create" {
       			aws_api_gateway_resource.create.id,
       			aws_api_gateway_method.create.id,
       			aws_api_gateway_integration.proxy-to-sfn.id,
-			aws_api_gateway_method_response.response_200,
-    			#aws_api_gateway_integration_response.response_200
+			aws_api_gateway_method_response.method_response_200,
+    			aws_api_gateway_integration_response.integration_response_200
 		]))
   	}
 
