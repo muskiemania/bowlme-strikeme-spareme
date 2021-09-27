@@ -12,9 +12,16 @@ class ShuffleCards:
 
         # shuffle cards
         shuffled = Deck.shuffle_cards(cards)
+        shuffled = Deck.shuffle_cards(shuffled)
+        shuffled.reverse()
+        shuffled = Deck.shuffle_cards(shuffled)
+        shuffled = Deck.shuffle_cards(shuffled)
+        shuffled.reverse()
+        shuffled = Deck.shuffle_cards(shuffled)
+        shuffled = Deck.shuffle_cards(shuffled)
 
         # append shuffled cards to deck pile
-        return BottomOfDeck.execute(game_id, cards)
+        return BottomOfDeck.execute(game_id, shuffled)
 
 
 
