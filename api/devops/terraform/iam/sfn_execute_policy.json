@@ -9,5 +9,13 @@
                 	"arn:aws:lambda:us-west-2:359299993558:function:bowlme-v2-us-west-2-create-game:$LATEST",
 			"arn:aws:lambda:us-west-2:359299993558:function:bowlme-v2-us-west-2-create-player:$LATEST"
             	]
-        }]
+        }, {
+		"Effect": "Allow",
+		"Action": [
+			"SNS:Publish"
+		],
+		"Resource": [
+			"arn:aws:sns:us-west-2:359299993558:bowlme-v2-us-west-2-shuffle-cards"
+		]
+	}]
 }
