@@ -28,33 +28,57 @@
           "BackoffRate": 2
         }
       ],
-      "Next": "Create Player",
+      "Next": "Parallel",
       "ResultSelector": {
         "body.$": "$.Payload.body"
       }
     },
-    "Create Player": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::lambda:invoke",
-      "OutputPath": "$.Payload",
-      "Parameters": {
-        "Payload.$": "$",
-        "FunctionName": "arn:aws:lambda:us-west-2:359299993558:function:bowlme-v2-us-west-2-create-player:$LATEST"
-      },
-      "Retry": [
+    "Parallel": {
+      "Type": "Parallel",
+      "Branches": [
         {
-          "ErrorEquals": [
-            "Lambda.ServiceException",
-            "Lambda.AWSLambdaException",
-            "Lambda.SdkClientException"
-          ],
-          "IntervalSeconds": 2,
-          "MaxAttempts": 6,
-          "BackoffRate": 2
+          "StartAt": "Create Player",
+          "States": {
+            "Create Player": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "OutputPath": "$.Payload",
+              "Parameters": {
+                "Payload.$": "$",
+                "FunctionName": "arn:aws:lambda:us-west-2:359299993558:function:bowlme-v2-us-west-2-create-player:$LATEST"
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "Lambda.ServiceException",
+                    "Lambda.AWSLambdaException",
+                    "Lambda.SdkClientException"
+                  ],
+                  "IntervalSeconds": 2,
+                  "MaxAttempts": 6,
+                  "BackoffRate": 2
+                }
+              ],
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "SNS Publish",
+          "States": {
+            "SNS Publish": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::sns:publish",
+              "Parameters": {
+                "Message.$": "$",
+                "TopicArn": "arn:aws:sns:us-west-2:359299993558:bowlme-v2-us-west-2-shuffle-cards"
+              },
+              "End": true
+            }
+          }
         }
       ],
       "End": true
     }
   }
-}
-
+} 
