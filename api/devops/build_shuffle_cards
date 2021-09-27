@@ -12,6 +12,7 @@ mkdir dist
 cp -rf ../bowl_game dist
 cp -rf ../configs dist
 cp -rf ../dynamos dist
+cp -rf ../cards dist
 
 cp ../lambdas/shuffle_cards.py dist
 

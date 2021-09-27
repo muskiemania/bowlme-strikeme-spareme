@@ -2,7 +2,7 @@ import boto3
 from configs.dynamo import DynamoConfigs
 import time
 
-class EmptyDiscard:
+class BottomOfDeck:
 
     @staticmethod
     def execute(game_id, cards):
@@ -33,7 +33,7 @@ class EmptyDiscard:
                     'game_id': game_id,
                     'pile_name': DynamoConfigs.DECK.value
                 },
-                UpdateExpression='SET #cards = list_append(#cards, :cards), version = :plusone'
+                UpdateExpression='SET #cards = list_append(#cards, :cards), version = :plusone',
                 ConditionExpression='#version = :version',
                 ExpressionAttributeNames={
                     '#cards': 'cards',

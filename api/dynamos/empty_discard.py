@@ -20,7 +20,7 @@ class EmptyDiscard:
         )
 
         version = _item.get('Item', {}).get('version', 0)
-        cards = item.get('Item', {}).get('cards', [])
+        cards = _item.get('Item', {}).get('cards', [])
 
         if version == 0 or len(cards) == 0:
             raise Exception('unable to fetch cards and version')
@@ -30,7 +30,7 @@ class EmptyDiscard:
 
         try:
             table.update_item(
-                Item={
+                Key={
                     'game_id': game_id,
                     'pile_name': DynamoConfigs.DISCARD.value
                 },
