@@ -12,33 +12,37 @@ class EmptyDiscard:
 
         # get version number
         _item = table.get_item(
-            Item={
+            Key={
                 'game_id': game_id,
-                'pile_name': str(DynamoConfigs.DECK.value)
-            ),
+                'pile_name': DynamoConfigs.DECK.value
+            },
             ConsistentRead=True
         )
 
-        version = _item.get('version')
+        version = _item.get('Item', {}).get('version', 0)
+
+        if version == 0:
+            raise Exception('unable to get version')
 
         # reset discard ->> [] and up version number
         # (conditional on matching previous)
 
         try:
             table.update_item(
-                Item={
+                Key={
                     'game_id': game_id,
-                    'pile_name': str(DynamoConfigs.DECK.value)
+                    'pile_name': DynamoConfigs.DECK.value
                 },
-                UpdateExpression='SET #cards = list_append(#cards, :cards), version = version + :one'
-                ConditionExpression='version = :version',
+                UpdateExpression='SET #cards = list_append(#cards, :cards), version = :plusone'
+                ConditionExpression='#version = :version',
                 ExpressionAttributeNames={
-                    '#cards': 'cards'
+                    '#cards': 'cards',
+                    '#version': 'version'
                 },
                 ExpressionAttributeValues={
                     ':cards': cards,
-                    ':one': {'N': 1},
-                    ':version': {'N': version}
+                    ':plusone': version + 1,
+                    ':version': version
                 }
             )
         except:

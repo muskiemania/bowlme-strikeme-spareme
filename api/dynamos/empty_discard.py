@@ -12,15 +12,18 @@ class EmptyDiscard:
 
         # get discard + version number
         _item = table.get_item(
-            Item={
+            Key={
                 'game_id': game_id,
-                'pile_name': str(DynamoConfigs.DISCARD.value)
-            ),
-            ConsistemtRead=True
+                'pile_name': DynamoConfigs.DISCARD.value
+            },
+            ConsistentRead=True
         )
 
-        version = _item.get('version')
-        cards = item.get('cards')
+        version = _item.get('Item', {}).get('version', 0)
+        cards = item.get('Item', {}).get('cards', [])
+
+        if version == 0 or len(cards) == 0:
+            raise Exception('unable to fetch cards and version')
 
         # reset discard ->> [] and up version number
         # (conditional on matching previous)
@@ -29,14 +32,18 @@ class EmptyDiscard:
             table.update_item(
                 Item={
                     'game_id': game_id,
-                    'pile_name': str(DynamoConfigs.DISCARD.value)
+                    'pile_name': DynamoConfigs.DISCARD.value
                 },
-                UpdateExpression='SET cards = :cards, version = version + :one',
-                ConditionExpression='version = :version',
-                ExpressionAttributeVaues={
+                UpdateExpression='SET #cards = :cards, #version = :plusone',
+                ConditionExpression='#version = :version',
+                ExpressionAttributeNames={
+                    '#cards': 'cards',
+                    '#version': 'version'
+                },
+                ExpressionAttributeValues={
                     ':cards': [],
-                    ':one': {'N': 1},
-                    ':version': {'N': version}
+                    ':plusone': version + 1,
+                    ':version': version
                 }
             )
         except:
