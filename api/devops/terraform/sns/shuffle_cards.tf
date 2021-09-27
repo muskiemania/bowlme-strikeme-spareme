@@ -21,6 +21,11 @@ resource "aws_sns_topic" "bowlme-v2-shuffle-cards" {
 	EOF
 }
 
+resource "aws_sns_topic_policy" "default" {
+	arn    = aws_sns_topic.bowlme-v2-shuffle-cards.arn
+	policy = data.aws_iam_policy_document.shuffle_cards_sns_topic_policy.json
+}
+
 resource "aws_sns_topic_subscription" "invoke_shuffle_cards_lambda" {
 	topic_arn = aws_sns_topic.bowlme-v2-shuffle-cards.arn
 	protocol  = "lambda"
