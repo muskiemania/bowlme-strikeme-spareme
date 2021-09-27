@@ -39,7 +39,7 @@ resource "aws_api_gateway_integration_response" "integration_response_200" {
 			#set ($bodyObj = $util.parseJson($input.body))
         		#if ($bodyObj.status == "SUCCEEDED")
     				#set ($body = $util.parseJson($bodyObj.output))
-    				$body.body
+    				$body[0].body
 			#elseif ($bodyObj.status == "FAILED")
     				#set($context.responseOverride.status = 500)
     				{
