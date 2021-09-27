@@ -3,12 +3,22 @@ import json
 from bowl_game.shuffle_cards import ShuffleCards
 
 def handler(event, context):
-    # fetch input
-    _body = event.get('body')
-    _body = json.loads(_body)
 
     # get game id from SNS
-    _game_id = ''
+    _records = event.get('Records', [{}])
+    for each in _records:
+        _sns = each.get('Sns', {})
+        _msg = json.loads(_sns.get('Message', '{}'))
+        _body = _msg.get('body')
+
+    if _body is None:
+        return
+
+    _body = json.loads(_body)
+    _game_id = _body.get('gameId')
+
+    if _game_id is None:
+        return
    
     if ShuffleCards.shuffle(_game_id):
         return {
