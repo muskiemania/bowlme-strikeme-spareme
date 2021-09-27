@@ -9,3 +9,9 @@ variable "bowlme_v2_create_player_lambda_arn" {
 	type        = string
 	default     = "arn:aws:lambda:us-west-2:359299993558:function:bowlme-v2-us-west-2-create-player"
 }
+
+variable "bowlme_v2_draw_cards_lambda_arn" {
+	description = "arn for draw_cards lambda"
+	type        = string
+	default     = "arn:aws:lambda:us-west-2:359299993558:function:bowlme-v2-us-west-2-draw-cards"
+}

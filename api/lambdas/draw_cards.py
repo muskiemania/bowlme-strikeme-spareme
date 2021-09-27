@@ -1,23 +1,30 @@
 import traceback
-import bowl_game
+import json
+from bowl_game.draw_cards import DrawCards
 
 def handler(event, context):
 
     # must get data from event
-    game_id = ''
-    player_id = ''
-    number_of_cards = 0 or 1
-    
+   
+    _body = event.get('body', '{}')
+    _body = json.loads(_body)
+    _game_id = _body.get('gameId')
+    _player_id = _body.get('playerId')
+    _number_of_cards = _body.get('numberOfCards')
+
+    if _number_of_cards not in [1,2,3,4,6]:
+        return
+
     # must execute
-    drawn = dynamos.DrawCards(game_id, player_id, number_of_cards)
-    
-    # must try and shuffle cards
-    # SNS
-    
-    return {
-        'statusCode': 200,
-        'body': 'OK'
-    }
+    try:
+        DrawCards.draw(_game_id, _player_id, _number_of_cards)
+    except:
+        raise
+    else:
+        return {
+            'statusCode': 200,
+            'body': 'OK'
+        }
 
     '''
     
