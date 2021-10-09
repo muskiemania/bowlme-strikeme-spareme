@@ -1,23 +1,49 @@
-from cards import Card, Flush, Hand
+import unittest
+import cards.hand
+import cards.flush
+import cards.card
 
-class Test_Flush():
+class Test_Flush(unittest.TestCase):
 
-    def test_isMatch_flush(self):
-        hand = Hand([Card('2H'),Card('4H'),Card('5H'),Card('JH'),Card('AH')])
-        flush = Flush(hand)
-        assert flush.is_match() == True
+    def test_is_match_flush(self):
+        hand = cards.hand.Hand([
+            cards.card.Card('2H'),
+            cards.card.Card('4H'),
+            cards.card.Card('5H'),
+            cards.card.Card('JH'),
+            cards.card.Card('AH')
+        ])
+        flush = cards.flush.Flush(hand)
+        self.assertTrue(flush.is_match())
 
-    def test_isMatch_notEnoughCards(self):
-        hand = Hand([Card('2H'),Card('4H'),Card('JH'),Card('AH')])
-        flush = Flush(hand)
-        assert flush.is_match() == False
+    def test_is_match_not_enough_cards(self):
+        hand = cards.hand.Hand([
+            cards.card.Card('2H'),
+            cards.card.Card('4H'),
+            cards.card.Card('JH'),
+            cards.card.Card('AH')
+        ])
+        flush = cards.flush.Flush(hand)
+        self.assertFalse(flush.is_match())
 
-    def test_isMatch_notAFlush(self):
-        hand = Hand([Card('2S'),Card('4H'),Card('5H'),Card('JH'),Card('AH')])
-        flush = Flush(hand)
-        assert flush.is_match() == False
+    def test_is_match_not_a_flush(self):
+        hand = cards.hand.Hand([
+            cards.card.Card('2S'),
+            cards.card.Card('4H'),
+            cards.card.Card('5H'),
+            cards.card.Card('JH'),
+            cards.card.Card('AH')
+        ])
+        flush = cards.flush.Flush(hand)
+        self.assertFalse(flush.is_match())
 
-    def test_getRating(self):
-        hand = Hand([Card('2S'),Card('4H'),Card('5H'),Card('JH'),Card('KH')])
-        flush = Flush(hand)
-        assert flush.get_rating().get() == (6, 13, 11, 5, 4, 2, 'Flush')
+    def test_get_rating(self):
+        hand = cards.hand.Hand([
+            cards.card.Card('2S'),
+            cards.card.Card('4H'),
+            cards.card.Card('5H'),
+            cards.card.Card('JH'),
+            cards.card.Card('KH')
+        ])
+        flush = cards.flush.Flush(hand)
+        self.assertEqual(flush.get_rating(), (6, 13, 11, 5, 4, 2, 'Flush'))
