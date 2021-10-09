@@ -1,13 +1,13 @@
+import json
 import boto3
 
 class SnsHelpers:
 
     @staticmethod
     def publish(**kwargs):
-        _arn = kwargs.get('TargetArn')
+        _arn = kwargs.get('TopicArn')
         _message = kwargs.get('Message')
         _attributes = kwargs.get('MessageAttributes')
-
         sns = boto3.resource('sns')
         topic = sns.Topic(_arn)
 

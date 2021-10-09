@@ -1,3 +1,4 @@
+import json
 from dynamos.draw_cards import DrawCards as Draw
 from dynamos.player_status import PlayerStatus
 from helpers.sns_helpers import SnsHelpers
@@ -10,7 +11,7 @@ class DrawCards:
     def draw(game_id, player_id, number_of_cards):
         
         # get cards from deck
-        (hand, deck_size) = Draw.execute(game_id, player_id, number_of_cards)
+        (hand, version, deck_size) = Draw.execute(game_id, player_id, number_of_cards)
 
         #if stack <= 7:
         #    helpers.SnsHelpers.publish('')
@@ -19,7 +20,7 @@ class DrawCards:
             player_status = PlayerStatusConfigs.FINISHED.value
         elif number_of_cards in [6] and len(hand) >= 5:
             player_status = PlayerStatusConfigs.FINISHED_MUST_DISCARD.value
-        elif number_of_cards not in [3, 4, 6] and hand_size >= 5:
+        elif number_of_cards not in [3, 4, 6] and len(hand) >= 5:
             player_status = PlayerStatusConfigs.MUST_DISCARD.value
         else:
             player_status = PlayerStatusConfigs.DEALT.value
@@ -30,12 +31,13 @@ class DrawCards:
             Message={
                 'gameId': game_id,
                 'playerId': player_id,
-                'version': version,
+                'version': str(version),
                 'hand': hand,
                 'status': player_status
             },
             MessageAttributes={
                 'MODE': {
+                    'DataType': 'String',
                     'StringValue': 'SCORE_HAND'
                 }
             }

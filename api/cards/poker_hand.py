@@ -1,4 +1,4 @@
-from cards import Hand
+from cards.hand import Hand
 
 class PokerHand(Hand):
 

@@ -8,7 +8,7 @@ import dynamos
 class ScoreHand:
 
     def __init__(self, hand):
-        self.poker_hand = cards.PokerHand(hand)
+        self.poker_hand = cards.poker_hand.PokerHand(hand)
         #print self.poker_hand
 
     @staticmethod
@@ -26,15 +26,15 @@ class ScoreHand:
     
     def get_rating(self):
         hands = []
-        hands.append(cards.StraightFlush(self.poker_hand))
-        hands.append(cards.FourOfAKind(self.poker_hand))
-        hands.append(cards.FullHouse(self.poker_hand))
-        hands.append(cards.Flush(self.poker_hand))
-        hands.append(cards.Straight(self.poker_hand))
-        hands.append(cards.ThreeOfAKind(self.poker_hand))
-        hands.append(cards.TwoPairs(self.poker_hand))
-        hands.append(cards.OnePair(self.poker_hand))
-        hands.append(cards.HighCard(self.poker_hand))
+        hands.append(cards.straight_flush.StraightFlush(self.poker_hand))
+        hands.append(cards.four_of_a_kind.FourOfAKind(self.poker_hand))
+        hands.append(cards.full_house.FullHouse(self.poker_hand))
+        hands.append(cards.flush.Flush(self.poker_hand))
+        hands.append(cards.straight.Straight(self.poker_hand))
+        hands.append(cards.three_of_a_kind.ThreeOfAKind(self.poker_hand))
+        hands.append(cards.two_pairs.TwoPairs(self.poker_hand))
+        hands.append(cards.one_pair.OnePair(self.poker_hand))
+        hands.append(cards.high_card.HighCard(self.poker_hand))
 
         for hand in hands:
             if hand.is_match():

@@ -1,0 +1,12 @@
+{
+	"Version": "2012-10-17",
+	"Statement": [{
+		"Effect": "Allow",
+		"Action": [
+			"SNS:Publish"
+		],
+		"Resource": [
+			"arn:aws:sns:us-west-2:359299993558:bowlme-v2-us-west-2-scoring"
+		]
+	}]
+}

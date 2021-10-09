@@ -56,49 +56,50 @@ class DrawCards:
                 TransactItems=[{
                     'Update': {
                         'Key': {
-                            'game_id': game_id,
-                            'pile_name': DynamoConfigs.DECK.value
+                            'game_id': {'S': game_id},
+                            'pile_name': {'S': DynamoConfigs.DECK.value}
+                        },
+                        'UpdateExpression': 'SET #cards = :cards, #version = :plusone',
+                        'TableName': DynamoConfigs.GAME_TABLE_NAME.value,
+                        'ConditionExpression': '#version = :version',
+                        'ExpressionAttributeNames': {
+                            '#cards': 'cards',
+                            '#version': 'version'
+                        },
+                        'ExpressionAttributeValues': {
+                            ':cards': {'L': [{'S': card} for card in deck]},
+                            ':plusone': {'N': str(deck_version + 1)},
+                            ':version': {'N': str(deck_version)}
                         }
-                    },
-                    'UpdateExpression': 'SET #cards = :cards, #version = :plusone',
-                    'TableName': DynamoConfigs.GAME_TABLE_NAME.value,
-                    'ConditionExpression': '#version = :version',
-                    'ExpressionAttributeNames': {
-                        '#cards': 'cards',
-                        '#version': 'version'
-                    },
-                    'ExpressionAttributeValues': {
-                        ':cards': deck,
-                        ':plusone': deck_version + 1,
-                        ':version': deck_version
                     }
                 }, {
                     'Update': {
                         'Key': {
-                            'game_id': game_id,
-                            'player_id': player_id
+                            'game_id': {'S': game_id},
+                            'player_id': {'S': player_id}
+                        },
+                        'UpdateExpression': 'SET #hand = list_append(#hand, :cards), #version = :plusone',
+                        'TableName': DynamoConfigs.PLAYER_TABLE_NAME.value,
+                        'ConditionExpression': '#version = :version',
+                        'ExpressionAttributeNames': {
+                            '#hand': 'hand',
+                            '#version': 'version'
+                        },
+                        'ExpressionAttributeValues': {
+                            ':cards': {'L': [{'S': card} for card in drawn]},
+                            ':plusone': {'N': str(player_version + 1)},
+                            ':version': {'N': str(player_version)}
                         }
-                    },
-                    'UpdateExpression': 'SET #hand = list_append(#hand, :cards), #version = :plusone',
-                    'TableName': DynamoConfigs.PLAYER_TABLE_NAME.value,
-                    'ConditionExpression': '#version = :version',
-                    'ExpressionAttributeNames': {
-                        '#hand': 'hand',
-                        '#version': 'version'
-                    },
-                    'ExpressionAttributeValues': {
-                        ':cards': drawn,
-                        ':plusone': player_version + 1,
-                        ':version': player_version
                     }
                 }]
             )
         except:
             # some kind of transaction error
+            raise
         else:
             # success!
             _hand = []
-            _hand.extend(player_hand)
+            _hand.extend(player_cards)
             _hand.extend(drawn)
             return (_hand, player_version + 1, len(deck))
 

@@ -8,10 +8,12 @@ def handler(event, context):
     _records = event.get('Records', [{}])
     for each in _records:
         _sns = each.get('Sns', {})
-        _msg = json.loads(_sns.get('Message', '{}')
+        _msg = json.loads(_sns.get('Message', '{}'))
     
     if not _msg:
         return
+
+    print(_msg)
 
     _game_id = _msg.get('gameId')
     _player_id = _msg.get('playerId')

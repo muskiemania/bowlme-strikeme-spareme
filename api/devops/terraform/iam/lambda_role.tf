@@ -4,6 +4,12 @@ resource "aws_iam_role_policy" "bowlme_lambda_dynamo_policy" {
 	policy = file("./dynamo_policy.json")
 }
 
+resource "aws_iam_role_policy" "bowlme_lambda_sns_policy" {
+	name = "bowlme_lambda_sns_policy"
+  	role = aws_iam_role.bowlme_lambda_role.id
+	policy = file("./sns_policy.json")
+}
+
 resource "aws_iam_role" "bowlme_lambda_role" {
  	name = "bowlme_lambda_role"
 	assume_role_policy = file("./lambda_role_policy.json")
