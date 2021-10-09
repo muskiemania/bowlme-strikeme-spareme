@@ -97,5 +97,8 @@ class DrawCards:
             # some kind of transaction error
         else:
             # success!
-            return (len(player_hand) + len(drawn), len(deck))
+            _hand = []
+            _hand.extend(player_hand)
+            _hand.extend(drawn)
+            return (_hand, player_version + 1, len(deck))
 
