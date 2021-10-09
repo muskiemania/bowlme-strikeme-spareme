@@ -21,7 +21,7 @@ resource "aws_sns_topic" "bowlme-v2-shuffle-cards" {
 	EOF
 }
 
-resource "aws_sns_topic_policy" "default" {
+resource "aws_sns_topic_policy" "shuffle_cards_policy" {
 	arn    = aws_sns_topic.bowlme-v2-shuffle-cards.arn
 	policy = data.aws_iam_policy_document.shuffle_cards_sns_topic_policy.json
 }
@@ -32,7 +32,7 @@ resource "aws_sns_topic_subscription" "invoke_shuffle_cards_lambda" {
 	endpoint  = var.bowlme-v2-shuffle-cards-lambda-function-arn
 }
 
-resource "aws_lambda_permission" "allow_sns_invoke" {
+resource "aws_lambda_permission" "allow_sns_invoke_shuffle_cards" {
 	statement_id  = "AllowExecutionFromSNS"
 	action        = "lambda:InvokeFunction"
 	function_name = var.bowlme-v2-shuffle-cards-lambda-function-name
