@@ -14,8 +14,8 @@ class ThreeOfAKind(poker_hand.PokerHand):
 
     def get_rating(self):
         tally = self.card_tally()
-        trips = {k: v for (k, v) in tally.items() if len(v) == 3}.keys()
-        others = sorted({k: v for (k, v) in tally.items() if len(v) < 3}.keys(), reverse=True)
+        trips = list({k: v for (k, v) in tally.items() if len(v) == 3}.keys())
+        others = sorted(list({k: v for (k, v) in tally.items() if len(v) < 3}.keys()), reverse=True)
         coalesce = self.coalesce
 
         rating = (self.__rating, trips[0], coalesce(others, 0, 0), coalesce(others, 1, 0), 99, 99, self.__name)

@@ -13,7 +13,7 @@ class TwoPairs(poker_hand.PokerHand):
 
     def get_rating(self):
         tally = self.card_tally()
-        pairs = sorted({k: v for (k, v) in tally.items() if len(v) == 2}.keys(), reverse=True)
-        other = {k: v for (k, v) in tally.items() if len(v) == 1}.keys()
+        pairs = sorted(list({k: v for (k, v) in tally.items() if len(v) == 2}.keys()), reverse=True)
+        other = list({k: v for (k, v) in tally.items() if len(v) == 1}.keys())
         rating = (self.__rating, pairs[0], pairs[1], self.coalesce(other, 0, 0), 99, 99, self.__name)
         return rating
