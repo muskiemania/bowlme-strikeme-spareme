@@ -17,9 +17,11 @@ def handler(event, context):
 
     _game_id = _msg.get('gameId')
     _player_id = _msg.get('playerId')
-    _hand = _msg.get('cards')
+    _hand = _msg.get('hand')
+    _status = _msg.get('status')
+    _version = _msg.get('version')
 
-    if ScoreHand.score(_game_id, _player_id, _hand):
+    if ScoreHand.score(_game_id, _player_id, _hand, _version, _status):
         return {
             'statusCode': 200,
             'body': 'OK'

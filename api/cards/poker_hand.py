@@ -1,10 +1,10 @@
-from cards.hand import Hand
+import cards.hand
 
-class PokerHand(Hand):
+class PokerHand(cards.hand.Hand):
 
     def __init__(self, hand=None):
         #self.hand = hand
-        Hand.__init__(self, hand.cards or [])
+        cards.hand.Hand.__init__(self, hand.cards or [])
 
     def sort_cards(self):
         self.cards.sort(key=lambda x: x.strength, reverse=True)

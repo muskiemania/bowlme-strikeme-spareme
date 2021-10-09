@@ -1,6 +1,6 @@
 import itertools
 from random import randint
-from cards.card import Card
+import cards.card
 
 class Deck:
 
@@ -19,7 +19,7 @@ class Deck:
 
         pairs = itertools.product(cards, suits)
         pairs = list(pairs) * number_of_decks
-        deck = Deck(cards=[Card(card, suit) for (card, suit) in pairs])
+        deck = Deck(cards=[cards.card.Card(card, suit) for (card, suit) in pairs])
         
         return deck
 

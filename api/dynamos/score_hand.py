@@ -5,7 +5,7 @@ import time
 class ScoreHand:
 
     @staticmethod
-    def execute(game_id, player_id, rating, status, version):
+    def execute(game_id, player_id, rating, version, status):
         
         db = boto3.resource('dynamodb')
 
@@ -24,7 +24,7 @@ class ScoreHand:
                     '#status': 'status',
                     '#version': 'version'
                 },
-                ExpressionAttributeValues: {
+                ExpressionAttributeValues={
                     ':score': rating,
                     ':status': status,
                     ':plusone': version + 1,
