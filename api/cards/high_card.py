@@ -17,4 +17,4 @@ class HighCard(PokerHand):
         coalesce = self.coalesce
         coalesced = [coalesce(cards, x, 0) for x in [0, 1, 2, 3, 4]]
         rating = (self.__rating, coalesced[0], coalesced[1], coalesced[2], coalesced[3], coalesced[4], self.__name)
-        return RatingDto(rating)
+        return rating

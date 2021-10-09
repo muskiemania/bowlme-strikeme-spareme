@@ -19,4 +19,4 @@ class FullHouse(PokerHand):
         tally = self.card_tally()
         inverted = {str(len(v)): k for (k, v) in tally.items()}
         rating = (self.__rating, inverted['3'], inverted['2'], 99, 99, 99, self.__name)
-        return RatingDto(rating)
+        return rating

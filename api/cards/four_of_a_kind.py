@@ -16,4 +16,4 @@ class FourOfAKind(PokerHand):
         quad = {k: v for (k, v) in tally.items() if len(v) == 4}.keys()
         others = sorted({k:v for (k, v) in tally.items() if len(v) < 4}.keys(), reverse=True)
         rating = (self.__rating, quad[0], self.coalesce(others, 0, 0), 99, 99, 99, self.__name)
-        return RatingDto(rating)
+        return rating

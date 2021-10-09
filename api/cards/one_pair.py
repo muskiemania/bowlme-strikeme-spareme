@@ -18,4 +18,4 @@ class OnePair(PokerHand):
         coalesce = self.coalesce
         coalesced = [coalesce(others, x, 0) for x in [0, 1, 2]]
         rating = (self.__rating, pair[0], coalesced[0], coalesced[1], coalesced[2], 99, self.__name)
-        return RatingDto(rating)
+        return rating

@@ -14,4 +14,4 @@ class Flush(PokerHand):
         self.sort_cards()
         strengths = [x.strength for x in self.cards]
         rating = (self.__rating, strengths[0], strengths[1], strengths[2], strengths[3], strengths[4], self.__name)
-        return RatingDto(rating)
+        return rating

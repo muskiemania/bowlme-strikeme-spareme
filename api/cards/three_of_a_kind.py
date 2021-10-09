@@ -23,4 +23,4 @@ class ThreeOfAKind(PokerHand):
         if len(self.cards) == 5 and len(others) == 1:
             rating = (self.__rating, trips[0], coalesce(others, 0), 99, 99, 99, self.__name)
 
-        return RatingDto(rating)
+        return rating

@@ -18,7 +18,7 @@ class StraightFlush(PokerHand):
         if self.is_royal_flush():
             rating = (self.__rating + 1, card1, card2, card3, card4, card5, 'Royal Flush')
 
-        return RatingDto(rating)
+        return rating
 
     def is_royal_flush(self):
         return self.is_match() and Straight(Hand(self.cards)).is_straight_to_the_ace()
