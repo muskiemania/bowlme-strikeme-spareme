@@ -15,3 +15,9 @@ variable "bowlme_v2_draw_cards_lambda_arn" {
 	type        = string
 	default     = "arn:aws:lambda:us-west-2:359299993558:function:bowlme-v2-us-west-2-draw-cards"
 }
+
+variable "bowlme_v2_discard_cards_lambda_arn" {
+	description = "arn for discard_cards lambda"
+	type        = string
+	default     = "arn:aws:lambda:us-west-2:359299993558:function:bowlme-v2-us-west-2-discard-cards"
+}

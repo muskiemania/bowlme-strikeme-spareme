@@ -2,10 +2,10 @@ import boto3
 from configs.dynamo import DynamoConfigs
 import time
 
-class DrawCards:
+class DiscardCards:
 
     @staticmethod
-    def execute(game_id, player_id, number_of_cards):
+    def execute(game_id, player_id, cards):
         
         db = boto3.resource('dynamodb')
 
@@ -14,19 +14,15 @@ class DrawCards:
         _item = table.get_item(
             Key={
                 'game_id': game_id,
-                'pile_name': DynamoConfigs.DECK.value
+                'pile_name': DynamoConfigs.DISCARD.value
             },
             ConsistentRead=True
         )
 
-        deck_version = _item.get('Item', {}).get('version', 0)
-        deck_cards = _item.get('Item', {}).get('cards', [])
+        discard_version = _item.get('Item', {}).get('version', 0)
 
-        if deck_version == 0 or len(deck_cards) == 0:
-            raise Exception('unable to fetch cards and version')
-
-        if number_of_cards > len(deck_cards):
-            raise Exception('not enough cards on the deck to draw')
+        if discard_version == 0:
+            raise Exception('unable to fetch discard and version')
 
         # get player hand + version number
         table = db.Table(DynamoConfigs.PLAYER_TABLE_NAME.value)
@@ -45,13 +41,19 @@ class DrawCards:
         if player_version == 0:
             raise Exception('unable to fetch player version')
 
-        if player_status is None or player_status not in ['joined', 'dealt']:
-            raise Exception(f'cannot draw cards for player with status {player_status}')
+        if player_status is in ['joined', 'finished']:
+            raise Exception(f'cannot discard cards for player with status {player_status}')
+
+        # make sure player has the cards they are discarding...
+        to_discard = []
+        while cards:
+            _a_card = cards.pop()
+            if _a_card not in player_cards:
+                raise Exception(f'cannot discard {_a_card} because player doesnt have it')
+            player_cards.remove(_a_card)
+            to_discard.push(_a_card)
 
         # now need to prepare data to write
-
-        drawn = deck_cards[:number_of_cards]
-        deck = deck_cards[number_of_cards:]
 
         client = boto3.client('dynamodb')
         
@@ -61,9 +63,9 @@ class DrawCards:
                     'Update': {
                         'Key': {
                             'game_id': {'S': game_id},
-                            'pile_name': {'S': DynamoConfigs.DECK.value}
+                            'pile_name': {'S': DynamoConfigs.DISCARD.value}
                         },
-                        'UpdateExpression': 'SET #cards = :cards, #version = :plusone',
+                        'UpdateExpression': 'SET #cards = list_append(#cards, :discards), #version = :plusone',
                         'TableName': DynamoConfigs.GAME_TABLE_NAME.value,
                         'ConditionExpression': '#version = :version',
                         'ExpressionAttributeNames': {
@@ -71,9 +73,9 @@ class DrawCards:
                             '#version': 'version'
                         },
                         'ExpressionAttributeValues': {
-                            ':cards': {'L': [{'S': card} for card in deck]},
-                            ':plusone': {'N': str(deck_version + 1)},
-                            ':version': {'N': str(deck_version)}
+                            ':discards': {'L': [{'S': card} for card in to_discard]},
+                            ':plusone': {'N': str(discard_version + 1)},
+                            ':version': {'N': str(discard_version)}
                         }
                     }
                 }, {
@@ -82,7 +84,7 @@ class DrawCards:
                             'game_id': {'S': game_id},
                             'player_id': {'S': player_id}
                         },
-                        'UpdateExpression': 'SET #hand = list_append(#hand, :cards), #version = :plusone',
+                        'UpdateExpression': 'SET #hand = :discarded, #version = :plusone',
                         'TableName': DynamoConfigs.PLAYER_TABLE_NAME.value,
                         'ConditionExpression': '#version = :version',
                         'ExpressionAttributeNames': {
@@ -90,7 +92,7 @@ class DrawCards:
                             '#version': 'version'
                         },
                         'ExpressionAttributeValues': {
-                            ':cards': {'L': [{'S': card} for card in drawn]},
+                            ':discard': {'L': [{'S': card} for card in player_cards]},
                             ':plusone': {'N': str(player_version + 1)},
                             ':version': {'N': str(player_version)}
                         }
@@ -102,12 +104,5 @@ class DrawCards:
             raise
         else:
             # success!
-            _hand = []
-            _hand.extend(player_cards)
-            print('player cards')
-            print(player_cards)
-            _hand.extend(drawn)
-            print('drawn cards')
-            print(drawn)
-            return (_hand, player_version + 1, len(deck))
+            return (player_cards, player_version + 1, player_status)
 
