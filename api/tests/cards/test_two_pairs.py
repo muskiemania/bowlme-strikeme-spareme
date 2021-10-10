@@ -1,29 +1,60 @@
+import unittest
+import cards.hand
+import cards.card
+import cards.two_pairs
 
-from cards import Card, Hand, TwoPairs
-
-class Test_TwoPairs():
+class Test_TwoPairs(unittest.TestCase):
 
     def test_is_match_two_pairs(self):
-        hand = Hand([Card('2H'),Card('2S'),Card('3C'),Card('JH'),Card('JD')])
-        two_pairs = TwoPairs(hand)
-        assert two_pairs.is_match() == True
+        hand = cards.hand.Hand([
+            cards.card.Card('2H'),
+            cards.card.Card('2S'),
+            cards.card.Card('3C'),
+            cards.card.Card('JH'),
+            cards.card.Card('JD')
+        ])
+        two_pairs = cards.two_pairs.TwoPairs(hand)
+        self.assertTrue(two_pairs.is_match())
 
     def test_is_match_not_four_of_a_kind(self):
-        hand = Hand([Card('2H'),Card('2S'),Card('2C'),Card('2D'),Card('JD')])
-        two_pairs = TwoPairs(hand)
-        assert two_pairs.is_match() == False
+        hand = cards.hand.Hand([
+            cards.card.Card('2H'),
+            cards.card.Card('2S'),
+            cards.card.Card('2C'),
+            cards.card.Card('2D'),
+            cards.card.Card('JD')
+        ])
+        two_pairs = cards.two_pairs.TwoPairs(hand)
+        self.assertFalse(two_pairs.is_match())
 
     def test_get_rating_1(self):
-        hand = Hand([Card('2S'),Card('2H'),Card('3D'),Card('JH'),Card('JS')])
-        two_pairs = TwoPairs(hand)
-        assert two_pairs.get_rating().get() == (3, 11, 2, 3, 99, 99, 'Two Pairs')
+        hand = cards.hand.Hand([
+            cards.card.Card('2S'),
+            cards.card.Card('2H'),
+            cards.card.Card('3D'),
+            cards.card.Card('JH'),
+            cards.card.Card('JS')
+        ])
+        two_pairs = cards.two_pairs.TwoPairs(hand)
+        self.assertEqual(two_pairs.get_rating(), (3, 11, 2, 3, 99, 99, 'Two Pairs'))
 
     def test_get_rating_2(self):
-        hand = Hand([Card('2S'),Card('2H'),Card('3D'),Card('3H'),Card('JS')])
-        two_pairs = TwoPairs(hand)
-        assert two_pairs.get_rating().get() == (3, 3, 2, 11, 99, 99, 'Two Pairs')
+        hand = cards.hand.Hand([
+            cards.card.Card('2S'),
+            cards.card.Card('2H'),
+            cards.card.Card('3D'),
+            cards.card.Card('3H'),
+            cards.card.Card('JS')
+        ])
+        two_pairs = cards.two_pairs.TwoPairs(hand)
+        self.assertEqual(two_pairs.get_rating(), (3, 3, 2, 11, 99, 99, 'Two Pairs'))
 
     def test_get_rating_partial(self):
-        hand = Hand([Card('2S'),Card('2H'),Card('3H'),Card('3S')])
-        two_pairs = TwoPairs(hand)
-        assert two_pairs.get_rating().get() == (3, 3, 2, 0, 99, 99, 'Two Pairs')
+        hand = cards.hand.Hand([
+            cards.card.Card('2S'),
+            cards.card.Card('2H'),
+            cards.card.Card('3H'),
+            cards.card.Card('3S')
+        ])
+        two_pairs = cards.two_pairs.TwoPairs(hand)
+        self.assertEqual(two_pairs.get_rating(), (3, 3, 2, 0, 99, 99, 'Two Pairs'))

@@ -1,34 +1,62 @@
+import unittest
+import cards.card
+import cards.hand
+import cards.one_pair
 
-from cards import Card, Hand, OnePair
-
-class Test_OnePair():
+class Test_OnePair(unittest.TestCase):
 
     def test_is_match(self):
-        hand = Hand([Card('2H'),Card('2S'),Card('3C'),Card('4H'),Card('JD')])
-        one_pair = OnePair(hand)
-        assert one_pair.is_match() == True
+        hand = cards.hand.Hand([
+            cards.card.Card('2H'),
+            cards.card.Card('2S'),
+            cards.card.Card('3C'),
+            cards.card.Card('4H'),
+            cards.card.Card('JD')
+        ])
+        one_pair = cards.one_pair.OnePair(hand)
+        self.assertTrue(one_pair.is_match())
 
     def test_is_match_partial(self):
-        hand = Hand([Card('2H'),Card('2S'),Card('3C')])
-        one_pair = OnePair(hand)
-        assert one_pair.is_match() == True
+        hand = cards.hand.Hand([
+            cards.card.Card('2H'),
+            cards.card.Card('2S'),
+            cards.card.Card('3C')
+        ])
+        one_pair = cards.one_pair.OnePair(hand)
+        self.assertTrue(one_pair.is_match())
 
     def test_is_match_only(self):
-        hand = Hand([Card('2H'),Card('2S')])
-        one_pair = OnePair(hand)
-        assert one_pair.is_match() == True
+        hand = cards.hand.Hand([
+            cards.card.Card('2H'),
+            cards.card.Card('2S')
+        ])
+        one_pair = cards.one_pair.OnePair(hand)
+        self.assertTrue(one_pair.is_match())
 
     def test_get_rating(self):
-        hand = Hand([Card('2S'),Card('2H'),Card('3D'),Card('4H'),Card('JS')])
-        one_pair = OnePair(hand)
-        assert one_pair.get_rating().get() == (2, 2, 11, 4, 3, 99, 'One Pair')
+        hand = cards.hand.Hand([
+            cards.card.Card('2S'),
+            cards.card.Card('2H'),
+            cards.card.Card('3D'),
+            cards.card.Card('4H'),
+            cards.card.Card('JS')
+        ])
+        one_pair = cards.one_pair.OnePair(hand)
+        self.assertEqual(one_pair.get_rating(), (2, 2, 11, 4, 3, 99, 'One Pair'))
 
     def test_get_rating_partial(self):
-        hand = Hand([Card('2S'),Card('2H'),Card('3D')])
-        one_pair = OnePair(hand)
-        assert one_pair.get_rating().get() == (2, 2, 3, 0, 0, 99, 'One Pair')
+        hand = cards.hand.Hand([
+            cards.card.Card('2S'),
+            cards.card.Card('2H'),
+            cards.card.Card('3D')
+        ])
+        one_pair = cards.one_pair.OnePair(hand)
+        self.assertEqual(one_pair.get_rating(), (2, 2, 3, 0, 0, 99, 'One Pair'))
 
     def test_get_rating_only(self):
-        hand = Hand([Card('2S'),Card('2H')])
-        one_pair = OnePair(hand)
-        assert one_pair.get_rating().get() == (2, 2, 0, 0, 0, 99, 'One Pair')
+        hand = cards.hand.Hand([
+            cards.card.Card('2S'),
+            cards.card.Card('2H')
+        ])
+        one_pair = cards.one_pair.OnePair(hand)
+        self.assertEqual(one_pair.get_rating(), (2, 2, 0, 0, 0, 99, 'One Pair'))
