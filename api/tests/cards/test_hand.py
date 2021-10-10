@@ -5,8 +5,8 @@ import cards.deck
 
 class Test_Hand(unittest.TestCase):
 
-    def __get_cards(self, cards=[]):
-        return map(lambda x: Card(x), cards)
+    def __get_cards(self, _cards=[]):
+        return map(lambda x: cards.card.Card(x), _cards)
     
     def test_constuctor_cards_none(self):
         hand = cards.hand.Hand()

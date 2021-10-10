@@ -14,7 +14,7 @@ class StraightFlush(poker_hand.PokerHand):
         return cards.straight.Straight(cards.hand.Hand(self.cards)).is_match() and cards.flush.Flush(cards.hand.Hand(self.cards)).is_match()
 
     def get_rating(self):
-        (skip, card1, card2, card3, card4, card5, text) = cards.straight.Straight(cards.hand.Hand(self.cards)).get_rating().get()
+        (skip, card1, card2, card3, card4, card5, text) = cards.straight.Straight(cards.hand.Hand(self.cards)).get_rating()
 
         rating = (self.__rating, card1, card2, card3, card4, card5, self.__name)
 

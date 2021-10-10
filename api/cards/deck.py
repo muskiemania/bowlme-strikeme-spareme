@@ -7,21 +7,22 @@ class Deck:
     def __init__(self, cards=None):
         self._cards = cards
 
+    @property
     def cards(self):
         return [f'{c.card}{c.suit}' for c in self._cards]
 
     @staticmethod
     def generate(number_of_decks=1):
-        cards = [str(x) for x in range(2, 10)]
+        _cards = [str(x) for x in range(2, 10)]
         
-        cards += ['T', 'J', 'Q', 'K', 'A']
-        suits = ['C', 'S', 'H', 'D']
+        _cards += ['T', 'J', 'Q', 'K', 'A']
+        _suits = ['C', 'S', 'H', 'D']
 
-        pairs = itertools.product(cards, suits)
+        pairs = itertools.product(_cards, _suits)
         pairs = list(pairs) * number_of_decks
-        deck = Deck(cards=[cards.card.Card(card, suit) for (card, suit) in pairs])
+        _deck = Deck(cards=[cards.card.Card(card, suit) for (card, suit) in pairs])
         
-        return deck
+        return _deck
 
     @staticmethod
     def shuffle_cards(cards):
