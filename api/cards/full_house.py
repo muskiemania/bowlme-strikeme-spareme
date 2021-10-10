@@ -15,9 +15,8 @@ class FullHouse(poker_hand.PokerHand):
         four_of_kind = four.FourOfAKind(hand.Hand(self.cards)).is_match()
         three_of_kind = three.ThreeOfAKind(hand.Hand(self.cards)).is_match()
         two_pairs = two.TwoPairs(hand.Hand(self.cards)).is_match()
-        five_cards = len(self.cards) == 5
 
-        return not four_of_kind and three_of_kind and two_pairs and five_cards
+        return not four_of_kind and three_of_kind and two_pairs
 
     def get_rating(self):
         tally = self.card_tally()

@@ -1,5 +1,6 @@
 import boto3
 from configs.dynamo import DynamoConfigs
+from configs.player_status import PlayerStatusConfigs
 import time
 
 class DrawCards:
@@ -40,12 +41,12 @@ class DrawCards:
 
         player_version = _item.get('Item', {}).get('version', 0)
         player_cards = _item.get('Item', {}).get('hand', [])
-        player_status = item.get('Item'), {}).get('status')
+        player_status = _item.get('Item', {}).get('status')
 
         if player_version == 0:
             raise Exception('unable to fetch player version')
 
-        if player_status is None or player_status not in ['joined', 'dealt']:
+        if player_status is None or player_status not in [PlayerStatusConfigs.JOINED.value, PlayerStatusConfigs.DEALT.value]:
             raise Exception(f'cannot draw cards for player with status {player_status}')
 
         # now need to prepare data to write
