@@ -7,7 +7,6 @@ class Deck:
     def __init__(self, cards=None):
         self._cards = cards
 
-    @property
     def cards(self):
         return [f'{c.card}{c.suit}' for c in self._cards]
 
