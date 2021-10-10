@@ -8,7 +8,7 @@ from configs.player_status import PlayerStatusConfigs
 class DiscardCards:
 
     @staticmethod
-    def discard(game_id, player_id, number_of_cards):
+    def discard(game_id, player_id, cards):
         
         # get cards from deck
         (hand, version, status) = Discard.execute(game_id, player_id, cards)

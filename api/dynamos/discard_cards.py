@@ -1,5 +1,6 @@
 import boto3
 from configs.dynamo import DynamoConfigs
+from configs.player_status import PlayerStatusConfigs
 import time
 
 class DiscardCards:
@@ -36,12 +37,12 @@ class DiscardCards:
 
         player_version = _item.get('Item', {}).get('version', 0)
         player_cards = _item.get('Item', {}).get('hand', [])
-        player_status = item.get('Item'), {}).get('status')
+        player_status = _item.get('Item', {}).get('status')
 
         if player_version == 0:
             raise Exception('unable to fetch player version')
 
-        if player_status is in ['joined', 'finished']:
+        if player_status in [PlayerStatusConfigs.JOINED.value, PlayerStatusConfigs.FINISHED.value]:
             raise Exception(f'cannot discard cards for player with status {player_status}')
 
         # make sure player has the cards they are discarding...
@@ -51,7 +52,7 @@ class DiscardCards:
             if _a_card not in player_cards:
                 raise Exception(f'cannot discard {_a_card} because player doesnt have it')
             player_cards.remove(_a_card)
-            to_discard.push(_a_card)
+            to_discard.append(_a_card)
 
         # now need to prepare data to write
 
@@ -92,7 +93,7 @@ class DiscardCards:
                             '#version': 'version'
                         },
                         'ExpressionAttributeValues': {
-                            ':discard': {'L': [{'S': card} for card in player_cards]},
+                            ':discarded': {'L': [{'S': card} for card in player_cards]},
                             ':plusone': {'N': str(player_version + 1)},
                             ':version': {'N': str(player_version)}
                         }
