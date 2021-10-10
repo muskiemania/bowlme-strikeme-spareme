@@ -39,7 +39,7 @@ class DrawCards:
         )
 
         player_version = _item.get('Item', {}).get('version', 0)
-        player_cards = _item.get('Item', {}).get('cards', [])
+        player_cards = _item.get('Item', {}).get('hand', [])
 
         if player_version == 0:
             raise Exception('unable to fetch player version')
@@ -100,6 +100,10 @@ class DrawCards:
             # success!
             _hand = []
             _hand.extend(player_cards)
+            print('player cards')
+            print(player_cards)
             _hand.extend(drawn)
+            print('drawn cards')
+            print(drawn)
             return (_hand, player_version + 1, len(deck))
 

@@ -19,7 +19,7 @@ def handler(event, context):
     _player_id = _msg.get('playerId')
     _hand = _msg.get('hand')
     _status = _msg.get('status')
-    _version = _msg.get('version')
+    _version = int(_msg.get('version'))
 
     if ScoreHand.score(_game_id, _player_id, _hand, _version, _status):
         return {

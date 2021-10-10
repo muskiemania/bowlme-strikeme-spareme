@@ -18,7 +18,7 @@ class CreatePlayer:
                 'game_id': game_id,
                 'player_id': player_id,
                 'player_name': player_name,
-                'player_status': player_status,
+                'status': player_status,
                 'hand': [],
                 'version': 1,
                 'score': '',
