@@ -1,0 +1,47 @@
+#!/bin/sh
+
+module=create_qr_code
+
+#empty dist directory
+rm -rf dist
+
+#create dist directory
+mkdir dist
+
+#copy local packages
+cp -rf ../bowl_game dist
+cp -rf ../configs dist
+
+cp ../lambdas/create_qr_code.py dist
+
+#copy global packages
+python3 -m pip install -r ../lambdas/$module.txt -t dist
+
+#go to dist directory and zip everything up
+cd dist
+file=${module}_$(git describe)
+zip -r $file.zip .
+
+#remove everything except the zip
+find . -type f ! -name $file.zip -delete
+find . -type d ! -name $file.zip -delete
+
+cp $file.zip ../s3/$file.zip
+cp $file.zip ../s3/$module.zip
+
+cd ..
+cd s3
+
+#upload to s3
+aws --profile s3-user s3 cp $file.zip s3://bowlme-cicd/artifacts/$file.zip
+aws --profile s3-user s3 cp $module.zip s3://bowlme-cicd/v2/$module.zip
+
+#echo $file.zip
+
+#update lambdas:
+#/home/muskiemania/.local/bin/aws --profile webpack-upload-s3 lambda update-function-code --function-name bowl-create-game-get --s3-bucket bowl-api --s3-key $file.zip
+#/home/muskiemania/.local/bin/aws --profile webpack-upload-s3 lambda update-function-code --function-name bowl-create-game-post --s3-bucket bowl-api --s3-key $file.zip
+#/home/muskiemania/.local/bin/aws --profile webpack-upload-s3 lambda update-function-code --function-name bowl-create-player --s3-bucket bowl-api --s3-key $file.zip
+#/home/muskiemania/.local/bin/aws --profile webpack-upload-s3 lambda update-function-code --function-name bowl-create-deck --s3-bucket bowl-api --s3-key $file.zip
+#/home/muskiemania/.local/bin/aws --profile webpack-upload-s3 lambda update-function-code --function-name bowl-get-game --s3-bucket bowl-api --s3-key $file.zip
+#/home/muskiemania/.local/bin/aws --profile webpack-upload-s3 lambda update-function-code --function-name bowl-get-game-auth --s3-bucket bowl-api --s3-key $file.zip
