@@ -1,13 +1,12 @@
 import jwt
 
-
 class AuthToken:
 
     def create(**kwargs):
 
-        _game_id = kwargs.get('gameId')
-        _player_id = kwargs.get('playerId')
-        _player_name = kwargs.get('playerName')
+        _game_id = kwargs.get('game_id')
+        _player_id = kwargs.get('player_id')
+        _player_name = kwargs.get('player_name')
         _ttl = kwargs.get('ttl')
 
         _token = jwt.encode(

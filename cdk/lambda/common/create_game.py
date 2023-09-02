@@ -75,5 +75,5 @@ class CreateGame:
         return {
                 'game_id': _game_id,
                 'player_id': _player_id,
-                'player_name': _player_name
-                }
+                'player_name': _player_name,
+                'ttl': _ttl}

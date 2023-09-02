@@ -1,6 +1,7 @@
 from aws_cdk import (
         Stack,
         aws_lambda as _lambda,
+        aws_lambda_python_alpha as _python,
         aws_events as _events
         )
 from constructs import Construct
@@ -8,19 +9,30 @@ import json
 
 class BowlApiStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
-        
+       
         _games_table = kwargs.pop('games_table')
         _players_table = kwargs.pop('players_table')
 
         super().__init__(scope, construct_id, **kwargs)
 
+        # LAMBDA-LAYER
+        jwt_layer = _python.PythonLayerVersion(
+                self,
+                'JwtLayer',
+                entry='layers/jwt_layer',
+                compatible_runtimes=[_lambda.Runtime.PYTHON_3_8],
+                description='PyJWTLibrary',
+                layer_version_name='PyJWTLibrary')
+
         # LAMBDA
-        create_game_lambda = _lambda.Function(
+        create_game_lambda = _python.PythonFunction(
                 self,
                 'CreateGame',
+                entry='lambda',
                 runtime=_lambda.Runtime.PYTHON_3_8,
-                code=_lambda.Code.from_asset('lambda'),
-                handler='create_game.handler',
+                layers=[jwt_layer],
+                index='create_game.py',
+                handler='handler',
                 environment={
                     'DYNAMODB': json.dumps({
                         'games_table': {
