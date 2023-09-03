@@ -73,6 +73,8 @@ class CreateGame:
                         'Detail': json.dumps({
                             'Action': 'create_deck',
                             'Game_Id': _game_id}),
+                        'DetailType': 'create a deck',
+                        'Source': 'bowlapi.create_game',
                         'EventBusName': _event_bus_name}])
 
         # need to return enough info to generate a token

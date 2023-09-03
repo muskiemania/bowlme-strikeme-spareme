@@ -2,10 +2,16 @@ from common.create_deck import CreateDeck
 
 def handler(event, context):
 
-    _game_id = event.get('gameId')
-    _decks = event.get('decks')
+    _detail = event.get('detail')
+    
+    _action = _detail.get('Action')
+    _game_id = _detail.get('Game_Id')
+    _decks = _detail.get('Decks')
 
-    if not isinstance(_decks, int)):
+    if _action != 'create_deck':
+        return
+
+    if not isinstance(_decks, int):
         _decks = 1
 
     if _decks > 10:
