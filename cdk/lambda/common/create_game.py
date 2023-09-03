@@ -62,14 +62,18 @@ class CreateGame:
                     })
                     
         # need to send event to create deck
-        #_events = boto3.client('events')
-        #_events.put_events(
-        #        Entries=[
-        #            {
-        #                'Detail': json.dumps({
-        #                    'Action': 'create_deck',
-        #                    'Game_Id': _game_id}),
-        #                'EventBusName': 'busname'
+
+        _event_metadata = json.loads(os.environ['EVENTBRIDGE'])
+        _event_bus_name = _event_metadata.get('event_bus').get('event_bus_name')
+
+        _events = boto3.client('events')
+        _events.put_events(
+                Entries=[
+                    {
+                        'Detail': json.dumps({
+                            'Action': 'create_deck',
+                            'Game_Id': _game_id}),
+                        'EventBusName': _event_bus_name}])
 
         # need to return enough info to generate a token
         return {

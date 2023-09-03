@@ -1,15 +1,15 @@
 from aws_cdk import (
         Stack,
         aws_lambda as _lambda,
-        aws_lambda_python_alpha as _python,
-        aws_events as _events
+        aws_lambda_python_alpha as _python
         )
 from constructs import Construct
 import json
 
 class BowlApiStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
-       
+
+        _event_bus = kwargs.pop('event_bus')
         _games_table = kwargs.pop('games_table')
         _players_table = kwargs.pop('players_table')
 
@@ -38,7 +38,14 @@ class BowlApiStack(Stack):
                         'games_table': {
                             'table_name': _games_table.table_name},
                         'players_table': {
-                            'table_name': _players_table.table_name}})})
+                            'table_name': _players_table.table_name}}),
+                    'EVENTBRIDGE': json.dumps({
+                        'event_bus': {
+                            'event_bus_name': _event_bus.event_bus_name}})})
 
+        # GRANTS
         _games_table.grant_read_write_data(create_game_lambda)
         _players_table.grant_read_write_data(create_game_lambda)
+
+        _event_bus.grant_put_events_to(create_game_lambda)
+

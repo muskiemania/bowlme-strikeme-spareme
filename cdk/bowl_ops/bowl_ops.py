@@ -1,0 +1,47 @@
+from aws_cdk import (
+        Stack,
+        aws_lambda as _lambda,
+        aws_lambda_python_alpha as _python,
+        aws_events as _events,
+        aws_events_targets as targets
+        )
+from constructs import Construct
+import json
+
+class BowlOpsStack(Stack):
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+       
+        _games_table = kwargs.pop('games_table')
+        #_players_table = kwargs.pop('players_table')
+        _event_bus = kwargs.pop('event_bus')
+        #_bowl_events_rules = kwargs.pop('bowl_events_rules')
+
+        super().__init__(scope, construct_id, **kwargs)
+
+        # LAMBDA
+        create_deck_lambda = _python.PythonFunction(
+                self,
+                'CreateDeck',
+                entry='lambda',
+                runtime=_lambda.Runtime.PYTHON_3_8,
+                index='create_deck.py',
+                handler='handler',
+                environment={
+                    'DYNAMODB': json.dumps({
+                        'games_table': {
+                            'table_name': _games_table.table_name}})})
+
+
+        # GRANTS
+        _games_table.grant_read_write_data(create_deck_lambda)
+                
+        # EVENT BRIDGE RULEES
+        _create_deck_rule = _events.Rule(
+                self,
+                'BowlCreateDeck',
+                event_bus=_event_bus)
+
+        _create_deck_rule.add_event_pattern(
+                source=['bowlapi.create_game'])
+        _create_deck_rule.add_target(
+                targets.LambdaFunction(create_deck_lambda))
