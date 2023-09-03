@@ -43,9 +43,27 @@ class BowlApiStack(Stack):
                         'event_bus': {
                             'event_bus_name': _event_bus.event_bus_name}})})
 
+        join_game_lambda = _python.PythonFunction(
+                self,
+                'JoinGame',
+                entry='lambda',
+                runtime=_lambda.Runtime.PYTHON_3_8,
+                layers=[jwt_layer],
+                index='join_game.py',
+                handler='handler',
+                environment={
+                    'DYNAMODB': json.dumps({
+                        'games_table': {
+                            'table_name': _games_table.table_name},
+                        'players_table': {
+                            'table_name': _players_table.table_name}})})
+
         # GRANTS
         _games_table.grant_read_write_data(create_game_lambda)
+        _games_table.grant_read_data(join_game_lambda)
+
         _players_table.grant_read_write_data(create_game_lambda)
+        _players_table.grant_read_write_data(join_game_lambda)
 
         _event_bus.grant_put_events_to(create_game_lambda)
 

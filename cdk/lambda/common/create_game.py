@@ -53,6 +53,8 @@ class CreateGame:
                                         'S': _game_id},
                                     'Player_Id': {
                                         'S': _player_id},
+                                    'Player_Name': {
+                                        'S': _player_name},
                                     'TTL': {
                                         'N': str(_ttl)}
                                     }
