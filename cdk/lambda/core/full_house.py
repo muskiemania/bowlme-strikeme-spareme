@@ -1,0 +1,25 @@
+import poker_hand
+import four_of_a_kind as four
+import three_of_a_kind as three
+import two_pairs as two
+import hand
+
+class FullHouse(poker_hand.PokerHand):
+
+    def __init__(self, hand):
+        self.__rating = 7
+        self.__name = 'Full House'
+        poker_hand.PokerHand.__init__(self, hand)
+
+    def is_match(self):
+        four_of_kind = four.FourOfAKind(hand.Hand(self.cards)).is_match()
+        three_of_kind = three.ThreeOfAKind(hand.Hand(self.cards)).is_match()
+        two_pairs = two.TwoPairs(hand.Hand(self.cards)).is_match()
+
+        return not four_of_kind and three_of_kind and two_pairs
+
+    def get_rating(self):
+        tally = self.card_tally()
+        inverted = {str(len(v)): k for (k, v) in tally.items()}
+        rating = (self.__rating, inverted['3'], inverted['2'], 99, 99, 99, self.__name)
+        return rating
