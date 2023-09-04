@@ -1,11 +1,11 @@
-import poker_hand
+from .poker_hand import PokerHand
 
-class FourOfAKind(poker_hand.PokerHand):
+class FourOfAKind(PokerHand):
 
     def __init__(self, hand):
         self.__rating = 8
         self.__name = 'Four-Of-A-Kind'
-        poker_hand.PokerHand.__init__(self, hand)
+        PokerHand.__init__(self, hand)
 
     def is_match(self):
         tally = self.card_tally()

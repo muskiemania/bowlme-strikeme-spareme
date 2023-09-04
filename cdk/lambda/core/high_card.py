@@ -1,11 +1,11 @@
-import poker_hand
+from .poker_hand import PokerHand
 
-class HighCard(poker_hand.PokerHand):
+class HighCard(PokerHand):
 
     def __init__(self, hand):
         self.__rating = 1
         self.__name = 'High Card'
-        poker_hand.PokerHand.__init__(self, hand)
+        PokerHand.__init__(self, hand)
 
     def is_match(self):
         return True

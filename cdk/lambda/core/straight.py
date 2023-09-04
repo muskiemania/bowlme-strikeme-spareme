@@ -1,11 +1,11 @@
-import poker_hand
+from .poker_hand import PokerHand
 
-class Straight(poker_hand.PokerHand):
+class Straight(PokerHand):
 
     def __init__(self, hand):
         self.__rating = 5
         self.__name = 'Straight'
-        poker_hand.PokerHand.__init__(self, hand)
+        PokerHand.__init__(self, hand)
 
     def is_coherent(self):
         tally = self.card_tally()

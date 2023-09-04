@@ -1,11 +1,11 @@
-import poker_hand
+from .poker_hand import PokerHand
 
-class Flush(poker_hand.PokerHand):
+class Flush(PokerHand):
 
     def __init__(self, hand):
         self.__rating = 6
         self.__name = 'Flush'
-        poker_hand.PokerHand.__init__(self, hand)
+        PokerHand.__init__(self, hand)
 
     def is_match(self):
         return len(self.get_suit_tally().keys()) == 1 and len(self.cards) == 5

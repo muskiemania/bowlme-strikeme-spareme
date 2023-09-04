@@ -27,6 +27,7 @@ ops = BowlOpsStack(app, 'BowlCoreOpsStack',
                     account=os.getenv('CDK_DEFAULT_ACCOUNT'),
                     region=os.getenv('CDK_DEFAULT_REGION')),
                 games_table=core.games_table,
+                players_table=core.players_table,
                 event_bus=core.event_bus)
 
 app.synth()

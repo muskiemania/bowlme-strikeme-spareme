@@ -27,8 +27,8 @@ class DrawCards:
                 ExpressionAttributeNames={
                     '#lock': 'Lock'},
                 ExpressionAttributeValues={
-                    ':drawing': 'drawing',
-                    ':unlocked': 'unlocked'})
+                    ':drawing': {'S': 'drawing'},
+                    ':unlocked': {'S': 'unlocked'}})
 
         # then get the deck
         reply = _dynamo.get_item(
@@ -77,8 +77,8 @@ class DrawCards:
                     '#lock': 'Lock'},
                 ExpressionAttributeValues={
                     ':deck': {'L': [{'S': card} for card in to_deck]},
-                    ':drawing': 'drawing',
-                    ':unlocked': 'unlocked'})
+                    ':drawing': {'S': 'drawing'},
+                    ':unlocked': {'S': 'unlocked'}})
 
         _event_metadata = json.loads(os.environ['EVENTBRIDGE'])
         _event_bus_name = _event_metadata.get('event_bus').get('event_bus_name')

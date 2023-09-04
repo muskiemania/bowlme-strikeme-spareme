@@ -1,20 +1,20 @@
-import poker_hand
-import four_of_a_kind as four
-import three_of_a_kind as three
-import two_pairs as two
-import hand
+from .poker_hand import PokerHand
+from .four_of_a_kind import FourOfAKind
+from .three_of_a_kind import ThreeOfAKind
+from .two_pairs import TwoPairs
+from .hand import Hand
 
-class FullHouse(poker_hand.PokerHand):
+class FullHouse(PokerHand):
 
     def __init__(self, hand):
         self.__rating = 7
         self.__name = 'Full House'
-        poker_hand.PokerHand.__init__(self, hand)
+        PokerHand.__init__(self, hand)
 
     def is_match(self):
-        four_of_kind = four.FourOfAKind(hand.Hand(self.cards)).is_match()
-        three_of_kind = three.ThreeOfAKind(hand.Hand(self.cards)).is_match()
-        two_pairs = two.TwoPairs(hand.Hand(self.cards)).is_match()
+        four_of_kind = FourOfAKind(Hand(self.cards)).is_match()
+        three_of_kind = ThreeOfAKind(Hand(self.cards)).is_match()
+        two_pairs = TwoPairs(Hand(self.cards)).is_match()
 
         return not four_of_kind and three_of_kind and two_pairs
 
