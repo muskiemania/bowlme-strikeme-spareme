@@ -55,6 +55,8 @@ class CreateGame:
                                         'S': _player_id},
                                     'Player_Name': {
                                         'S': _player_name},
+                                    'Hand': {
+                                        'L': []},
                                     'TTL': {
                                         'N': str(_ttl)}
                                     }

@@ -29,10 +29,13 @@ class CreateDeck:
                 Key={
                     'Game_Id': {
                         'S': game_id}},
-                UpdateExpression='SET #discard = :discard',
+                UpdateExpression='SET #deck = :deck, #discard = :discard',
                 ExpressionAttributeNames={
+                    '#deck': 'Deck',
                     '#discard': 'Discard'},
                 ExpressionAttributeValues={
+                    ':deck': {
+                        'L': []},
                     ':discard': {
                         'L': [{'S': card} for card in decks]}})
 

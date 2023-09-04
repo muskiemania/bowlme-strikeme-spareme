@@ -31,11 +31,25 @@ class BowlOpsStack(Stack):
                         'games_table': {
                             'table_name': _games_table.table_name}})})
 
+        shuffle_deck_lambda = _python.PythonFunction(
+                self,
+                'ShuffleDeck',
+                entry='lambda',
+                runtime=_lambda.Runtime.PYTHON_3_8,
+                index='shuffle_deck.py',
+                handler='handler',
+                environment={
+                    'DYNAMODB': json.dumps({
+                        'games_table': {
+                            'table_name': _games_table.table_name}})})
+
+
 
         # GRANTS
         _games_table.grant_read_write_data(create_deck_lambda)
-                
-        # EVENT BRIDGE RULEES
+        _games_table.grant_read_write_data(shuffle_deck_lambda)
+
+        # EVENT BRIDGE RULES
         _create_deck_rule = _events.Rule(
                 self,
                 'BowlCreateDeck',
@@ -45,3 +59,13 @@ class BowlOpsStack(Stack):
                 source=['bowlapi.create_game'])
         _create_deck_rule.add_target(
                 targets.LambdaFunction(create_deck_lambda))
+
+        _shuffle_deck_rule = _events.Rule(
+                self,
+                'BowlShuffleDeck',
+                event_bus=_event_bus)
+
+        _shuffle_deck_rule.add_event_pattern(
+                source=['bowlapi.game_status.start'])
+        _shuffle_deck_rule.add_target(
+                targets.LambdaFunction(shuffle_deck_lambda))

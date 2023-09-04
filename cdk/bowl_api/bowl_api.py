@@ -58,12 +58,66 @@ class BowlApiStack(Stack):
                         'players_table': {
                             'table_name': _players_table.table_name}})})
 
+        game_status_lambda = _python.PythonFunction(
+                self,
+                'GameStatus',
+                entry='lambda',
+                runtime=_lambda.Runtime.PYTHON_3_8,
+                layers=[jwt_layer],
+                index='change_status.py',
+                handler='handler',
+                environment={
+                    'EVENTBRIDGE': json.dumps({
+                        'event_bus': {
+                            'event_bus_name': _event_bus.event_bus_name}})})
+
+        draw_cards_lambda = _python.PythonFunction(
+                self,
+                'DrawCards',
+                entry='lambda',
+                runtime=_lambda.Runtime.PYTHON_3_8,
+                index='draw_cards.py',
+                handler='handler',
+                environment={
+                    'DYNAMODB': json.dumps({
+                        'games_table': {
+                            'table_name': _games_table.table_name},
+                        'players_table': {
+                            'table_name': _players_table.table_name}}),
+                    'EVENTBRIDGE': json.dumps({
+                        'event_bus': {
+                            'event_bus_name': _event_bus.event_bus_name}})})
+
+        discard_cards_lambda = _python.PythonFunction(
+                self,
+                'DiscardCards',
+                entry='lambda',
+                runtime=_lambda.Runtime.PYTHON_3_8,
+                index='discard_cards.py',
+                handler='handler',
+                environment={
+                    'DYNAMODB': json.dumps({
+                        'games_table': {
+                            'table_name': _games_table.table_name},
+                        'players_table': {
+                            'table_name': _players_table.table_name}}),
+                    'EVENTBRIDGE': json.dumps({
+                        'event_bus': {
+                            'event_bus_name': _event_bus.event_bus_name}})})
+
+
         # GRANTS
         _games_table.grant_read_write_data(create_game_lambda)
         _games_table.grant_read_data(join_game_lambda)
-
+        _games_table.grant_read_write_data(draw_cards_lambda)
+        _games_table.grant_read_write_data(discard_cards_lambda)
+ 
         _players_table.grant_read_write_data(create_game_lambda)
         _players_table.grant_read_write_data(join_game_lambda)
+        _players_table.grant_read_write_data(draw_cards_lambda)
+        _players_table.grant_read_write_data(discard_cards_lambda)
 
         _event_bus.grant_put_events_to(create_game_lambda)
-
+        _event_bus.grant_put_events_to(game_status_lambda)
+        _event_bus.grant_put_events_to(draw_cards_lambda)
+        _event_bus.grant_put_events_to(discard_cards_lambda)
