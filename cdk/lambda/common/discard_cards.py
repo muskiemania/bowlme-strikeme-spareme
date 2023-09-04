@@ -16,6 +16,7 @@ class DiscardCards:
         _players_table_name = _table_metadata.get('players_table').get('table_name')
 
         # then get the players hand
+        _dynamo = boto3.client('dynamodb')
         reply = _dynamo.get_item(
                 TableName=_players_table_name,
                 Key={
@@ -66,7 +67,7 @@ class DiscardCards:
                 ExpressionAttributeNames={
                     '#discard': 'Discard'},
                 ExpressionAttributeValues={
-                    ':discards': {'L': [{'S': card} for card in to_discard]}})
+                    ':discards': {'L': [{'S': card} for card in _to_discard]}})
 
         _event_metadata = json.loads(os.environ['EVENTBRIDGE'])
         _event_bus_name = _event_metadata.get('event_bus').get('event_bus_name')
@@ -81,7 +82,7 @@ class DiscardCards:
                             'Game_Id': _game_id,
                             'Player_Id': _player_id}),
                         'DetailType': 'score a hand',
-                        'Source': 'bowlapi.draw_cards',
+                        'Source': 'bowlapi.discard_cards',
                         'EventBusName': _event_bus_name}])
 
         return
