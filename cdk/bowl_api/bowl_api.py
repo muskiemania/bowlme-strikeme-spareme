@@ -1,5 +1,8 @@
 from aws_cdk import (
         Stack,
+        aws_apigatewayv2_alpha as apigw2a,
+        aws_apigatewayv2_authorizers_alpha as apigw2aa,
+        aws_apigatewayv2_integrations_alpha as apigw2a_int,
         aws_lambda as _lambda,
         aws_lambda_python_alpha as _python
         )
@@ -25,6 +28,21 @@ class BowlApiStack(Stack):
                 layer_version_name='PyJWTLibrary')
 
         # LAMBDA
+        authorizer_lambda = _python.PythonFunction(
+                self,
+                'Authorizer',
+                entry='lambda',
+                runtime=_lambda.Runtime.PYTHON_3_8,
+                layers=[jwt_layer],
+                index='authorize.py',
+                handler='handler',
+                environment={
+                    'DYNAMODB': json.dumps({
+                        'games_table': {
+                            'table_name': _games_table.table_name},
+                        'players_table': {
+                            'table_name': _players_table.table_name}})})
+
         create_game_lambda = _python.PythonFunction(
                 self,
                 'CreateGame',
@@ -105,13 +123,84 @@ class BowlApiStack(Stack):
                         'event_bus': {
                             'event_bus_name': _event_bus.event_bus_name}})})
 
+        # API GATEWAY
+        http_api = apigw2a.HttpApi(
+                self,
+                'BowlApi',
+                description='Bowl API',
+                cors_preflight=apigw2a.CorsPreflightOptions(
+                    allow_headers=[
+                        'authorization',
+                        'content-type',
+                        'x-amz-date',
+                        'x-amz-security-token',
+                        'x-api-key',
+                        'accept'],
+                    allow_methods=[apigw2a.CorsHttpMethod.ANY],
+                    allow_origins=['*']))
+
+        # INTEGRATIONS
+        create_game_alias = _lambda.Alias(
+                self,
+                'CreateGameLambdaAlias',
+                alias_name=f'local-{create_game_lambda.current_version.version}',
+                version=create_game_lambda.current_version)
+
+        create_game_integration = apigw2a_int.HttpLambdaIntegration(
+                'CreateGameLambdaIntegration',
+                handler=create_game_alias)
+
+        join_game_alias = _lambda.Alias(
+                self,
+                'JoinGameLambdaAlias',
+                alias_name=f'local-{join_game_lambda.current_version.version}',
+                version=join_game_lambda.current_version)
+
+        join_game_integration = apigw2a_int.HttpLambdaIntegration(
+                'JoinGameLambdaIntegration',
+                handler=join_game_alias)
+
+        game_status_alias = _lambda.Alias(
+                self,
+                'GameStatusLambdaAlias',
+                alias_name=f'local-{game_status_lambda.current_version.version}',
+                version=game_status_lambda.current_version)
+
+        game_status_integration = apigw2a_int.HttpLambdaIntegration(
+                'GameStatusLambdaIntegration',
+                handler=game_status_alias)
+
+        # AUTHORIZERS
+        bowl_authorizer = apigw2aa.HttpLambdaAuthorizer(
+                'BowlAuthorizer',
+                handler=authorizer_lambda,
+                response_types=[apigw2aa.HttpLambdaResponseType.SIMPLE])
+
+        # ROUTES
+        http_api.add_routes(
+                path='/game/create',
+                methods=[apigw2a.HttpMethod.POST],
+                integration=create_game_integration)
+
+        http_api.add_routes(
+                path='/game/join',
+                methods=[apigw2a.HttpMethod.POST],
+                integration=join_game_integration)
+
+        http_api.add_routes(
+                path='/game/status',
+                methods=[apigw2a.HttpMethod.POST],
+                integration=game_status_integration,
+                authorizer=bowl_authorizer)
 
         # GRANTS
+        _games_table.grant_read_data(authorizer_lambda)
         _games_table.grant_read_write_data(create_game_lambda)
         _games_table.grant_read_data(join_game_lambda)
         _games_table.grant_read_write_data(draw_cards_lambda)
         _games_table.grant_read_write_data(discard_cards_lambda)
  
+        _players_table.grant_read_data(authorizer_lambda)
         _players_table.grant_read_write_data(create_game_lambda)
         _players_table.grant_read_write_data(join_game_lambda)
         _players_table.grant_read_write_data(draw_cards_lambda)
