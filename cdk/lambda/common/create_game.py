@@ -3,6 +3,7 @@ import boto3
 import time
 import json
 import os
+import traceback
 
 class CreateGame:
 
@@ -14,6 +15,8 @@ class CreateGame:
         _player_id = str(uuid.uuid4())
 
         _decks = kwargs.get('decks', '1')
+
+        print(f'_decks is {_decks}')
 
         try:
             _decks = int(_decks)

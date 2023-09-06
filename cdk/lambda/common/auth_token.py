@@ -15,7 +15,7 @@ class AuthToken:
                     'aud': _game_id,
                     'name': _player_name,
                     'exp': _ttl},
-                key='my-secret')
+                key='secret')
 
         return _token
 

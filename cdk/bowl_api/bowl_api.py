@@ -43,6 +43,14 @@ class BowlApiStack(Stack):
                         'players_table': {
                             'table_name': _players_table.table_name}})})
 
+        whoami_lambda = _python.PythonFunction(
+                self,
+                'WhoAmI',
+                entry='lambda',
+                runtime=_lambda.Runtime.PYTHON_3_8,
+                index='whoami.py',
+                handler='handler')
+
         create_game_lambda = _python.PythonFunction(
                 self,
                 'CreateGame',
@@ -140,6 +148,16 @@ class BowlApiStack(Stack):
                     allow_origins=['*']))
 
         # INTEGRATIONS
+        whoami_alias = _lambda.Alias(
+                self,
+                'WhoAmILambdaAlias',
+                alias_name=f'local-{whoami_lambda.current_version.version}',
+                version=whoami_lambda.current_version)
+
+        whoami_integration = apigw2a_int.HttpLambdaIntegration(
+                'WhoAmILambdaIntegration',
+                handler=whoami_alias)
+
         create_game_alias = _lambda.Alias(
                 self,
                 'CreateGameLambdaAlias',
@@ -191,6 +209,12 @@ class BowlApiStack(Stack):
                 path='/game/status',
                 methods=[apigw2a.HttpMethod.POST],
                 integration=game_status_integration,
+                authorizer=bowl_authorizer)
+
+        http_api.add_routes(
+                path='/game/whoami',
+                methods=[apigw2a.HttpMethod.GET],
+                integration=whoami_integration,
                 authorizer=bowl_authorizer)
 
         # GRANTS
