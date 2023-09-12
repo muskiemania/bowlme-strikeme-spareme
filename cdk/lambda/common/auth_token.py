@@ -11,8 +11,8 @@ class AuthToken:
 
         _token = jwt.encode(
                 payload={
-                    'sub': _player_id,
-                    'aud': _game_id,
+                    'sub': f'{_game_id} {_player_id}',
+                    'aud': 'BOWL_API',
                     'name': _player_name,
                     'exp': _ttl},
                 key='secret')

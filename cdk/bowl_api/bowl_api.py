@@ -192,7 +192,7 @@ class BowlApiStack(Stack):
         bowl_authorizer = apigw2aa.HttpLambdaAuthorizer(
                 'BowlAuthorizer',
                 handler=authorizer_lambda,
-                response_types=[apigw2aa.HttpLambdaResponseType.SIMPLE])
+                response_types=[apigw2aa.HttpLambdaResponseType.IAM])
 
         # ROUTES
         http_api.add_routes(
