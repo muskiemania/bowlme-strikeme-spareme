@@ -1,0 +1,47 @@
+<script setup lang="ts">
+
+import { store } from './store'
+import Button from './Button.vue'
+
+</script>
+
+<template>
+    <div class='welcome'>
+        <div class='grid-x row align-center'>
+            <div class='column'>
+                <Button text='Create Game' />
+            </div>
+        </div>
+        <div class='grid-x row align-center'>
+            <div class='column'>
+                <Button text='Join Game' />
+            </div>
+        </div>
+    </div>
+</template>
+
+<style scoped>
+
+.welcome {
+    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+
+    .draw-button {
+
+        float: none;
+        margin-right: 0;
+        font-size: 3em;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+    }
+}
+
+
+
+
+</style>
