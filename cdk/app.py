@@ -6,6 +6,7 @@ import aws_cdk as cdk
 from core_infra.core_infra import CoreInfraStack
 from bowl_api.bowl_api import BowlApiStack
 from bowl_ops.bowl_ops import BowlOpsStack
+from bowl_vue.cdk_stack.bowl_vue_website import BowlVueWebsiteStack
 
 app = cdk.App()
 
@@ -29,5 +30,10 @@ ops = BowlOpsStack(app, 'BowlCoreOpsStack',
                 games_table=core.games_table,
                 players_table=core.players_table,
                 event_bus=core.event_bus)
+
+BowlVueWebsiteStack(app, 'BowlVueWebsiteStack',
+                env=cdk.Environment(
+                    account=os.getenv('CDK_DEFAULT_ACCOUNT'),
+                    region=os.getenv('CDK_DEFAULT_REGION')))
 
 app.synth()
