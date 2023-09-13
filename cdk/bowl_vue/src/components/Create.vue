@@ -1,6 +1,9 @@
 <script setup lang="ts">
 
-import { store } from './store'
+import { useActions } from 'vuex-composition-helpers/dist'
+const { changeView } = useActions(['changeView'])
+
+import Button from './Button.vue'
 
 </script>
 
@@ -13,7 +16,7 @@ import { store } from './store'
         </div>
         <div class='grid-x row align-center'>
             <div class='column'>
-                <Button text='Play Now!' />
+                <Button text='Play Now!' @click="changeView('Waiting')" />
             </div>
         </div>
     </div>

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 
-import { store } from './store'
+import { useActions } from 'vuex-composition-helpers/dist'
+const { changeView } = useActions(['changeView'])
+
 import Button from './Button.vue'
 
 </script>
@@ -9,12 +11,12 @@ import Button from './Button.vue'
     <div class='welcome'>
         <div class='grid-x row align-center'>
             <div class='column'>
-                <Button text='Create Game' />
+                <Button text='Create Game' @click="changeView('JoinCreate.Create')" />
             </div>
         </div>
         <div class='grid-x row align-center'>
             <div class='column'>
-                <Button text='Join Game' />
+                <Button text='Join Game' @click="changeView('JoinCreate.Join')" />
             </div>
         </div>
     </div>

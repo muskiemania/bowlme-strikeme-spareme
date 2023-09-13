@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
 import Button from './Button.vue'
-import { store } from './store'
 
 </script>
 

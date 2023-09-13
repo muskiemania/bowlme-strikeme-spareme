@@ -5,7 +5,7 @@ defineProps<{
 </script>
 
 <template>
-    <div class='draw-button'>
+    <div class='draw-button' @click="$emit('click')">
         <a href='#' class='button'>
             <div class='inner-box'>{{text}}</div>
         </a>
