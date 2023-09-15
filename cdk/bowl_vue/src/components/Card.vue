@@ -9,9 +9,6 @@ defineProps<{
   selected: boolean
 }>()
 
-
-
-
 </script>
 
 <template>
@@ -33,6 +30,11 @@ defineProps<{
 
 <style scoped>
 
+@font-face {
+    font-family: 'carddeck';
+    src: url('/CARDC___.woff');
+}
+
 .a-card {
     font-family: 'carddeck';
     font-size: 4em;
@@ -51,7 +53,7 @@ defineProps<{
 	border: white solid 1px;
 }
     
-.a-card.big {
+.a-card .big {
 	width: 300px;
 }
 
