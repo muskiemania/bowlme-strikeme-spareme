@@ -13,9 +13,11 @@ console.log(mode);
 </script>
 
 <template>
-    <Create v-show="mode === 'JoinCreate.Create'" />
-    <Join v-show="mode === 'JoinCreate.Join'" />
-    <Welcome v-show="mode === 'JoinCreate.Welcome'" />
+    <div class='join-create'>
+        <Create v-show="mode === 'JoinCreate.Create'" />
+        <Join v-show="mode === 'JoinCreate.Join'" />
+        <Welcome v-show="mode === 'JoinCreate.Welcome'" />
+    </div>
 </template>
 
 <style scoped>

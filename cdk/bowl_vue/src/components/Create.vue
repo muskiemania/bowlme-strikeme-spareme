@@ -16,7 +16,7 @@ import Button from './Button.vue'
         </div>
         <div class='grid-x row align-center'>
             <div class='column'>
-                <Button text='Play Now!' @click="changeView('Waiting')" />
+                <Button text='Play Now!' @click="changeView('Pregame')" />
             </div>
         </div>
     </div>
@@ -37,9 +37,9 @@ import Button from './Button.vue'
     .draw-button {
         float: none;
         margin-right: 0;
-	font-size: 3em;
-	margin-top: 0.5em;
-	margin-bottom: 0.5em;
+	    font-size: 3em;
+	    margin-top: 0.5em;
+	    margin-bottom: 0.5em;
     }
 }
 

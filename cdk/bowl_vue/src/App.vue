@@ -1,18 +1,22 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import { store } from './store.ts'
+
+import { useState, useActions, useGetters } from 'vuex-composition-helpers/dist'
+const { mode } = useState(['mode']);
 
 import JoinCreate from './components/JoinCreate.vue'
-//import DisplayQrCode from './components/DisplayQrCode.vue'
-//import Waiting from './components/Waiting vue'
-//import PokerTable from './components/PokerTable.vue'
-//import Results from './components/Results.vue'
+import Pregame from './components/Pregame.vue'
+import PokerGame from './components/PokerGame.vue'
 
 </script>
 
 <template>
     <div class="poker-table">
-      <JoinCreate />
+      <JoinCreate v-show="mode.startsWith('JoinCreate')" />
+      <Pregame v-show="mode.startsWith('Pregame')" /> 
+      <PokerGame v-show="mode.startsWith('PokerGame')" />
+
+
     </div>
 </template>
 
