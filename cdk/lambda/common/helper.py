@@ -5,6 +5,30 @@ import os
 class Helper:
 
     @staticmethod
+    def get_host_id(**kwargs):
+        _game_id = kwargs.get('game_id')
+
+        _table_metadata = json.loads(os.environ['DYNAMODB'])
+        _games_table_name = _table_metadata.get('games_table').get('table_name')
+
+        # then get the host from game
+        _dynamo = boto3.client('dynamodb')
+        reply = _dynamo.get_item(
+                TableName=_games_table_name,
+                Key={
+                    'Game_Id': {
+                        'S': _game_id}},
+                ConsistentRead=True,
+                ProjectionExpression='#host',
+                ExpressionAttributeNames={
+                    '#host': 'Host_Id'})
+
+        # must get host
+        host = reply['Item']['Host_Id']['S']
+
+        return host
+
+    @staticmethod
     def get_player_hand(**kwargs):
         _game_id = kwargs.get('game_id')
         _player_id = kwargs.get('player_id')

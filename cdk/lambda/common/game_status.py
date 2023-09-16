@@ -10,6 +10,9 @@ class GameStatus:
     def start(**kwargs):
 
         _game_id = kwargs.get('game_id')
+        _player_id = kwargs.get('player_id')
+
+        # need to check to make sure the host is starting game
 
         #_table_metadata = json.loads(os.environ['DYNAMODB'])
         #_games_table_name = _table_metadata.get('games_table').get('table_name')

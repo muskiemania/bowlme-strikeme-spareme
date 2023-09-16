@@ -9,6 +9,14 @@ def handler(event, context):
     _token = event.get('headers', {})['authorization']
     _token = _token.split(' ')[1]
 
+    _resources = [
+            ('POST', '/game/status'),
+            ('POST', '/game/cards/draw'),
+            ('POST', '/game/cards/discard')]
+
+    _delimiter = '$default/'
+    (prefix, _) = event['methodArn'].split(_delimiter)
+
     try:
         decoded = jwt.decode(_token, 'secret', audience='BOWL_API', algorithms=['HS256'])
         principal_id = decoded['sub'].split(' ')[1]
@@ -18,7 +26,8 @@ def handler(event, context):
                     {
                         'Action': 'execute-api:Invoke',
                         'Effect': 'Allow',
-                        'Resource': event['methodArn']}]}
+                        'Resource': f'{prefix}{_delimiter}{method}{route}'
+                    } for (method, route) in _resources]}
         context = {
                 'gameId': decoded['sub'].split(' ')[0],
                 'playerId': decoded['sub'].split(' ')[1],

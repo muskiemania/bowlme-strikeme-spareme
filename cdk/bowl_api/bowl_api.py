@@ -93,6 +93,9 @@ class BowlApiStack(Stack):
                 index='change_status.py',
                 handler='handler',
                 environment={
+                    'DYNAMODB': json.dumps({
+                        'games_table': {
+                            'table_name': _games_table.table_name}}),
                     'EVENTBRIDGE': json.dumps({
                         'event_bus': {
                             'event_bus_name': _event_bus.event_bus_name}})})
@@ -188,6 +191,16 @@ class BowlApiStack(Stack):
                 'GameStatusLambdaIntegration',
                 handler=game_status_alias)
 
+        draw_cards_alias = _lambda.Alias(
+                self,
+                'DrawCardsLambdaAlias',
+                alias_name=f'local-{draw_cards_lambda.current_version.version}',
+                version=draw_cards_lambda.current_version)
+
+        draw_cards_integration = apigw2a_int.HttpLambdaIntegration(
+                'DrawCardsLambdaIntegration',
+                handler=draw_cards_alias)
+
         # AUTHORIZERS
         bowl_authorizer = apigw2aa.HttpLambdaAuthorizer(
                 'BowlAuthorizer',
@@ -217,10 +230,17 @@ class BowlApiStack(Stack):
                 integration=whoami_integration,
                 authorizer=bowl_authorizer)
 
+        http_api.add_routes(
+                path='/game/cards/draw',
+                methods=[apigw2a.HttpMethod.POST],
+                integration=draw_cards_integration,
+                authorizer=bowl_authorizer)
+
         # GRANTS
         _games_table.grant_read_data(authorizer_lambda)
         _games_table.grant_read_write_data(create_game_lambda)
         _games_table.grant_read_data(join_game_lambda)
+        _games_table.grant_read_data(game_status_lambda)
         _games_table.grant_read_write_data(draw_cards_lambda)
         _games_table.grant_read_write_data(discard_cards_lambda)
  

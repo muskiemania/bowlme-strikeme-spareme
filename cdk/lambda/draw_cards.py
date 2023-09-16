@@ -1,15 +1,26 @@
-
+import json
 from common.draw_cards import DrawCards
+from common.helper import Helper
+
 
 def handler(event, context):
 
-    # get game id from event
-    # get player name from event
-    # get number of cards from event
+    try:
+        _auth_context = event.get('requestContext', {}).get('authorizer', {}).get('lambda', {})
+        
+        _game_id = _auth_context['gameId']
+        _player_id = _auth_context['playerId']
+        _player_name = _auth_context['playerName']
+    except:
+        traceback.print_exc()
 
-    _game_id = event.get('gameId')
-    _player_id = event.get('playerId')
-    _cards = event.get('cards')
+    print(event)
+
+    # get number of cards from event
+    _body = json.loads(event.get('body'))
+    _cards = _body.get('cards')
+
+    print(_cards)
 
     if not isinstance(_cards, int):
         return 'need an int'
@@ -22,4 +33,9 @@ def handler(event, context):
             player_id=_player_id,
             cards=_cards)
 
-    return 'OK'
+    return {
+            'statusCode': 200,
+            'body': json.dumps({
+                'hand': Helper.get_player_hand(
+                    game_id=_game_id,
+                    player_id=_player_id)})}
