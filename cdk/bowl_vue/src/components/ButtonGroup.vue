@@ -21,19 +21,19 @@ const { mode } = useState(['mode']);
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.6), 0 6px 20px 0 rgba(0,0,0,0.6);
     border-radius: 5px;
     background: radial-gradient(#ff2222, #881133);
+}
 
-    li {
-        .button {
-            color: white;
-            font-weight: bold;
-            background: none;
-        }
+.draw-button-group li {
+    border-left: 2px solid #880000;
+}
 
-        border-left: 2px solid #880000;
-    }
+.draw-button-group li .button {
+    color: white;
+    font-weight: bold;
+    background: none;
+}
 
-    li:first-child {
-        border-left: none;
-    }
+.draw-button-group li:first-child {
+    border-left: none;
 }
 </style>

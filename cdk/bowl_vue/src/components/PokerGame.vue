@@ -5,15 +5,14 @@ import PokerHand from './PokerHand.vue'
 import DrawFactory from './DrawFactory.vue'
 
 import { useState, useActions, useGetters } from 'vuex-composition-helpers/dist'
-const { changeView } = useActions(['changeView'])
-const { mode } = useState(['mode']);
+const { gameId } = useState(['gameId']);
 
 </script>
 
 <template>
     <div>
         <div>
-            <span id="game-id">game id</span>
+            <span id="game-id">{{gameId}}</span>
             <Seats />
             <PokerHand />
         </div>

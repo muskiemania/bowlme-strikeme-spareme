@@ -8,8 +8,6 @@ import { useState, useActions, useGetters } from 'vuex-composition-helpers/dist'
 const { changeView } = useActions(['changeView'])
 const { mode } = useState(['mode']);
 
-console.log(mode);
-
 </script>
 
 <template>
@@ -23,55 +21,50 @@ console.log(mode);
 <style scoped>
 
 .join-create {
-
     font-family: 'carddeck';
-
-    input {
-        text-shadow: 2px 2px 3px rgba(0,0,0,0.2),
-        -2px 2px 3pc rgba(0,0,0,0.2),
-        2px -2px 3px rgba(0,0,0,0.2).
-        -2px -2px 3px rgba(0,0,0,0.2);
-        background: rgba(0,0,0,0.1);
-        border: 4px solid rgba(255,255,255,0.6);
-        color: rgba(255,255,255,0.9);
-        text-shadow: 2px 2px 3px rgba(0,0,0,0.2),
-        -2px 2px 3px rgba(0,0,0,0.2),
-        2px -2px 3px rgba(0,0,0,0.2),
-        -2px -2px 3px rgba(0,0,0,0.2);
-
-        font-size: 3em;
-        padding: 0.5em;
-        height: 3em;
-    }
-
-    input:focus {
-        background: rgba(0,0,0,0.1);
-        border: 4px solid rgba(255,255,255,0.9);
-    }
-
-    ::-webkit-input-placeholder {
-        color: white;
-        opacity: 0.8 !important;
-    }
-    
-    :-moz-placeholder {
-        color: white;
-        opacity: 0.8 !important;
-    }
-
-    ::moz-placeholder {
-        color: white;
-        opacity: 0.8 !important;
-    }
-
-    :-ms-input-placeholder {
-        color: white;
-        opacity: 0.8 !important;
-    }
 }
-        
 
+.join-create input {
+    text-shadow: 2px 2px 3px rgba(0,0,0,0.2),
+    -2px 2px 3pc rgba(0,0,0,0.2),
+    2px -2px 3px rgba(0,0,0,0.2).
+    -2px -2px 3px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.1);
+    border: 4px solid rgba(255,255,255,0.6);
+    color: rgba(255,255,255,0.9);
+    text-shadow: 2px 2px 3px rgba(0,0,0,0.2),
+    -2px 2px 3px rgba(0,0,0,0.2),
+    2px -2px 3px rgba(0,0,0,0.2),
+    -2px -2px 3px rgba(0,0,0,0.2);
 
+    font-size: 3em;
+    padding: 0.5em;
+    height: 3em;
+}
 
+.join-create input:focus {
+    background: rgba(0,0,0,0.1);
+    border: 4px solid rgba(255,255,255,0.9);
+}
+
+.join-create ::-webkit-input-placeholder {
+    color: white;
+    opacity: 0.8 !important;
+}
+    
+.join-create :-moz-placeholder {
+    color: white;
+    opacity: 0.8 !important;
+}
+
+.join-create ::moz-placeholder {
+    color: white;
+    opacity: 0.8 !important;
+}
+
+.join-create :-ms-input-placeholder {
+    color: white;
+    opacity: 0.8 !important;
+}
 
 </style>

@@ -32,18 +32,14 @@ import Button from './Button.vue'
     -ms-transform: translateX(-50%) translateY(-50%);
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
-
-    .draw-button {
-
-        float: none;
-        margin-right: 0;
-        font-size: 3em;
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
-    }
 }
 
-
-
+.welcome .draw-button {
+    float: none;
+    margin-right: 0;
+    font-size: 3em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
 
 </style>
