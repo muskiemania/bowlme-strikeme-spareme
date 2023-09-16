@@ -48,7 +48,7 @@ const createGame = async () => {
         </div>
         <div class='grid-x row align-center'>
             <div class='column'>
-                <Button text='Play Now!' @click.once="createGame" />
+                <Button text='Play Now!' @touch="createGame" @mouseup="createGame" />
             </div>
         </div>
     </div>

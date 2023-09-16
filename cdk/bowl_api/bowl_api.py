@@ -201,6 +201,16 @@ class BowlApiStack(Stack):
                 'DrawCardsLambdaIntegration',
                 handler=draw_cards_alias)
 
+        discard_cards_alias = _lambda.Alias(
+                self,
+                'DiscardCardsLambdaAlias',
+                alias_name=f'local-{discard_cards_lambda.current_version.version}',
+                version=discard_cards_lambda.current_version)
+
+        discard_cards_integration = apigw2a_int.HttpLambdaIntegration(
+                'DiscardCardsLambdaIntegration',
+                handler=discard_cards_alias)
+
         # AUTHORIZERS
         bowl_authorizer = apigw2aa.HttpLambdaAuthorizer(
                 'BowlAuthorizer',
@@ -236,6 +246,12 @@ class BowlApiStack(Stack):
                 integration=draw_cards_integration,
                 authorizer=bowl_authorizer)
 
+        http_api.add_routes(
+                path='/game/cards/discard',
+                methods=[apigw2a.HttpMethod.POST],
+                integration=discard_cards_integration,
+                authorizer=bowl_authorizer)
+      
         # GRANTS
         _games_table.grant_read_data(authorizer_lambda)
         _games_table.grant_read_write_data(create_game_lambda)

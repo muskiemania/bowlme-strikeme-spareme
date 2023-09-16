@@ -17,11 +17,19 @@ const store = createStore({
         hand: [],
         players: ['Sarah', 'Paul', 'Sara']
     },
+    getters: {
+        canDiscard(state) {
+            return state.hand.length > 5;
+        },
+        canDraw(state) {
+            return state.hand.length <= 5;
+        },
+    },
     mutations: {
         CHANGE_VIEW(state, payload) {
             state.mode = payload;
         },
-        DRAW_CARDS(state, payload) {
+        RESET_CARDS(state, payload) {
             state.hand = payload.map((card) => {
                 return { card: card, selected: false };
             });
@@ -48,8 +56,8 @@ const store = createStore({
         changeView(context, payload) {
             context.commit('CHANGE_VIEW', payload);
         },
-        drawCards(context, payload) {
-            context.commit('DRAW_CARDS', payload);
+        resetCards(context, payload) {
+            context.commit('RESET_CARDS', payload);
         },
         storeGameInfo(context, payload) {
             context.commit('STORE_GAME_INFO', payload);
@@ -63,6 +71,8 @@ const store = createStore({
 const app = createApp(App)
 
 app.use(store);
-//app.use(router)
+app.use(router)
 
-app.mount('#app')
+router.isReady().then(() => {
+    app.mount('#app')
+})

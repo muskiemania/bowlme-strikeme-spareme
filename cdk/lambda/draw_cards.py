@@ -14,8 +14,6 @@ def handler(event, context):
     except:
         traceback.print_exc()
 
-    print(event)
-
     # get number of cards from event
     _body = json.loads(event.get('body'))
     _cards = _body.get('cards')

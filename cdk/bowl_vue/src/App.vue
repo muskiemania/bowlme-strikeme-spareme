@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRouter, useRoute } from 'vue-router'
 
 import { useState, useActions, useGetters } from 'vuex-composition-helpers/dist'
 const { mode } = useState(['mode']);
@@ -7,6 +7,10 @@ const { mode } = useState(['mode']);
 import JoinCreate from './components/JoinCreate.vue'
 import Pregame from './components/Pregame.vue'
 import PokerGame from './components/PokerGame.vue'
+
+const route = useRoute();
+console.log(route.query.gameId);
+
 
 </script>
 

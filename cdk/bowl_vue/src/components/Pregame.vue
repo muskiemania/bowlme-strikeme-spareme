@@ -29,7 +29,7 @@ const startGame = async () => {
 <template>
     <div class='pregame'>
         <div class='button-overlay'>
-            <Button text='Waiting...' @click="startGame" />
+            <Button text='Waiting...' @touch="startGame" @mouseup="startGame" />
         </div>
     </div>
 </template>
