@@ -60,7 +60,12 @@ class BowlSocketStack(Stack):
                 entry='lambda',
                 runtime=_lambda.Runtime.PYTHON_3_8,
                 index='socket_disconnect.py',
-                handler='handler')
+                handler='handler',
+                environment={
+                    'EVENTBRIDGE': json.dumps({
+                        'event_bus': {
+                            'event_bus_name': _event_bus.event_bus_name}})})
+
 
         default_lambda = _python.PythonFunction(
                 self,
@@ -143,8 +148,26 @@ class BowlSocketStack(Stack):
                         'players_table': {
                             'table_name': _players_table.table_name}})})
 
+        socket_disconnect_lambda = _python.PythonFunction(
+                self,
+                'SocketDisconnect2',
+                entry='lambda',
+                runtime=_lambda.Runtime.PYTHON_3_8,
+                index='socket_disconnect2.py',
+                handler='handler',
+                environment={
+                    'DYNAMODB': json.dumps({
+                        'players_table': {
+                            'table_name': _players_table.table_name},
+                        'socket_index': {
+                            'index_name': 'SocketConnectionIndex'}})})
+
+
+
         # GRANTS
         _players_table.grant_read_write_data(socket_register_lambda)
+        _players_table.grant_read_write_data(socket_disconnect_lambda)
+        _event_bus.grant_put_events_to(disconnect_lambda)
         _event_bus.grant_put_events_to(default_lambda)
         #_event_bus.grant_put_events_to(game_status_lambda)
  
@@ -158,4 +181,16 @@ class BowlSocketStack(Stack):
                 source=['bowlsocket.register'])
         _socket_register_rule.add_target(
                 targets.LambdaFunction(socket_register_lambda))
+
+        _socket_disconnect_rule = _events.Rule(
+                self,
+                'BowlSocketDisconnect',
+                event_bus=_event_bus)
+
+        _socket_disconnect_rule.add_event_pattern(
+                source=['bowlsocket.disconnect'])
+        _socket_disconnect_rule.add_target(
+                targets.LambdaFunction(socket_disconnect_lambda))
+
+
 

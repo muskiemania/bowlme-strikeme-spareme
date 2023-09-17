@@ -32,6 +32,13 @@ class CoreInfraStack(Stack):
                 billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
                 time_to_live_attribute='TTL')
 
+        self.players_table.add_global_secondary_index(
+                partition_key=dynamodb.Attribute(
+                    name='Connection_Id',
+                    type=dynamodb.AttributeType.STRING),
+                index_name='SocketConnectionIndex',
+                projection_type=dynamodb.ProjectionType.KEYS_ONLY)
+
         # EVENTBRIDGE
         self.event_bus = _events.EventBus(
                 self, 
