@@ -3,14 +3,17 @@ import { RouterLink, RouterView, useRouter, useRoute } from 'vue-router'
 
 import { useState, useActions, useGetters } from 'vuex-composition-helpers/dist'
 const { mode } = useState(['mode']);
+const { storeGameInfo } = useActions(['storeGameInfo']);
 
 import JoinCreate from './components/JoinCreate.vue'
 import Pregame from './components/Pregame.vue'
 import PokerGame from './components/PokerGame.vue'
 
 const route = useRoute();
-console.log(route.query.gameId);
 
+if (route.query.gameId) {
+    storeGameInfo({ gameId: route.query.gameId });
+}
 
 </script>
 

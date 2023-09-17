@@ -1,12 +1,21 @@
 <script setup lang="ts">
 
+import { onBeforeMount } from 'vue'
+
 import Create from './Create.vue'
 import Join from './Join.vue'
 import Welcome from './Welcome.vue'
 
 import { useState, useActions, useGetters } from 'vuex-composition-helpers/dist'
-const { changeView } = useActions(['changeView'])
-const { mode } = useState(['mode']);
+const { changeView, storeGameInfo } = useActions(['changeView', 'storeGameInfo'])
+const { gameId, mode } = useState(['gameId', 'mode']);
+
+onBeforeMount(async () => {
+
+    if (gameId.value) {
+        changeView('JoinCreate.Join')
+    }
+})
 
 </script>
 
@@ -14,7 +23,7 @@ const { mode } = useState(['mode']);
     <div class='join-create'>
         <Create v-show="mode === 'JoinCreate.Create'" />
         <Join v-show="mode === 'JoinCreate.Join'" />
-        <Welcome v-show="mode === 'JoinCreate.Welcome'" />
+        <Welcome v-show="mode === 'JoinCreate.Welcome'" :gameId="gameId" />
     </div>
 </template>
 

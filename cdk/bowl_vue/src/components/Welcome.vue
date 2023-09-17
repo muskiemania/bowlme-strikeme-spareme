@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { useActions } from 'vuex-composition-helpers/dist'
-const { changeView } = useActions(['changeView'])
+const { changeView, storeGameInfo } = useActions(['changeView', 'storeGameInfo'])
 
 import Button from './Button.vue'
 

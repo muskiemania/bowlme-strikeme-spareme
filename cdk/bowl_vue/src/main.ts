@@ -35,13 +35,11 @@ const store = createStore({
             });
         },
         STORE_GAME_INFO(state, payload) {
-            state.playerName = payload.playerName;
-            state.playerId = payload.playerId;
-            state.gameId = payload.gameId;
-            state.isHost = payload.isHost;
-            state.token = payload.token;
-
-            console.log(`token: ${state.token}`);
+            state.playerName = payload.playerName ?? state.playerName;
+            state.playerId = payload.playerId ?? state.playerId;
+            state.gameId = payload.gameId ?? state.gameId;
+            state.isHost = payload.isHost ?? state.isHost;
+            state.token = payload.token ?? state.token;
         },
         TOGGLE_CARD(state, payload) {
             state.hand = state.hand.map((c, i) => {
