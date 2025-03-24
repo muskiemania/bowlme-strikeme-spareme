@@ -1,9 +1,11 @@
 from aws_cdk import (
     # Duration,
+    RemovalPolicy,
     Stack,
     aws_dynamodb as dynamo,
     aws_lambda as lambda_,
-    aws_lambda_python_alpha as python_
+    aws_lambda_python_alpha as python_,
+    aws_s3 as s3
     # aws_sqs as sqs,
 )
 from constructs import Construct
@@ -16,7 +18,13 @@ class PocStack(Stack):
 
         # The code that defines your stack goes here
 
+        # S3
         # s3 bucket for generated images
+        bucket = s3.Bucket(self, 'bowl-analysis-bucket',
+            encryption=s3.BucketEncryption.S3_MANAGED,
+            versioned=False,
+            removal_policy=RemovalPolicy.DESTROY
+        )
 
         # DYNAMODB
         # dynamodb table for bowling data
