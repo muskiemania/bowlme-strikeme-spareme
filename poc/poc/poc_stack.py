@@ -49,6 +49,23 @@ class PocStack(Stack):
             }
         )
 
+        score_throws = python_.PythonFunction(self,
+            'score_throws_lambda',
+            entry='lambda_/score_throws',
+            index='package/function.py',
+            handler='handler',
+            runtime=lambda_.Runtime.PYTHON_3_12,
+            environment={
+                'DYNAMODB': json.dumps({
+                    'bowling-training-table': {
+                        'table_name': training_table.table_name
+                    }
+                })
+            }
+        )
+
+
+
         # lambda to write to dynamodb
         # lambda to handle stream event, create analysis image
         # lambda to handle stream event, re-score
@@ -57,7 +74,7 @@ class PocStack(Stack):
         
         # GRANTS
         training_table.grant_read_write_data(create_throw)
-
+        training_table.grant_read_write_data(score_throws)
 
 
         # example resource
