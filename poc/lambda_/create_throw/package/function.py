@@ -1,6 +1,7 @@
 import boto3
 import json
 import os
+import uuid
 
 def handler(event, context):
 
@@ -75,7 +76,58 @@ def handler(event, context):
 
     if 'data' in event:
 
+        _pins = event.get('data', {}).get('pins')
+        _id = str(uuid.uuid4()).split('-')[-1]
+
+        if isinstance(_pins, str):
+            _pins = _pins
+        elif isinstance(_pins, list):
+            _pins = str(len(_pins))
+
         # put the data into dynamodb and then return
-        
+        db = boto3.client('dynamodb')
+
+        _metadata = json.loads(os.environ.get('DYNAMODB', {}))
+        _table = _metadata.get('bowling-training-table', {})
+
+        db.update_item(
+            TableName=_table.get('table_name'),
+            Key={
+                'series_id': {
+                    'S': _series_id
+                 },
+                'game_number': {
+                    'N': str(_game_number)
+                }
+            },
+            UpdateExpression='SET #throws = list_append(if_not_exists(#throws, :empty), :thr)',
+            ExpressionAttributeNames={
+                '#throws': 'throws'
+            },
+            ExpressionAttributeValues={
+                ':thr': {
+                    'L': [
+                        {
+                            'M': {
+                                'id': {
+                                    'S': _id
+                                },
+                                'raw': {
+                                    'S': json.dumps(event.get('data'))
+                                },
+                                'pins_result': {
+                                    'S': _pins
+                                }
+                            }
+                        }
+                    ]
+                },
+                ':empty': {
+                    'L': []
+                }
+            }
+        )
+
+       
         return 'OK!'
 
