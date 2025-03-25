@@ -1,5 +1,5 @@
 from aws_cdk import (
-    # Duration,
+    Duration,
     RemovalPolicy,
     Stack,
     aws_dynamodb as dynamo,
@@ -40,11 +40,44 @@ class PocStack(Stack):
             )
         )
 
+        # LAYERS
+        #pillow_layer = lambda_.LayerVersion(
+        #    self,
+        #    'PillowLayer',
+        #    code=lambda_.Code.from_asset('lambda_/layers/pillow/layer.zip'),
+        #    compatible_runtimes=[lambda_.Runtime.PYTHON_3_12],
+        #    layer_version_name='PillowLayer',
+        #    description='Pillow')
+
+        pillow_layer = lambda_.LayerVersion.from_layer_version_arn(
+            self, 'PillowLayer', 'arn:aws:lambda:us-west-2:770693421928:layer:Klayers-p312-Pillow:5')
+
+        matplotlib_layer = lambda_.LayerVersion(
+            self,
+            'MatplotlibLayer',
+            code=lambda_.Code.from_asset('lambda_/layers/matplotlib/layer.zip'),
+            compatible_runtimes=[lambda_.Runtime.PYTHON_3_12],
+            layer_version_name='MatplotlibLayer',
+            description='Matplotlib')
+
+        matplotlib_numpy_layer = lambda_.LayerVersion(
+            self,
+            'MatplotlibNumpyLayer',
+            code=lambda_.Code.from_asset('lambda_/layers/matplot_numpy/layer.zip'),
+            compatible_runtimes=[lambda_.Runtime.PYTHON_3_12],
+            layer_version_name='Matplotlib_Numpy_Layer',
+            description='Matplotlib_Numpy')
+
+        numpy_layer = lambda_.LayerVersion.from_layer_version_arn(
+            self, 'NumpyLayer', 'arn:aws:lambda:us-west-2:770693421928:layer:Klayers-p312-numpy:11')
+
+        scipy_layer = lambda_.LayerVersion.from_layer_version_arn(
+            self, 'SciPyLayer', 'arn:aws:lambda:us-west-2:770693421928:layer:Klayers-p312-scipy:3')
 
         # LAMBDA
         create_throw = python_.PythonFunction(self,
             'create_throw_lambda',
-            entry='lambda_/create_throw',
+            entry='lambda_/functions/create_throw',
             index='package/function.py',
             handler='handler',
             runtime=lambda_.Runtime.PYTHON_3_12,
@@ -59,7 +92,7 @@ class PocStack(Stack):
 
         score_throws = python_.PythonFunction(self,
             'score_throws_lambda',
-            entry='lambda_/score_throws',
+            entry='lambda_/functions/score_throws',
             index='package/function.py',
             handler='handler',
             runtime=lambda_.Runtime.PYTHON_3_12,
@@ -67,6 +100,39 @@ class PocStack(Stack):
                 'DYNAMODB': json.dumps({
                     'bowling-training-table': {
                         'table_name': training_table.table_name
+                    }
+                })
+            }
+        )
+
+        curve_interpolate = python_.PythonFunction(self,
+            'curve_interpolation_lambda',
+            entry='lambda_/functions/curve_interpolate',
+            index='package/function.py',
+            handler='handler',
+            layers=[scipy_layer],
+            timeout=Duration.seconds(15),
+            runtime=lambda_.Runtime.PYTHON_3_12,
+        )
+
+        generate_analysis = python_.PythonFunction(self,
+            'generate_analysiis_lambda',
+            entry='lambda_/functions/generate_analysis',
+            index='package/function.py',
+            handler='handler',
+            layers=[pillow_layer],
+            timeout=Duration.seconds(15),
+            runtime=lambda_.Runtime.PYTHON_3_12,
+            environment={
+                'MPLCONFIGDIR': '/tmp/matplotlb',
+                'S3': json.dumps({
+                    'bowling-analysis-bucket': {
+                        'bucket_name': bucket.bucket_name
+                    }
+                }),
+                'LAMBDA': json.dumps({
+                    'curve-interpolate-lambda': {
+                        'function_name': curve_interpolate.function_name
                     }
                 })
             }
@@ -84,6 +150,9 @@ class PocStack(Stack):
         training_table.grant_read_write_data(create_throw)
         training_table.grant_read_write_data(score_throws)
 
+        bucket.grant_put(generate_analysis)
+
+        curve_interpolate.grant_invoke(generate_analysis)
 
         # example resource
         # queue = sqs.Queue(

@@ -1,9 +1,10 @@
-import numpy as np
-from scipy.interpolate import make_interp_spline
-import matplotlib.pyplot as plt
+import base64
+import io
 import math
+import matplotlib.pyplot as plt
+import numpy as np
 
-def draw_analysis(image_height=9.0, image_width=2.1, image_dpi=100, start_x=None, start=None, slide=None, dots=None, arrows=None, break_point=None, break_location=None, pin_entry=None, pin_exit=None):
+def draw_analysis(image_height=9.0, image_width=2.1, image_dpi=100, start_x=None, start=None, slide=None, dots=None, arrows=None, break_point=None, break_location=None, pin_entry=None, pin_exit=None, spline=None):
 
     # function to convert boards to inches
     b2i = lambda x: (42.0/39) * x - (0.5 * 42.0 / 39)
@@ -27,24 +28,19 @@ def draw_analysis(image_height=9.0, image_width=2.1, image_dpi=100, start_x=None
         break_location = break_location or 52.5
         points.append((break_location, b2i(break_point)))
 
-    if pins is not None:
+    if pin_entry is not None:
         # in the drawing the aspect ratio is condensed for legibility
         # the result is that the depth of pins from headpin to 7-10 pins
         # are exaggerated. this function is to plot the correct
         # lane depth
-        p = lambda x: abs((2*math.sqrt(3)/12.0) * b2i(pins) - (b2i(20) * 2 * math.sqrt(3)/12.0)) + 60
-        points.append((p(pins), b2i(pins)))
+        p = lambda x: abs((2*math.sqrt(3)/12.0) * b2i(pin_entry) - (b2i(20) * 2 * math.sqrt(3)/12.0)) + 60
+        points.append((p(pin_entry), b2i(pin_entry)))
 
-    # will use all of the known points to generate a curve
-    x = np.array([x for (x, _) in points])
-    y = np.array([y for (_, y) in points])
+    # spline has been generated from known points
+    X_ = np.array(spline['X'])
+    Y_ = np.array(spline['Y'])
 
-    X_Y_Spline = make_interp_spline(x, y)
-
-    X_ = np.linspace(x.min(), x.max(), 500)
-    Y_ = X_Y_Spline(X_)
-
-
+    # set figure size
     fig = plt.figure(figsize = [image_height,image_width], tight_layout = {'pad': 0})
 
     # draw curve
@@ -52,7 +48,7 @@ def draw_analysis(image_height=9.0, image_width=2.1, image_dpi=100, start_x=None
 
     # plot markers
     for (x, y) in points:
-    plt.plot(x, y, 'o', color='black', markersize=8)
+        plt.plot(x, y, 'o', color='black', markersize=8)
 
     # draw pins
     _pins = [None for _ in range(11)]
@@ -112,8 +108,8 @@ def draw_analysis(image_height=9.0, image_width=2.1, image_dpi=100, start_x=None
     plt.plot([0, 0], [0, 42], linestyle='-', color='black', lw=0.5)
 
     # draw exit
-    if pins and exit:
-        plt.arrow(60, b2i(pins), 9, b2i(exit)-b2i(pins), shape='full', lw=2, linestyle='-', length_includes_head=True, head_width=2, color='seagreen')
+    if pin_entry and pin_exit:
+        plt.arrow(60, b2i(pin_entry), 9, b2i(pin_exit)-b2i(pin_entry), shape='full', lw=2, linestyle='-', length_includes_head=True, head_width=2, color='seagreen')
 
     # draw lane markers
     plt.plot([34, 37], [b2i(15), b2i(15)], linestyle='-', color='brown', lw=3)
@@ -136,7 +132,7 @@ def draw_analysis(image_height=9.0, image_width=2.1, image_dpi=100, start_x=None
     fig.savefig(image_buffer, bbox_inches='tight', dpi=image_dpi, pad_inches=0, transparent=True, format='png')
 
     image_buffer.seek(0)
-    image_bytes_base64 = base64.b64encode(image_bytes.getvalue())
+    image_bytes_base64 = base64.b64encode(image_buffer.getvalue())
     
     return image_bytes_base64.decode('utf-8')
 

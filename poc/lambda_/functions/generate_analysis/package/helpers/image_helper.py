@@ -1,7 +1,9 @@
+import base64
+import io
 from PIL import Image, ImageDraw, ImageColor, ImageFilter
 import random
 
-def draw_lanes(image_height=9.0, image_width=2.1, image_dpi):
+def draw_lanes(image_height=9.0, image_width=2.1, image_dpi=100):
 
     _COLORS = [
         '#c07f4d',
@@ -50,7 +52,7 @@ def draw_lanes(image_height=9.0, image_width=2.1, image_dpi):
         if i == 0:
             continue
 
-        random_color = ImageColor.getcolor(random.choice(colors), "RGB")
+        random_color = ImageColor.getcolor(random.choice(_COLORS), "RGB")
 
         _diff = 5
 
@@ -68,31 +70,27 @@ def draw_lanes(image_height=9.0, image_width=2.1, image_dpi):
         blurred_image.convert('RGBA')
     )
 
-    image_bytes = io.BytesIO()
-
-    image_bytes_base64 = base64.b64encode
-
     image_buffer = io.BytesIO()
     blurred_image.save(image_buffer, format='png')
 
     image_buffer.seek(0)
-    image_bytes_base64 = base64.b64encode(image_bytes.getvalue())
+    image_bytes_base64 = base64.b64encode(image_buffer.getvalue())
     
     return image_bytes_base64.decode('utf-8')
 
 
 
-diagram = Image.open('sample.png')
+#diagram = Image.open('sample.png')
 
 
-diagram = diagram.transpose(Image.ROTATE_90)
+#diagram = diagram.transpose(Image.ROTATE_90)
 
 #diagram.show()
 
 #print(diagram.size)
-blurred_image.paste(diagram, (0, 0), diagram)
+#blurred_image.paste(diagram, (0, 0), diagram)
 
 #blurred_image.show()
 
-blurred_image.save('lane.png')
+#blurred_image.save('lane.png')
 
