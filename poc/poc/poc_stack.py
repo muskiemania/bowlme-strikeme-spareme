@@ -2,6 +2,8 @@ from aws_cdk import (
     Duration,
     RemovalPolicy,
     Stack,
+    aws_cloudfront as cloudfront,
+    aws_cloudfront_origins as origins,
     aws_dynamodb as dynamo,
     aws_lambda as lambda_,
     aws_lambda_python_alpha as python_,
@@ -24,6 +26,13 @@ class PocStack(Stack):
             encryption=s3.BucketEncryption.S3_MANAGED,
             versioned=False,
             removal_policy=RemovalPolicy.DESTROY
+        )
+
+        # CLOUDFRONT
+        distribution = cloudfront.Distribution(self, 'bowl-analysis-distribution',
+            default_behavior=cloudfront.BehaviorOptions(
+                origin=origins.S3BucketOrigin.with_origin_access_control(bucket)
+            )
         )
 
         # DYNAMODB
@@ -124,6 +133,16 @@ class PocStack(Stack):
             timeout=Duration.seconds(15),
             runtime=lambda_.Runtime.PYTHON_3_12,
             environment={
+                'CLOUDFRONT': json.dumps({
+                    'distribution': {
+                        'domain_name': distribution.distribution_domain_name
+                    }
+                }),
+                'DYNAMODB': json.dumps({
+                    'bowling-training-table': {
+                        'table_name': training_table.table_name
+                    }
+                }),
                 'MPLCONFIGDIR': '/tmp/matplotlb',
                 'S3': json.dumps({
                     'bowling-analysis-bucket': {
@@ -138,17 +157,12 @@ class PocStack(Stack):
             }
         )
 
-
-
-        # lambda to write to dynamodb
-        # lambda to handle stream event, create analysis image
-        # lambda to handle stream event, re-score
-        # lambda to handle object created (analysis image)
-        # lambda to create presigned url, trigger step fn
+        
         
         # GRANTS
         training_table.grant_read_write_data(create_throw)
         training_table.grant_read_write_data(score_throws)
+        training_table.grant_read_write_data(generate_analysis)
 
         bucket.grant_put(generate_analysis)
 

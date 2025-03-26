@@ -102,7 +102,7 @@ def handler(event, context):
             },
             UpdateExpression='SET #throws = list_append(if_not_exists(#throws, :empty), :thr)',
             ExpressionAttributeNames={
-                '#throws': 'throws'
+                '#throws': 'throws',
             },
             ExpressionAttributeValues={
                 ':thr': {
@@ -111,9 +111,6 @@ def handler(event, context):
                             'M': {
                                 'id': {
                                     'S': _id
-                                },
-                                'raw': {
-                                    'S': json.dumps(event.get('data'))
                                 },
                                 'pins_result': {
                                     'S': _pins
@@ -128,6 +125,60 @@ def handler(event, context):
             }
         )
 
-       
+        # must make 2 more updates to initialize an empty data map
+        # and then add the throw data to it
+
+        try:
+            db.update_item(
+                TableName=_table.get('table_name'),
+                Key={
+                    'series_id': {
+                        'S': _series_id
+                    },
+                    'game_number': {
+                        'N': str(_game_number)
+                    }
+                },
+                UpdateExpression='SET #data = :empty',
+                ConditionExpression='attribute_not_exists(#data)',
+                ExpressionAttributeNames={
+                    '#data': 'data',
+                },
+                ExpressionAttributeValues={
+                    ':empty': {
+                        'M': {}
+                    }
+                }
+            )
+        except:
+            #this is stupid
+            pass
+        
+        db.update_item(
+            TableName=_table.get('table_name'),
+            Key={
+                'series_id': {
+                    'S': _series_id
+                 },
+                'game_number': {
+                    'N': str(_game_number)
+                }
+            },
+            UpdateExpression='SET #data.#id = :val',
+            ExpressionAttributeNames={
+                '#data': 'data',
+                '#id': _id
+            },
+            ExpressionAttributeValues={
+                ':val': {
+                    'M': {
+                        'raw': {
+                            'S': json.dumps(event.get('data'))
+                         }
+                    }
+                 }
+            }
+        )
+        
         return 'OK!'
 

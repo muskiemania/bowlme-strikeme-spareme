@@ -68,12 +68,45 @@ def handler(event, context):
     _bucket = _metadata.get('bowling-analysis-bucket', {})
 
     s3 = boto3.client('s3')
+    _key = f'muskiemania/{_series_id}_{str(_game_number)}_{_id}.png'
     s3.put_object(
         Body=analysis_graphic_bytes,
         Bucket=_bucket.get('bucket_name'),
-        Key=f'muskiemania/{_series_id}_{str(_game_number)}_{_id}.png'
+        Key=_key
     )
 
-    
+    # put this info back in dynamodb
+    _metadata = json.loads(os.environ.get('CLOUDFRONT', {}))
+    _distro = _metadata.get('distribution', {})
 
+    _metadata = json.loads(os.environ.get('DYNAMODB', {}))
+    _table = _metadata.get('bowling-training-table')
 
+    _url = f'https://{_distro.get("domain_name")}/{_key}'
+                           
+    db = boto3.client('dynamodb')
+
+    db.update_item(
+        TableName=_table.get('table_name'),
+        Key={
+            'series_id': {
+                'S': _series_id
+             },
+            'game_number': {
+                'N': str(_game_number)
+            }
+        },
+        UpdateExpression=f'SET #data.#id.#url = :url',
+        ExpressionAttributeNames={
+            '#data': 'data',
+            '#id': _id,
+            '#url': 'url'
+        },
+        ExpressionAttributeValues={
+            ':url': {
+                'S': _url
+            }
+        }
+    )
+
+    return 'OK!!'
