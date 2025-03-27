@@ -93,7 +93,7 @@ def handler(event, context):
             UpdateExpression='SET #data = :empty',
             ConditionExpression='attribute_not_exists(#data)',
             ExpressionAttributeNames={
-                '#data': 'data',
+                '#data': 'throw_data',
             },
             ExpressionAttributeValues={
                 ':empty': {
@@ -112,7 +112,7 @@ def handler(event, context):
         _pins = event.get('throw')
 
         _data = {
-            'pins': {'S': _pins}
+            'pins': {'S': str(_pins)}
         }
     elif 'data' in event:
         if event.get('data', {}).get('pins') == 'X':
@@ -139,7 +139,7 @@ def handler(event, context):
         },
         UpdateExpression='SET #data.#id = :val',
         ExpressionAttributeNames={
-            '#data': 'data',
+            '#data': 'throw_data',
             '#id': _id
         },
         ExpressionAttributeValues={
