@@ -32,153 +32,122 @@ def handler(event, context):
     _series_id = event.get('series_id')
     _game_number = event.get('game_number')
 
-    if 'throw' in event:
+    # step 1 create a unique id for the throw
+    # step 2 write the throw
+    # step 3 initialize the empty data map
+    # step 4 add the data map
 
-        # put only the throw into dynamo db and then return
-        db = boto3.client('dynamodb')
+    # 1
+    _id = str(uuid.uuid4()).split('-')[-1]
 
-        _metadata = json.loads(os.environ.get('DYNAMODB', {}))
-        _table = _metadata.get('bowling-training-table', {})
+    # 2
+    db = boto3.client('dynamodb')
 
-        db.update_item(
-            TableName=_table.get('table_name'),
-            Key={
-                'series_id': {
-                    'S': _series_id
-                 },
-                'game_number': {
-                    'N': str(_game_number)
-                }
-            },
-            UpdateExpression='SET #throws = list_append(if_not_exists(#throws, :empty), :thr)',
-            ExpressionAttributeNames={
-                '#throws': 'throws'
-            },
-            ExpressionAttributeValues={
-                ':thr': {
-                    'L': [
-                        {
-                            'M': {
-                                'pins_result': {
-                                    'S': event.get('throw')
-                                }
-                            }
-                        }
-                    ]
-                },
-                ':empty': {
-                    'L': []
-                }
+    _metadata = json.loads(os.environ.get('DYNAMODB', {}))
+    _table = _metadata.get('bowling-training-table', {})
+
+    db.update_item(
+        TableName=_table.get('table_name'),
+        Key={
+            'series_id': {
+                'S': _series_id
+             },
+             'game_number': {
+                'N': str(_game_number)
             }
-        )
-
-        return 'OK'
-
-    if 'data' in event:
-
-        _pins = event.get('data', {}).get('pins')
-        _id = str(uuid.uuid4()).split('-')[-1]
-
-        if isinstance(_pins, str):
-            _pins = _pins
-        elif isinstance(_pins, list):
-            _pins = str(len(_pins))
-
-        # put the data into dynamodb and then return
-        db = boto3.client('dynamodb')
-
-        _metadata = json.loads(os.environ.get('DYNAMODB', {}))
-        _table = _metadata.get('bowling-training-table', {})
-
-        db.update_item(
-            TableName=_table.get('table_name'),
-            Key={
-                'series_id': {
-                    'S': _series_id
-                 },
-                'game_number': {
-                    'N': str(_game_number)
-                }
+        },
+        UpdateExpression='SET #throws = list_append(if_not_exists(#throws, :empty), :thr)',
+        ExpressionAttributeNames={
+            '#throws': 'throws'
+        },
+        ExpressionAttributeValues={
+            ':thr': {
+                'L': [
+                    {
+                        'S': _id
+                    }
+                ]
             },
-            UpdateExpression='SET #throws = list_append(if_not_exists(#throws, :empty), :thr)',
-            ExpressionAttributeNames={
-                '#throws': 'throws',
-            },
-            ExpressionAttributeValues={
-                ':thr': {
-                    'L': [
-                        {
-                            'M': {
-                                'id': {
-                                    'S': _id
-                                },
-                                'pins_result': {
-                                    'S': _pins
-                                }
-                            }
-                        }
-                    ]
-                },
-                ':empty': {
-                    'L': []
-                }
+            ':empty': {
+                'L': []
             }
-        )
+        }
+    )
 
-        # must make 2 more updates to initialize an empty data map
-        # and then add the throw data to it
+    # 3
 
-        try:
-            db.update_item(
-                TableName=_table.get('table_name'),
-                Key={
-                    'series_id': {
-                        'S': _series_id
-                    },
-                    'game_number': {
-                        'N': str(_game_number)
-                    }
-                },
-                UpdateExpression='SET #data = :empty',
-                ConditionExpression='attribute_not_exists(#data)',
-                ExpressionAttributeNames={
-                    '#data': 'data',
-                },
-                ExpressionAttributeValues={
-                    ':empty': {
-                        'M': {}
-                    }
-                }
-            )
-        except:
-            #this is stupid
-            pass
-        
+    # must make 2 more updates to initialize an empty data map
+    # and then add the throw data to it
+
+    try:
         db.update_item(
             TableName=_table.get('table_name'),
             Key={
                 'series_id': {
                     'S': _series_id
-                 },
+                },
                 'game_number': {
                     'N': str(_game_number)
                 }
             },
-            UpdateExpression='SET #data.#id = :val',
+            UpdateExpression='SET #data = :empty',
+            ConditionExpression='attribute_not_exists(#data)',
             ExpressionAttributeNames={
                 '#data': 'data',
-                '#id': _id
             },
             ExpressionAttributeValues={
-                ':val': {
-                    'M': {
-                        'raw': {
-                            'S': json.dumps(event.get('data'))
-                         }
-                    }
-                 }
+                ':empty': {
+                    'M': {}
+                }
             }
         )
+    except:
+        #this is stupid
+        pass
+       
+    # 4
+    _pins = ''
+    _data = {}
+    if 'throw' in event:
+        _pins = event.get('throw')
+
+        _data = {
+            'pins': {'S': _pins}
+        }
+    elif 'data' in event:
+        if event.get('data', {}).get('pins') == 'X':
+            _pins = 'X'
+        elif event.get('data', {}).get('pins') == '/':
+            _pins = '/'
+        else:
+            _pins = len(event.get('data', {}).get('pins'))
+
+        _data = {
+            'pins': {'S': _pins},
+            'raw': {'S': json.dumps(event.get('data'))}
+        }
+
+    db.update_item(
+        TableName=_table.get('table_name'),
+        Key={
+            'series_id': {
+                'S': _series_id
+             },
+             'game_number': {
+                'N': str(_game_number)
+             }
+        },
+        UpdateExpression='SET #data.#id = :val',
+        ExpressionAttributeNames={
+            '#data': 'data',
+            '#id': _id
+        },
+        ExpressionAttributeValues={
+            ':val': {
+                'M': _data
+            }
+        }
+    )
         
-        return 'OK!'
+    return 'OK!'
 
