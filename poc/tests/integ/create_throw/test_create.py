@@ -48,7 +48,7 @@ class Test_CreateSingleThrow:
             pass
 
 
-    def test_single(self):
+    def test_single_plain(self):
     
         # arrange
         self.try_delete()
@@ -107,7 +107,75 @@ class Test_CreateSingleThrow:
         
         assert item.get('throw_data', {}).get(_THROW_ID, {}).get('pins') == str(_throw)
 
-    def test_single_X(self):
+    def test_single_w_data(self):
+    
+        # arrange
+        self.try_delete()
+
+        _input = {
+            'series_id': self._TEST_SERIES_ID,
+            'game_number': self._TEST_GAME_NUMBER,
+            'data': {
+                'ball': 'string',
+                'start_distance': '-15',
+                'start': '35',
+                'slide': '30',
+                'arrows': '20',
+                'pin_entry': '18',
+                'pin_exit': '21',
+                'pins': [1,2,3,4,5,7,8,9]
+            }
+        }
+
+        # act
+        lambda_ = boto3.client('lambda')
+        reply = lambda_.invoke(
+            FunctionName=self._FUNCTION_NAME,
+            InvocationType='RequestResponse',
+            Payload=json.dumps(_input)
+        )
+
+        # assert - prep
+        db = boto3.client('dynamodb')
+        item = db.get_item(
+            TableName=self._TABLE_NAME,
+            Key={
+                'series_id': {
+                    'S': self._TEST_SERIES_ID
+                },
+                'game_number': {
+                    'N': str(self._TEST_GAME_NUMBER)
+                }
+            },
+            ConsistentRead=True
+        )
+        dez = TypeDeserializer()
+        item = { 
+                k: dez.deserialize(v) for k, v in item['Item'].items()
+        }
+
+        # assert
+        assert 'series_id' in item
+        assert 'game_number' in item
+        assert 'throws' in item
+        assert 'throw_data' in item
+
+        assert item.get('series_id') == self._TEST_SERIES_ID
+        assert item.get('game_number') == self._TEST_GAME_NUMBER
+        assert isinstance(item.get('throws'), list)
+        assert isinstance(item.get('throw_data'), dict)
+
+        assert len(item.get('throws')) == 1
+        assert len(item.get('throw_data').keys()) == 1
+
+        _THROW_ID = item.get('throws')[0]
+        assert _THROW_ID in item.get('throw_data')
+        
+        assert item.get('throw_data', {}).get(_THROW_ID, {}).get('pins') == str(len(_input['data']['pins']))
+        assert item.get('throw_data', {}).get(_THROW_ID, {}).get('raw') == json.dumps(_input['data'])
+
+
+    def test_single_plain_X(self):
     
         # arrange
         self.try_delete()
@@ -166,7 +234,74 @@ class Test_CreateSingleThrow:
         
         assert item.get('throw_data', {}).get(_THROW_ID, {}).get('pins') == str(_throw)
 
-    def test_two_throws_spare(self):
+    def test_single_X_w_data(self):
+    
+        # arrange
+        self.try_delete()
+
+        _input = {
+            'series_id': self._TEST_SERIES_ID,
+            'game_number': self._TEST_GAME_NUMBER,
+            'data': {
+                'ball': 'string',
+                'start_distance': '-15',
+                'start': '35',
+                'slide': '30',
+                'arrows': '20',
+                'pin_entry': '18',
+                'pin_exit': '21',
+                'pins': 'X'
+            }
+        }
+
+        # act
+        lambda_ = boto3.client('lambda')
+        reply = lambda_.invoke(
+            FunctionName=self._FUNCTION_NAME,
+            InvocationType='RequestResponse',
+            Payload=json.dumps(_input)
+        )
+
+        # assert - prep
+        db = boto3.client('dynamodb')
+        item = db.get_item(
+            TableName=self._TABLE_NAME,
+            Key={
+                'series_id': {
+                    'S': self._TEST_SERIES_ID
+                },
+                'game_number': {
+                    'N': str(self._TEST_GAME_NUMBER)
+                }
+            },
+            ConsistentRead=True
+        )
+        dez = TypeDeserializer()
+        item = { 
+                k: dez.deserialize(v) for k, v in item['Item'].items()
+        }
+
+        # assert
+        assert 'series_id' in item
+        assert 'game_number' in item
+        assert 'throws' in item
+        assert 'throw_data' in item
+
+        assert item.get('series_id') == self._TEST_SERIES_ID
+        assert item.get('game_number') == self._TEST_GAME_NUMBER
+        assert isinstance(item.get('throws'), list)
+        assert isinstance(item.get('throw_data'), dict)
+
+        assert len(item.get('throws')) == 1
+        assert len(item.get('throw_data').keys()) == 1
+
+        _THROW_ID = item.get('throws')[0]
+        assert _THROW_ID in item.get('throw_data')
+        
+        assert item.get('throw_data', {}).get(_THROW_ID, {}).get('pins') == _input['data']['pins']
+        assert item.get('throw_data', {}).get(_THROW_ID, {}).get('raw') == json.dumps(_input['data'])
+
+    def test_two_throws_plain_spare(self):
     
         # arrange
         self.try_delete()
@@ -239,7 +374,103 @@ class Test_CreateSingleThrow:
         assert _SECOND_THROW_ID in item.get('throw_data')
         assert item.get('throw_data', {}).get(_SECOND_THROW_ID, {}).get('pins') == str(_second_throw)
 
-    def test_two_throws_no_spare(self):
+    def test_two_throws_spare_w_data(self):
+    
+        # arrange
+        self.try_delete()
+
+        _first_throw = {
+            'series_id': self._TEST_SERIES_ID,
+            'game_number': self._TEST_GAME_NUMBER,
+            'data': {
+                'ball': 'string',
+                'start_distance': '-15',
+                'start': '35',
+                'slide': '30',
+                'arrows': '20',
+                'pin_entry': '18',
+                'pin_exit': '21',
+                'pins': [1,2,3,4,5,7,8,9]
+            }
+        }
+
+        _second_throw = {
+            'series_id': self._TEST_SERIES_ID,
+            'game_number': self._TEST_GAME_NUMBER,
+            'data': {
+                'ball': 'string',
+                'start_distance': '-15',
+                'start': '35',
+                'slide': '30',
+                'arrows': '20',
+                'pin_entry': '5',
+                'pin_exit': '2',
+                'pins': '/'
+            }
+        }
+
+        # act
+        lambda_ = boto3.client('lambda')
+        reply = lambda_.invoke(
+            FunctionName=self._FUNCTION_NAME,
+            InvocationType='RequestResponse',
+            Payload=json.dumps(_first_throw)
+        )
+
+        reply = lambda_.invoke(
+            FunctionName=self._FUNCTION_NAME,
+            InvocationType='RequestResponse',
+            Payload=json.dumps(_second_throw)
+        )
+
+        # assert - prep
+        db = boto3.client('dynamodb')
+        item = db.get_item(
+            TableName=self._TABLE_NAME,
+            Key={
+                'series_id': {
+                    'S': self._TEST_SERIES_ID
+                },
+                'game_number': {
+                    'N': str(self._TEST_GAME_NUMBER)
+                }
+            },
+            ConsistentRead=True
+        )
+        dez = TypeDeserializer()
+        item = { 
+                k: dez.deserialize(v) for k, v in item['Item'].items()
+        }
+
+        # assert
+        assert 'series_id' in item
+        assert 'game_number' in item
+        assert 'throws' in item
+        assert 'throw_data' in item
+
+        assert item.get('series_id') == self._TEST_SERIES_ID
+        assert item.get('game_number') == self._TEST_GAME_NUMBER
+        assert isinstance(item.get('throws'), list)
+        assert isinstance(item.get('throw_data'), dict)
+
+        assert len(item.get('throws')) == 2
+        assert len(item.get('throw_data').keys()) == 2
+
+        _FIRST_THROW_ID = item.get('throws')[0]
+        assert _FIRST_THROW_ID in item.get('throw_data')
+        
+        assert item.get('throw_data', {}).get(_FIRST_THROW_ID, {}).get('pins') == str(len(_first_throw['data']['pins']))
+        assert item.get('throw_data', {}).get(_FIRST_THROW_ID, {}).get('raw') == json.dumps(_first_throw['data'])
+
+        _SECOND_THROW_ID = item.get('throws')[1]
+        assert _SECOND_THROW_ID in item.get('throw_data')
+        
+        assert item.get('throw_data', {}).get(_SECOND_THROW_ID, {}).get('pins') == _second_throw['data']['pins']
+        assert item.get('throw_data', {}).get(_SECOND_THROW_ID, {}).get('raw') == json.dumps(_second_throw['data'])
+
+
+
+    def test_two_throws_plain_no_spare(self):
     
         # arrange
         self.try_delete()
@@ -311,5 +542,99 @@ class Test_CreateSingleThrow:
         _SECOND_THROW_ID = item.get('throws')[1]
         assert _SECOND_THROW_ID in item.get('throw_data')
         assert item.get('throw_data', {}).get(_SECOND_THROW_ID, {}).get('pins') == str(_second_throw)
+
+    def test_two_throws_no_spare_w_data(self):
+    
+        # arrange
+        self.try_delete()
+
+        _first_throw = {
+            'series_id': self._TEST_SERIES_ID,
+            'game_number': self._TEST_GAME_NUMBER,
+            'data': {
+                'ball': 'string',
+                'start_distance': '-15',
+                'start': '35',
+                'slide': '30',
+                'arrows': '20',
+                'pin_entry': '18',
+                'pin_exit': '21',
+                'pins': [1,2,3,4,5,7,8,9]
+            }
+        }
+
+        _second_throw = {
+            'series_id': self._TEST_SERIES_ID,
+            'game_number': self._TEST_GAME_NUMBER,
+            'data': {
+                'ball': 'string',
+                'start_distance': '-15',
+                'start': '35',
+                'slide': '30',
+                'arrows': '15',
+                'pin_entry': '5',
+                'pin_exit': '5',
+                'pins': [6]
+            }
+        }
+
+        # act
+        lambda_ = boto3.client('lambda')
+        reply = lambda_.invoke(
+            FunctionName=self._FUNCTION_NAME,
+            InvocationType='RequestResponse',
+            Payload=json.dumps(_first_throw)
+        )
+
+        reply = lambda_.invoke(
+            FunctionName=self._FUNCTION_NAME,
+            InvocationType='RequestResponse',
+            Payload=json.dumps(_second_throw)
+        )
+
+        # assert - prep
+        db = boto3.client('dynamodb')
+        item = db.get_item(
+            TableName=self._TABLE_NAME,
+            Key={
+                'series_id': {
+                    'S': self._TEST_SERIES_ID
+                },
+                'game_number': {
+                    'N': str(self._TEST_GAME_NUMBER)
+                }
+            },
+            ConsistentRead=True
+        )
+        dez = TypeDeserializer()
+        item = { 
+                k: dez.deserialize(v) for k, v in item['Item'].items()
+        }
+
+        # assert
+        assert 'series_id' in item
+        assert 'game_number' in item
+        assert 'throws' in item
+        assert 'throw_data' in item
+
+        assert item.get('series_id') == self._TEST_SERIES_ID
+        assert item.get('game_number') == self._TEST_GAME_NUMBER
+        assert isinstance(item.get('throws'), list)
+        assert isinstance(item.get('throw_data'), dict)
+
+        assert len(item.get('throws')) == 2
+        assert len(item.get('throw_data').keys()) == 2
+
+        _FIRST_THROW_ID = item.get('throws')[0]
+        assert _FIRST_THROW_ID in item.get('throw_data')
+        
+        assert item.get('throw_data', {}).get(_FIRST_THROW_ID, {}).get('pins') == str(len(_first_throw['data']['pins']))
+        assert item.get('throw_data', {}).get(_FIRST_THROW_ID, {}).get('raw') == json.dumps(_first_throw['data'])
+
+        _SECOND_THROW_ID = item.get('throws')[1]
+        assert _SECOND_THROW_ID in item.get('throw_data')
+        
+        assert item.get('throw_data', {}).get(_SECOND_THROW_ID, {}).get('pins') == str(len(_second_throw['data']['pins']))
+        assert item.get('throw_data', {}).get(_SECOND_THROW_ID, {}).get('raw') == json.dumps(_second_throw['data'])
 
 

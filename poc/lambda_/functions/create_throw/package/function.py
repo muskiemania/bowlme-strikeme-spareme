@@ -123,7 +123,7 @@ def handler(event, context):
             _pins = len(event.get('data', {}).get('pins'))
 
         _data = {
-            'pins': {'S': _pins},
+            'pins': {'S': str(_pins)},
             'raw': {'S': json.dumps(event.get('data'))}
         }
 
