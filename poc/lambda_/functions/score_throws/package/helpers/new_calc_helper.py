@@ -9,7 +9,7 @@ def calculate(th, sc = None, frames = None, fr = None):
     if fr is None:
         fr = 1
 
-    '''
+    ''':
     th = [
         {
             'id': 'string',
@@ -30,9 +30,23 @@ def calculate(th, sc = None, frames = None, fr = None):
 
         t = th.pop(0)
         if score(t) == 'X':
+            # option 1 - no more throws, cannot calculate
+            # option 2 - 1 more throw, cannot calculate
+            # option 3 - 2 more throws, can calculate
+
+            if len(th) < 2:
+                frames.append(
+                    (
+                        (score(t), id(t)),
+                    )
+                )
+                s = None
+                continue
+
             s = 10
             if score(th[0]) == 'X':
                 s += 10
+                
                 if score(th[1]) == 'X':
                     s += 10
                 else:
@@ -87,7 +101,9 @@ def calculate(th, sc = None, frames = None, fr = None):
                 )
             )
         elif score(th[0]) == '/':
-            s = 10
+            # option 1 - no more throws, cannot calculate
+            # option 2 - 1 more throw, can calculate
+
             if len(th) == 1:
                 frames.append(
                     (
@@ -100,9 +116,12 @@ def calculate(th, sc = None, frames = None, fr = None):
                         (score(th[0]), id(th[0]))
                     )
                 )
-                score.append(s)
-                break
-            elif score(th[1]) == 'X':
+                s = None
+                th.pop(0)
+                continue
+            
+            s = 10
+            if score(th[1]) == 'X':
                 s += 10
                 frames.append(
                     (
