@@ -7,7 +7,9 @@ from aws_cdk import (
     aws_dynamodb as dynamo,
     aws_lambda as lambda_,
     aws_lambda_python_alpha as python_,
-    aws_s3 as s3
+    aws_s3 as s3,
+    aws_apigatewayv2 as apigwv2,
+    aws_apigatewayv2_integrations as apigwv2int
     # aws_sqs as sqs,
 )
 from constructs import Construct
@@ -157,12 +159,52 @@ class PocStack(Stack):
             }
         )
 
-        
-        
+        get_series = python_.PythonFunction(self,
+            'get_series_lambda',
+            entry='lambda_/functions/get_series',
+            index='package/function.py',
+            handler='handler',
+            runtime=lambda_.Runtime.PYTHON_3_12,
+            environment={
+                'DYNAMODB': json.dumps({
+                    'bowling-training-table': {
+                        'table_name': training_table.table_name
+                    }
+                })
+            }
+        )
+
+        # API GATEWAY
+
+        http_api = apigwv2.HttpApi(self,
+            'BowlingTrainerApi',
+            description='Bowling Trainer API'
+        )
+
+        # INTEGRATIONS
+        get_series_alias = lambda_.Alias(self,
+            'GetSeriesAlias',
+            alias_name=f'local-{get_series.current_version.version}',
+            version=get_series.current_version
+        )
+
+        get_series_integration = apigwv2int.HttpLambdaIntegration(
+            'GetSeriesIntegration',
+            handler=get_series_alias
+        )
+
+        # ROUTES
+        http_api.add_routes(
+            path='/series/{series_id}',
+            methods=[apigwv2.HttpMethod.GET],
+            integration=get_series_integration
+        )
+
         # GRANTS
         training_table.grant_read_write_data(create_throw)
         training_table.grant_read_write_data(score_throws)
         training_table.grant_read_write_data(generate_analysis)
+        training_table.grant_read_data(get_series)
 
         bucket.grant_put(generate_analysis)
 
