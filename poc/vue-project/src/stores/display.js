@@ -1,10 +1,12 @@
-import { ref, computed } from 'vue'
+import { ref, computed, toRaw } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useDisplayStore = defineStore('display', {
 
     state: () => {
         return {
+            sliderOpen: ref(false),
+
             gameNumber: 1,
             //frameLeft: ref(false),
             //frameRight: ref(false),
@@ -25,6 +27,7 @@ export const useDisplayStore = defineStore('display', {
                                 "frameNumber": 1,
                                 "throws": [
                                     {
+                                        "id": "a",
                                         "pins": "7"
                                     },
                                     {
@@ -37,6 +40,7 @@ export const useDisplayStore = defineStore('display', {
                                 "frameNumber": 2,
                                 "throws": [
                                     {
+                                        "id": "a",
                                         "pins": "8"
                                     },
                                     {
@@ -45,7 +49,25 @@ export const useDisplayStore = defineStore('display', {
                                 ],
                                 "totalScore": 27
                             },
-                        ]
+                            {
+                                "frameNumber": 3,
+                                "throws": [
+                                    {
+                                        "id": "b",
+                                        "pins": "X"
+                                    },
+                                ],
+                                "totalScore": ""
+                            },
+                        ],
+                        "analysis": {
+                            "a": {
+                                "url": "https://dbeusqqg6817d.cloudfront.net/muskiemania/abc123_1_7c314aca36b2.png"
+                            },
+                            "b": {
+                                "url": "https://dbeusqqg6817d.cloudfront.net/muskiemania/xyz123_1_7e6976d9bebe.png"
+                            }
+                        }
                     },
                     "2": {
                     },
@@ -61,11 +83,8 @@ export const useDisplayStore = defineStore('display', {
         getGameLeft: (state) => state.gameNumber > 1,
         getGameRight: (state) => state.gameNumber === Math.max(state.master.games),
         getFrameNumber: (state) => state.frameNumber,
-        getFrameLeft: (state) => state.frameNumber > 1,
-        getFrameRight: (state) => {
-            const frames = state.master.gameData[state.gameNumber.toString()].frames.map((e) => e.frameNumber)
-            console.log(`${state.frameNumber} :: ${frames}`);
-            return state.frameNumber === Math.max(frames);
+        getTotalFrames: (state) => { 
+            return state.master.gameData[state.gameNumber.toString()].frames.map((e) => e.frameNumber);
         },
         getFrameThrows: (state) => {
             const f = state.master.gameData[state.gameNumber.toString()].frames.find((e) => e.frameNumber === state.frameNumber);
@@ -75,10 +94,34 @@ export const useDisplayStore = defineStore('display', {
             const f = state.master.gameData[state.gameNumber.toString()].frames.find((e) => e.frameNumber === state.frameNumber);
             return f.totalScore
         },
+        getSliderIsOpen: (state) => state.sliderOpen,
+        getAnalysis: (state) => {
+            const f = state.master.gameData[state.gameNumber.toString()].frames.find((e) => e.frameNumber === state.frameNumber);
+            const t = f['throws'].map((e) => e['id']).filter(value => value !== undefined);
+
+            //return toRaw(f);
+
+            let u = [];
+            t.forEach((i) => {
+                const a = state.master.gameData[state.gameNumber.toString()].analysis || {};
+                if (i in a) {
+                    u.push(a[i].url)
+                }
+            });
+            return u;
+        },
         getMaster: (state) => state.master
     },
     actions: {
-
+        toggleSlider() {
+            this.sliderOpen = !this.sliderOpen            
+        },
+        nextFrame() {
+            this.frameNumber++
+        },
+        previousFrame() {
+            this.frameNumber--
+        },
     }
 });
 
