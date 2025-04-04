@@ -1,30 +1,25 @@
 import { ref, computed, toRaw } from 'vue'
 import { defineStore } from 'pinia'
+import axios from 'axios'
+
 
 export const useDisplayStore = defineStore('display', {
 
     state: () => {
         return {
+            loading: ref(true),
             sliderOpen: ref(false),
 
             gameNumber: 1,
-            //frameLeft: ref(false),
-            //frameRight: ref(false),
             frameNumber: 1,
-            //throw1: ref(0),
-            //throw2: ref(0),
-            //throw3: ref(0),
             analysisCursor: ref(0),
-            analysis1: ref(''),
-            analysis2: ref(''),
-            analysis3: ref(''),
             master: ref({
                 games: [1,2,3],
                 gameData: {
                     "1": {
                         "frames": [
                             {
-                                "frameNumber": 1,
+                                "frame": "1",
                                 "throws": [
                                     {
                                         "id": "a",
@@ -34,10 +29,10 @@ export const useDisplayStore = defineStore('display', {
                                         "pins": "/"
                                     }
                                 ],
-                                "totalScore": 18
+                                "total": 18
                             },
                             {
-                                "frameNumber": 2,
+                                "frame": "2",
                                 "throws": [
                                     {
                                         "id": "a",
@@ -47,10 +42,10 @@ export const useDisplayStore = defineStore('display', {
                                         "pins": "1"
                                     }
                                 ],
-                                "totalScore": 27
+                                "total": 27
                             },
                             {
-                                "frameNumber": 3,
+                                "frame": "3",
                                 "throws": [
                                     {
                                         "id": "b",
@@ -78,25 +73,30 @@ export const useDisplayStore = defineStore('display', {
         };
     },
     getters: {
-    
+   
+        isLoading: (state) => state.loading,
         getGameNumber: (state) => state.gameNumber,
         getGameLeft: (state) => state.gameNumber > 1,
         getGameRight: (state) => state.gameNumber === Math.max(state.master.games),
         getFrameNumber: (state) => state.frameNumber,
         getTotalFrames: (state) => { 
-            return state.master.gameData[state.gameNumber.toString()].frames.map((e) => e.frameNumber);
+            return state.master.gameData[state.gameNumber.toString()].frames.map((e) => e.frame);
         },
         getFrameThrows: (state) => {
-            const f = state.master.gameData[state.gameNumber.toString()].frames.find((e) => e.frameNumber === state.frameNumber);
-            return f['throws'].map((e) => e['pins']);
+            const f = state.master.gameData[state.gameNumber.toString()].frames;
+            const fr = f.find((e) => e.frame === state.frameNumber.toString());
+            console.log(state.frameNumber);
+            console.log(fr);
+
+            return fr['throws'].map((e) => e['pins']);
         },
         getFrameScore: (state) => {
-            const f = state.master.gameData[state.gameNumber.toString()].frames.find((e) => e.frameNumber === state.frameNumber);
-            return f.totalScore
+            const f = state.master.gameData[state.gameNumber.toString()].frames.find((e) => e.frame === state.frameNumber.toString());
+            return f.total
         },
         getSliderIsOpen: (state) => state.sliderOpen,
         getAnalysis: (state) => {
-            const f = state.master.gameData[state.gameNumber.toString()].frames.find((e) => e.frameNumber === state.frameNumber);
+            const f = state.master.gameData[state.gameNumber.toString()].frames.find((e) => e.frame === state.frameNumber.toString());
             const t = f['throws'].map((e) => e['id']).filter(value => value !== undefined);
 
             //return toRaw(f);
@@ -122,6 +122,35 @@ export const useDisplayStore = defineStore('display', {
         previousFrame() {
             this.frameNumber--
         },
+        getSeries(seriesId) {
+            
+            const BASE_URL = 'https://smqu6xcne4.execute-api.us-west-2.amazonaws.com';
+
+            // must call out to API to retrieve series
+            // then initialize
+            // finally set loading ==> false
+            axios.get(`${BASE_URL}/series/${seriesId}`)
+            .then((reply) => {
+                
+                const master = {};
+                master.games = reply.data.games;
+                master.gameData = reply.data.game_data;
+
+                const current = Math.max(...reply.data.games)
+                const frames = master.gameData[current.toString()].frames.map((e) => e.frame);
+
+                const thisFrame = Math.max(...frames);
+
+                this.master = master;
+                this.frameNumber = parseInt(thisFrame);
+                this.gameNumber = parseInt(current);
+                this.loading = false;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+        }
     }
 });
 

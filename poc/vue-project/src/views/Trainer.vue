@@ -1,4 +1,9 @@
 <template>
+
+    <div class='loading' v-if='display.isLoading.value'>
+        <span>Loading...</span>
+    </div>
+
     <div class="header">
         <span>
             <button :disabled='!display.getGameLeft'>&lt;&lt;</button>
@@ -74,32 +79,35 @@
                         </template>
 
                     </div>
-                    <div>
+                    <div class='pinsInput'>
                         <label for="pins">Pins</label><input v-model='pinsBinding' /><br /><button @click='usePins'>Use Pins</button> <button @click='spare'>Spare</button> <button @click='strike'>Strike</button>
                     </div>
                     <div class="analysisInput">
-                        <label class="left">Pin Exit</label>
-                        <input name="pinExit" />
-                        <input name="arrows" />
-                        <label>Arrows</label>
+                        <label class="left" @click='toggleAnalysis(1)'>Pin Exit</label>
+                        <input name="pinExit" v-model='pinExitBinding' :disabled='!analysis.pexOn.value' />
+                        <input name="arrows" v-model='arrowsBinding' :disabled='!analysis.arrowsOn.value' />
+                        <label @click='toggleAnalysis(5)'>Arrows</label>
                         <br style="clear: both" />
-                        <label class="left">Pin Enter</label>
-                        <input name="pinEnter" />
-                        <input name="slide" />
-                        <label>Slide</label>
+                        <label class="left" @click='toggleAnalysis(2)'>Pin Enter</label>
+                        <input name="pinEnter" v-model='pinEnterBinding' :disabled='!analysis.penOn.value' />
+                        <input name="slide" v-model='slideBinding' :disabled='!analysis.slideOn.value' />
+                        <label @click='toggleAnalysis(6)'>Slide</label>
                         <br style="clear: both" />
-                        <label class="left">Break Pt.</label>
-                        <input name="breakPoint" />
-                        <input name="start" />
-                        <label>Start</label>
+                        <label class="left" @click='toggleAnalysis(3)'>Break Pt.</label>
+                        <input name="breakPoint" v-model='breakPointBinding' :disabled='!analysis.breakPtOn.value'/>
+                        <input name="startDots" v-model='startDotsBinding' :disabled='!analysis.startDotsOn.value' />
+                        <label @click='toggleAnalysis(7)'>Start Dots</label>
                         <br style="clear: both" />
-                        <label class="left">Break Dist.</label>
-                        <input name="breakPoint" />
+                        <label class="left" @click='toggleAnalysis(4)'>Break Dist.</label>
+                        <input name="breakPoint" v-model='breakDistanceBinding' :disabled='!analysis.breakDistOn.value' />
+                        <input name="startDist" v-model='startDistanceBinding' :disabled='!analysis.startDistOn.value' />
+                        <label @click='toggleAnalysis(8)'>Start Dist.</label>
+ 
                         <br style="clear: both" />
                     </div>
             
                     <div class='submit'>
-                        <button>Submit</button>&nbsp;&nbsp;&nbsp;<button @click='togglePanel'>Close Me</button>
+                        <button @click='submitThrow'>Submit</button>&nbsp;&nbsp;&nbsp;<button @click='togglePanel'>Close Me</button>
                     </div>
                 </div>
             </div>
@@ -109,6 +117,25 @@
 </template>
 
 <style>
+
+    .loading {
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        left: 0;
+        top: 0;
+        background: rgba(0, 0, 0, 0.85);
+        z-index: 2000;
+    }
+
+    .loading span {
+        position: absolute;
+        font-size: 40px;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
 
     .header button {
         height: 30px;
@@ -140,6 +167,10 @@
         background-color: gray
     }
 
+    .panel-content h1 {
+        color: black;
+    }
+
     div.analysisInput {
         height: 200px;
     }
@@ -148,12 +179,18 @@
         height: 100px;
     }
 
+    .pinsInput label {
+        color: black;
+    }
+
     .analysisInput label {
+        color: black;
         display: block;
         width: 60px;
         margin-left: 10px;
         margin-right: 0px;
         float: left;
+        cursor: pointer;
     }
 
     .analysisInput label.left {
@@ -230,13 +267,21 @@
     import { storeToRefs } from 'pinia';
     import { useDisplayStore } from '../stores/display';
     import { useAnalysisStore } from '../stores/analysis';
-    import { computed, ref } from 'vue';
-    
+    import { computed, ref, onMounted } from 'vue';
+    import { useRoute } from 'vue-router';
+
     const displayStore = useDisplayStore();
     const display = storeToRefs(displayStore);
 
     const analysisStore = useAnalysisStore();
     const analysis = storeToRefs(analysisStore);
+
+    const route = useRoute();
+
+    onMounted(() => {
+        const seriesId = route.params.series_id;
+        displayStore.getSeries(seriesId);
+    });
 
     //const frames = display.getMaster.value.gameData[display.getGameNumber.value].frames;
     //const fs = frames.map((e) => e.frameNumber);
@@ -295,6 +340,156 @@
             analysisStore.pinText(value);
         }
     });
+
+    const pinExitBinding = computed({
+        get() {
+            return analysisStore.pinExit;
+        },
+        set(value) {
+            console.log(`setting...${value}`);
+            analysisStore.setAnalysis(1, parseInt(value));
+        }
+    });
+
+    const pinEnterBinding = computed({
+        get() {
+            return analysisStore.pinEnter;
+        },
+        set(value) {
+            console.log(`setting...${value}`);
+            analysisStore.setAnalysis(2, parseInt(value));
+        }
+    });
+
+    const breakPointBinding = computed({
+        get() {
+            return analysisStore.breakPoint;
+        },
+        set(value) {
+            console.log(`setting...${value}`);
+            analysisStore.setAnalysis(3, parseInt(value));
+        }
+    });
+
+    const breakDistanceBinding = computed({
+        get() {
+            return analysisStore.breakDistance;
+        },
+        set(value) {
+            console.log(`setting...${value}`);
+            analysisStore.setAnalysis(4, parseInt(value));
+        }
+    });
+
+    const arrowsBinding = computed({
+        get() {
+            return analysisStore.arrows;
+        },
+        set(value) {
+            console.log(`setting...${value}`);
+            analysisStore.setAnalysis(5, parseInt(value));
+        }
+    });
+
+    const slideBinding = computed({
+        get() {
+            return analysisStore.slide;
+        },
+        set(value) {
+            console.log(`setting...${value}`);
+            analysisStore.setAnalysis(6, parseInt(value));
+        }
+    });
+
+    const startDotsBinding = computed({
+        get() {
+            return analysisStore.startDots;
+        },
+        set(value) {
+            console.log(`setting...${value}`);
+            analysisStore.setAnalysis(7, parseInt(value));
+        }
+    });
+
+    const startDistanceBinding = computed({
+        get() {
+            return analysisStore.startDistance;
+        },
+        set(value) {
+            console.log(`setting...${value}`);
+            analysisStore.setAnalysis(8, parseInt(value));
+        }
+    });
+
+    const submitThrow = () => {
+
+        let payload = {};
+        payload['series_id'] = route.params.series_id;
+        payload['game_number'] = display.gameNumber.value;
+
+        //console.log(display.usePins);
+
+        if (!display.usePins) {
+            payload['throw'] = analysis.pinsText.value;
+        }
+        
+        if (analysis.anyAnalysis.value) {
+            payload['data'] = {};
+
+            if (display.usePins) {
+                payload['data']['pins'] = [...analysis.getPinsActive.value];
+            }
+            else {
+
+                //console.log(typeof pinsBinding.value);
+
+                if (['X', '/'].includes(pinsBinding.value)) {
+                    payload['data']['pins'] = pinsBinding.value;
+                }
+                else {
+                    payload['data']['pins'] = [...analysis.pinsClick.value];
+                }
+            }
+            delete payload['throw']
+        }
+   
+        if (analysis.pexOn.value) {
+            //console.log(analysis.pexOn);
+            //console.log(analysis.pexOn.value);
+
+            payload['data']['pin_exit'] = analysis.pinExit.value;
+        }
+        if (analysis.penOn.value) {
+            payload['data']['pin_entry'] = analysis.pinEnter.value;
+        }
+        if (analysis.breakPtOn.value) {
+            payload['data']['break_point'] = analysis.breakPoint.value;
+        }
+        if (analysis.breakDistOn.value) {
+            payload['data']['break_distance'] = analysis.breakDistance.value;
+        }
+        if (analysis.arrowsOn.value) {
+            payload['data']['arrows'] = analysis.arrows.value;
+        }
+        if (analysis.slideOn.value) {
+            payload['data']['slide'] = analysis.slide.value;
+        }
+        if (analysis.startDotsOn.value) {
+            payload['data']['start'] = analysis.startDots.value;
+        }
+        if (analysis.startDistOn.value) {
+            payload['data']['start_distance'] = -1 * Math.abs(analysis.startDistance.value);
+        }
+
+        console.log(JSON.stringify(payload));
+
+    };
+
+    const toggleAnalysis = (i) => {
+        
+        console.log(i);
+        analysisStore.toggleAnalysis(i);
+    };
 
     const leftFrameDisabled = computed({
         get() {

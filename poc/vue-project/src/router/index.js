@@ -1,14 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Trainer from '../views/Trainer.vue'
+import StartHere from '../views/StartHere.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Trainer,
+      name: 'start',
+      component: StartHere,
+    },
+    {
+      path: '/series/:series_id',
+      name: 'new_trainer',
+      component: Trainer
     },
     {
       path: '/about',
