@@ -6,6 +6,21 @@ import os
 
 def handler(event, context):
 
+    # first check http verb
+    verb = event.get('requestContext', {}).get('http', {}).get('method')
+
+    if verb == 'OPTIONS':
+        return {
+            'statusCode': 200, 
+            'body': json.dumps({'message': 'OK'}), 
+            'headers': {
+                'Access-Control-Allow-Origin': '*', 
+                'Access-Control-Allow-Headers': '*', 
+                'Access-Control-Allow-Methods': 'OPTIONS, GET, POST', 
+                'Content-Type': 'application/json'
+            }
+        }
+
     print(event)
 
     # must retrieve series from dynamodb
@@ -77,6 +92,7 @@ def handler(event, context):
 
     return {
         'statusCode': 200,
-        'body': json.dumps(s, default=str)
+        'body': json.dumps(s, default=str),
+        'headers': {'Access-Control-Allow-Origin': '*'}
     }
-        
+

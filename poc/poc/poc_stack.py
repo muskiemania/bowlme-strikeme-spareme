@@ -196,7 +196,7 @@ class PocStack(Stack):
         # ROUTES
         http_api.add_routes(
             path='/series/{series_id}',
-            methods=[apigwv2.HttpMethod.GET],
+            methods=[apigwv2.HttpMethod.GET, apigwv2.HttpMethod.OPTIONS],
             integration=get_series_integration
         )
 

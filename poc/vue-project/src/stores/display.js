@@ -79,8 +79,15 @@ export const useDisplayStore = defineStore('display', {
         getGameLeft: (state) => state.gameNumber > 1,
         getGameRight: (state) => state.gameNumber === Math.max(state.master.games),
         getFrameNumber: (state) => state.frameNumber,
-        getTotalFrames: (state) => { 
-            return state.master.gameData[state.gameNumber.toString()].frames.map((e) => e.frame);
+        getTotalFrames: (state) => {
+            let total = [];
+            try {
+                total = state.master.gameData[state.gameNumber.toString()].frames.map((e) => e.frame);
+            } catch (error) {
+                total = [];
+            } finally {
+                return total;
+            }
         },
         getFrameThrows: (state) => {
             const f = state.master.gameData[state.gameNumber.toString()].frames;
@@ -131,14 +138,21 @@ export const useDisplayStore = defineStore('display', {
             // finally set loading ==> false
             axios.get(`${BASE_URL}/series/${seriesId}`)
             .then((reply) => {
-                
+               
+
                 const master = {};
                 master.games = reply.data.games;
                 master.gameData = reply.data.game_data;
 
                 const current = Math.max(...reply.data.games)
-                const frames = master.gameData[current.toString()].frames.map((e) => e.frame);
 
+                let frames = [];
+                try {
+                    frames = master.gameData[current.toString()].frames.map((e) => e.frame);
+                } catch (error) {
+                    
+                }
+                
                 const thisFrame = Math.max(...frames);
 
                 this.master = master;

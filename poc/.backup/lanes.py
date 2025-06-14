@@ -52,6 +52,8 @@ X_Y_Spline = make_interp_spline(x, y)
 X_ = np.linspace(x.min(), x.max(), 500)
 Y_ = X_Y_Spline(X_)
 
+print(X_)
+print(Y_)
 
 #fig, ax = plt.subplots(figsize=(9.0, 1.68), dpi=100)
 #fig = plt.figure()
