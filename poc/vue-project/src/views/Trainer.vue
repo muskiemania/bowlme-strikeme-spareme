@@ -1,5 +1,106 @@
 <template>
 
+    <div id="app">
+        <!-- 
+            TOUCH CONTAINER
+            Parent container for area that's responsive to taps and swipes
+        -->
+        <div id="touch-container">
+            <!--
+                RENDERED ITEMS FLEXBOX
+                A flexbox container that displays items horizontally & centered
+            -->
+            <div
+                id="rendered-items-flexbox"
+                :class="displayStore.transitionClass"
+                :style="{transform: displayStore.transformStyle}"
+            >
+                <!-- 
+                    RENDERED ITEM
+                    Only 3 items will be rendered at a time (or 1 item if only 1 in array)
+                    renderedItems includes the previous, current, & next items
+                    It's important that each item has a stable key so Vue can track it
+                -->
+                <div
+                    v-for="item in displayStore.renderedItems"
+                    :id="item.key"
+                    :key="item.key"
+                    class="rendered-item"
+                >
+                    <!-- 
+                        ITEM CONTENT
+                        Whatever content or component you're displaying
+                    -->
+                    <div class="item-content" :class="item.id"></div>
+                </div>
+            </div>
+
+            <!--
+                LEFT & RIGHT TOUCH AREAS
+                Non-visible divs over left & right sides of screen that can be tapped to change slide
+            -->
+            <div
+                class="touch-tap-left"
+                role="button"
+                aria-label="Previous"
+                tabindex="0"
+                @click="displayStore.previous"
+                @keyup.enter="displayStore.previous"
+                @keyup.space="displayStore.previous"
+            >
+            <!--   
+                LEFT EDGE SHAPE
+                Edge animation when reaching end of array, otherwise loops infinitely (optional)
+            -->
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                x="0px"
+                y="0px"
+                viewBox="0 0 10 100"
+                height="100%"
+                width="40px"
+                preserveAspectRatio="none"
+                class="left-edge-shape"
+                :class="displayStore.transitionClass"
+                :style="{transform: 'scaleX(' + displayStore.leftEdgeScale + ')'}"
+            >
+                <path d="M0,0v100h5.2c3-14.1,4.8-31.4,4.8-50S8.2,14.1,5.2,0H0z" />
+            </svg>
+        </div>
+
+        <div
+            class="touch-tap-right"
+            role="button"
+            aria-label="Next"
+            tabindex="0"
+            @click="displayStore.next"
+            @keyup.enter="displayStore.next"
+            @keyup.space="displayStore.next"
+        >
+            <!-- RIGHT EDGE SHAPE-->
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                x="0px"
+                y="0px"
+                viewBox="0 0 10 100"
+                height="100%"
+                width="40px"
+                preserveAspectRatio="none"
+                class="right-edge-shape"
+                :class="displayStore.transitionClass"
+                :style="{transform: 'scaleX(' + displayStore.rightEdgeScale + ')'}"
+            >
+                <path
+                    d="M10,100V0L4.8,0C1.8,14.1,0,31.4,0,50c0,18.6,1.8,35.9,4.8,50H10z"
+                />
+            </svg>
+        </div>
+    </div>
+</div>
+    
+<!-- OLD CODE 
+
+
     <div class='loading' v-if='display.isLoading.value'>
         <span>Loading...</span>
     </div>
@@ -114,10 +215,152 @@
         </transition>
     </div>
 
+-->
+
 </template>
 
 <style>
+    
+    /* Note: This example shows the content as fullscreen with only one item displayed at once
+    Adjust sizing to fit your content/use case */
+    body {
+        min-height: 100vh;
+        width: 100vw;
+        background-color: white;
+    }
 
+    #touch-container {
+        position: relative;
+        min-width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+    }
+
+    #rendered-items-flexbox {
+        display: flex;
+        justify-content: center;
+        height: 100vh;
+        min-height: fit-content;
+        width: 100vw;
+        box-sizing: border-box;
+        touch-action: pan-y; 
+        
+        /* Disables automatic browser control of touches, except vertical scrolling */
+    }
+
+    /* Removes all translation effects for those who prefer less animation */
+    @media (prefers-reduced-motion: reduce) {
+        #rendered-items-flexbox {
+            transform: none !important;
+        }
+    }
+
+    /* Transition classes */
+    .transition-initial {
+        transition: transform 0s ease,
+    }
+
+    .transition-item {
+        transition: transform 250ms cubic-bezier(0.0, 0.0, 0.2, 1); 
+        /* ease-out timing function */
+    }
+
+    .transition-edge {
+        transition: transform 500ms ease-out;
+    }
+ 
+    .rendered-item {
+        height: 100%;
+        min-height: 500px;
+        min-width: 100%;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .item-content {
+        min-height: 500px;
+        height: 100%;
+        width: 100vw;
+        margin: 0 auto;
+        box-sizing: border-box;
+    }
+
+
+    /* Left and right tap targets */
+    .touch-tap-left,
+    .touch-tap-right {
+        position: absolute;
+        top: 0;
+        width: 20%;
+        height: 100%;
+    }
+
+    .touch-tap-left {
+        left: 0;
+    }
+
+    .touch-tap-right {
+        right: 0;
+    }
+
+
+    /* This is good for accessibility, so instead use polyfill for :focus-visible
+    https://github.com/WICG/focus-visible */
+    .touch-tap-left:focus, .touch-tap-right:focus {
+        outline: none;
+    }
+
+    .left-edge-shape, .right-edge-shape {
+        position: absolute;
+        fill: white;
+        opacity: 0.3;
+    }
+
+    .left-edge-shape {
+        left: 0;
+        transform-origin: left;
+    }
+
+    .right-edge-shape {
+        right: 0;
+        transform-origin: right;
+    }
+
+    .red {
+        background: rgb(255,6,25);
+        background: linear-gradient(145deg, rgba(255,6,25,1) 40%, rgba(255,4,159,1) 100%);
+    }
+
+    .orange {
+        background: rgb(255,100,6);
+        background: linear-gradient(145deg, rgba(255,100,6,1) 40%, rgba(255,183,4,1) 100%);
+    }
+
+    .yellow {
+        background: rgb(255,241,0);
+        background: linear-gradient(145deg, rgba(255,241,0,1) 40%, rgba(239,255,6,1) 100%);
+    }
+
+    .green {
+        background: rgb(1,159,127);
+        background: linear-gradient(145deg, rgba(1,159,127,1) 40%, rgba(161,230,0,1) 100%);
+    }
+
+    .blue {
+        background: rgb(34,29,233);
+        background: linear-gradient(145deg, rgba(34,29,233,1) 40%, rgba(0,206,230,1) 100%);
+    }
+
+    .purple {
+        background: rgb(114,27,250);
+        background: linear-gradient(145deg, rgba(114,27,250,1) 40%, rgba(171,84,250,1) 100%);
+    }
+
+
+
+    /*
+
+    -------
     .loading {
         position: fixed;
         height: 100%;
@@ -261,6 +504,8 @@
     .slide-up-leave-to {
         transform: translateY(100%);
     }
+
+    */
 </style>
 
 <script setup>
@@ -269,6 +514,7 @@
     import { useAnalysisStore } from '../stores/analysis';
     import { computed, ref, onMounted } from 'vue';
     import { useRoute } from 'vue-router';
+    import Hammer from 'hammerjs';
 
     const displayStore = useDisplayStore();
     const display = storeToRefs(displayStore);
@@ -278,11 +524,45 @@
 
     const route = useRoute();
 
+    //onMounted(() => {
+    //    const seriesId = route.params.series_id;
+    //    displayStore.getSeries(seriesId);
+    //});
+
     onMounted(() => {
-        const seriesId = route.params.series_id;
-        displayStore.getSeries(seriesId);
+        // Set up Hammer element & event listeners to respond to swiping gestures
+        const touchContainer = document.getElementById("touch-container");
+        const hammer = new Hammer.Manager(touchContainer, {
+            recognizers: [
+                [Hammer.Pan, { direction: Hammer.DIRECTION_HORIZONTAL }],
+                [Hammer.Swipe, { direction: Hammer.DIRECTION_HORIZONTAL }]
+            ]
+        });
+        hammer.on("pan swipe", displayStore.handleTouchEvents);
+
+        // Set up event listeners for when items are transitioning across the screen
+        const itemsContainer = document.getElementById("rendered-items-flexbox");
+
+        itemsContainer.addEventListener("transitionstart", (e) => {
+            if (e.target === itemsContainer) {
+                display.isTransitioning = true;
+            }
+        });
+        itemsContainer.addEventListener("transitionend", (e) => {
+            if (e.target === itemsContainer) {
+                displayStore.updateCurrentItem();
+     	    }
+        });
+
+        // For users who prefer reduced motion, can't rely on transition to change items
+        displayStore.prefersReducedMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
     });
 
+    console.log('hi');
+
+    /*
     //const frames = display.getMaster.value.gameData[display.getGameNumber.value].frames;
     //const fs = frames.map((e) => e.frameNumber);
     //console.log(fs);
@@ -501,5 +781,6 @@
             return display.getFrameNumber.value === Math.max(...display.getTotalFrames.value);
         }
     });
+    */
 
 </script>
