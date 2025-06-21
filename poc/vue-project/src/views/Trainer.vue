@@ -257,7 +257,7 @@
 
     /* Transition classes */
     .transition-initial {
-        transition: transform 0s ease,
+        transition: transform 0s ease;
     }
 
     .transition-item {
