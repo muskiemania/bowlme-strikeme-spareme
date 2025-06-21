@@ -1,6 +1,11 @@
 <template>
 
     <div id="app">
+
+        <div class='loading' v-if='displayStore.loading'>
+            <span>Loading...</span>
+        </div>
+
         <!-- 
             TOUCH CONTAINER
             Parent container for area that's responsive to taps and swipes
@@ -31,7 +36,13 @@
                         ITEM CONTENT
                         Whatever content or component you're displaying
                     -->
-                    <div class="item-content" :class="item.id"></div>
+                    <div class="item-content" :class="item.id">
+
+                        <span class='overlay'>
+                            {{ item.key }}
+                        </span>
+
+                    </div>
                 </div>
             </div>
 
@@ -283,6 +294,9 @@
         width: 100vw;
         margin: 0 auto;
         box-sizing: border-box;
+
+        display: flex;
+        justify-content: center;
     }
 
 
@@ -356,11 +370,6 @@
         background: linear-gradient(145deg, rgba(114,27,250,1) 40%, rgba(171,84,250,1) 100%);
     }
 
-
-
-    /*
-
-    -------
     .loading {
         position: fixed;
         height: 100%;
@@ -379,6 +388,20 @@
         -webkit-transform: translate(-50%, -50%);
         transform: translate(-50%, -50%);
     }
+
+    span.overlay {
+        /*position: absolute;*/
+        font-size: 40px;
+        margin: auto;
+        /*top: 50%;*/
+        /*left: 50%;*/
+        /*-webkit-transform: translate(-50%, -50%);*/
+        /*transform: translate(-50%, -50%);*/
+    }
+
+
+
+    /*
 
     .header button {
         height: 30px;
@@ -524,12 +547,11 @@
 
     const route = useRoute();
 
-    //onMounted(() => {
-    //    const seriesId = route.params.series_id;
-    //    displayStore.getSeries(seriesId);
-    //});
-
     onMounted(() => {
+
+        const seriesId = route.params.series_id;
+        displayStore.getSeries(seriesId);
+
         // Set up Hammer element & event listeners to respond to swiping gestures
         const touchContainer = document.getElementById("touch-container");
         const hammer = new Hammer.Manager(touchContainer, {
@@ -560,7 +582,6 @@
         ).matches;
     });
 
-    console.log('hi');
 
     /*
     //const frames = display.getMaster.value.gameData[display.getGameNumber.value].frames;

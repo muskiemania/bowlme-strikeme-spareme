@@ -9,6 +9,7 @@ export const useDisplayStore = defineStore('display', {
 
 
         return {
+            loading: ref(true),
             items: ["red", "orange", "yellow", "green", "blue", "purple"], // IDs for all items
             isInfiniteLoop: false, // Whether to loop back to start of item array when reaching the end
             prefersReducedMotion: false,
@@ -361,6 +362,8 @@ export const useDisplayStore = defineStore('display', {
         previousFrame() {
             this.frameNumber--
         },
+
+        */
         getSeries(seriesId) {
             
             const BASE_URL = 'https://smqu6xcne4.execute-api.us-west-2.amazonaws.com';
@@ -371,6 +374,10 @@ export const useDisplayStore = defineStore('display', {
             axios.get(`${BASE_URL}/series/${seriesId}`)
             .then((reply) => {
                
+                console.log(reply);
+                this.loading = false;
+
+                /*
 
                 const master = {};
                 master.games = reply.data.games;
@@ -391,13 +398,13 @@ export const useDisplayStore = defineStore('display', {
                 this.frameNumber = parseInt(thisFrame);
                 this.gameNumber = parseInt(current);
                 this.loading = false;
+                */
             })
             .catch((error) => {
                 console.log(error);
             });
 
         }
-        */
     }
 });
 
